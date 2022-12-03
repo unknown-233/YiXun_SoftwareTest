@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yixun.yixun_backend.mapper.InfoReportMapper">
+
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.InfoReport">
+            <id property="infoReportId" column="INFO_REPORT_ID" jdbcType="INTEGER"/>
+            <result property="reportTime" column="REPORT_TIME" jdbcType="TIMESTAMP"/>
+            <result property="reportContent" column="REPORT_CONTENT" jdbcType="VARCHAR"/>
+            <result property="searchinfoId" column="SEARCHINFO_ID" jdbcType="INTEGER"/>
+            <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+            <result property="administratorId" column="ADMINISTRATOR_ID" jdbcType="INTEGER"/>
+            <result property="isreviewed" column="ISREVIEWED" jdbcType="VARCHAR"/>
+            <result property="ispass" column="ISPASS" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        INFO_REPORT_ID,REPORT_TIME,REPORT_CONTENT,
+        SEARCHINFO_ID,USER_ID,ADMINISTRATOR_ID,
+        ISREVIEWED,ISPASS
+    </sql>
+</mapper>

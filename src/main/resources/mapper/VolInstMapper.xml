@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yixun.yixun_backend.mapper.VolInstMapper">
+
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.VolInst">
+            <id property="volInstId" column="VOL_INST_ID" jdbcType="INTEGER"/>
+            <result property="instName" column="INST_NAME" jdbcType="VARCHAR"/>
+            <result property="passwords" column="PASSWORDS" jdbcType="VARCHAR"/>
+            <result property="fundationTime" column="FUNDATION_TIME" jdbcType="TIMESTAMP"/>
+            <result property="addressId" column="ADDRESS_ID" jdbcType="INTEGER"/>
+            <result property="instSlogan" column="INST_SLOGAN" jdbcType="VARCHAR"/>
+            <result property="peopleCount" column="PEOPLE_COUNT" jdbcType="INTEGER"/>
+            <result property="contactMethod" column="CONTACT_METHOD" jdbcType="VARCHAR"/>
+            <result property="instPicUrl" column="INST_PIC_URL" jdbcType="VARCHAR"/>
+            <result property="volInstCredUrl" column="VOL_INST_CRED_URL" jdbcType="VARCHAR"/>
+            <result property="volInstIntroduce" column="VOL_INST_INTRODUCE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        VOL_INST_ID,INST_NAME,PASSWORDS,
+        FUNDATION_TIME,ADDRESS_ID,INST_SLOGAN,
+        PEOPLE_COUNT,CONTACT_METHOD,INST_PIC_URL,
+        VOL_INST_CRED_URL,VOL_INST_INTRODUCE
+    </sql>
+</mapper>
