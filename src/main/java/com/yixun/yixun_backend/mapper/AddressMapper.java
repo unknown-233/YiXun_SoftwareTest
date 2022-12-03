@@ -1,2 +1,14 @@
-package com.yixun.yixun_backend.mapper;public interface AddressMapper {
+package com.yixun.yixun_backend.mapper;
+
+import com.yixun.yixun_backend.entity.Address;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+@Mapper
+public interface AddressMapper{
+    //查询所有用户
+    @Select("select * from yixun_address")
+    List<Address> getAddress();
 }
