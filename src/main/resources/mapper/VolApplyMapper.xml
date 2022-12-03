@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yixun.yixun_backend.mapper.VolApplyMapper">
 
-    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.VolApply">
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.VolApply">
             <id property="volApplyId" column="VOL_APPLY_ID" jdbcType="INTEGER"/>
             <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
             <result property="isreviewed" column="ISREVIEWED" jdbcType="VARCHAR"/>

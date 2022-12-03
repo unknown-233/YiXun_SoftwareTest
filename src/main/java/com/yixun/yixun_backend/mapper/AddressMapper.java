@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.mapper;
 
-import com.yixun.yixun_backend.domain.Address;
+import com.yixun.yixun_backend.entity.Address;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

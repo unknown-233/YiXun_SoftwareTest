@@ -1,44 +1,36 @@
-package com.yixun.yixun_backend.domain;
+package com.yixun.yixun_backend.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
 
 /**
  * 
- * @TableName yixun_address
+ * @TableName yixun_recruited
  */
-@TableName(value ="yixun_address")
+@TableName(value ="yixun_recruited")
 @Data
-public class Address implements Serializable {
+public class Recruited implements Serializable {
     /**
-     * 地址存储编号
+     * 志愿活动编号
      */
     @TableId(type = IdType.AUTO)
-    private Integer addressId;
+    private Integer volActId;
 
     /**
-     * 行政区编号
+     * 志愿者编号
      */
-    private String areaId;
+    @TableId
+    private Integer volId;
 
     /**
-     * 详细地址
+     * 报名志愿活动时间
      */
-    private String detail;
-
-    /**
-     * 行政市编号
-     */
-    private String cityId;
-
-    /**
-     * 行政省编号
-     */
-    private String provinceId;
+    private Date recruittime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

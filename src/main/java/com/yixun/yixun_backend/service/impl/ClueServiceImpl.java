@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.Clue;
+import com.yixun.yixun_backend.entity.Clue;
 import com.yixun.yixun_backend.service.ClueService;
 import com.yixun.yixun_backend.mapper.ClueMapper;
 import org.springframework.stereotype.Service;

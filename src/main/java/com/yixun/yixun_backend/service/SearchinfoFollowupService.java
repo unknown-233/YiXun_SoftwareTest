@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.service;
 
-import com.yixun.yixun_backend.domain.SearchinfoFollowup;
+import com.yixun.yixun_backend.entity.SearchinfoFollowup;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

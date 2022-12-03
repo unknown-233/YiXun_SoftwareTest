@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.service;
 
-import com.yixun.yixun_backend.domain.Clue;
+import com.yixun.yixun_backend.entity.Clue;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

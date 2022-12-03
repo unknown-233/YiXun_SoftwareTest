@@ -1,4 +1,4 @@
-package com.yixun.yixun_backend.domain;
+package com.yixun.yixun_backend.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,51 +10,41 @@ import lombok.Data;
 
 /**
  * 
- * @TableName yixun_info_report
+ * @TableName yixun_clue
  */
-@TableName(value ="yixun_info_report")
+@TableName(value ="yixun_clue")
 @Data
-public class InfoReport implements Serializable {
+public class Clue implements Serializable {
     /**
-     * 寻人信息举报编号
+     * 线索编号
      */
     @TableId(type = IdType.AUTO)
-    private Integer infoReportId;
+    private Integer clueId;
 
     /**
-     * 举报时间
+     * 线索内容
      */
-    private Date reportTime;
+    private String clueContent;
 
     /**
-     * 举报内容
+     * 线索上传时间
      */
-    private String reportContent;
+    private Date clueDate;
 
     /**
-     * 寻人信息编号
+     * 对应寻人信息
      */
     private Integer searchinfoId;
 
     /**
-     * 举报人编号
+     * 发布用户编号
      */
     private Integer userId;
 
     /**
-     * 审核管理员id
+     * 线索是否被删除
      */
-    private Integer administratorId;
-
-    /**
-     * 是否被审核过
-     */
-    private String isreviewed;
-
-    /**
-     * 审核是否通过
-     */
-    private String ispass;
+    private String isactive;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

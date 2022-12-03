@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.service;
 
-import com.yixun.yixun_backend.domain.Administrators;
+import com.yixun.yixun_backend.entity.Administrators;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

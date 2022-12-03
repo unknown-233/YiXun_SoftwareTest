@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.News;
+import com.yixun.yixun_backend.entity.News;
 import com.yixun.yixun_backend.service.NewsService;
 import com.yixun.yixun_backend.mapper.NewsMapper;
 import org.springframework.stereotype.Service;

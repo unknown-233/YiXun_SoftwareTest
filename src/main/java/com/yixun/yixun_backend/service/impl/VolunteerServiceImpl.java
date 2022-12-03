@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.Volunteer;
+import com.yixun.yixun_backend.entity.Volunteer;
 import com.yixun.yixun_backend.service.VolunteerService;
 import com.yixun.yixun_backend.mapper.VolunteerMapper;
 import org.springframework.stereotype.Service;

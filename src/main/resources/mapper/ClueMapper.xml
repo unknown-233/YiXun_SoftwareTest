@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yixun.yixun_backend.mapper.ClueMapper">
 
-    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.Clue">
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.Clue">
             <id property="clueId" column="CLUE_ID" jdbcType="INTEGER"/>
             <result property="clueContent" column="CLUE_CONTENT" jdbcType="VARCHAR"/>
             <result property="clueDate" column="CLUE_DATE" jdbcType="TIMESTAMP"/>

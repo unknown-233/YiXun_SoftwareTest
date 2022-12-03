@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.service;
 
-import com.yixun.yixun_backend.domain.VolInst;
+import com.yixun.yixun_backend.entity.VolInst;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

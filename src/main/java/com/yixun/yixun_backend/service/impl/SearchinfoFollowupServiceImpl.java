@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.SearchinfoFollowup;
+import com.yixun.yixun_backend.entity.SearchinfoFollowup;
 import com.yixun.yixun_backend.service.SearchinfoFollowupService;
 import com.yixun.yixun_backend.mapper.SearchinfoFollowupMapper;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.RelatedDp;
+import com.yixun.yixun_backend.entity.RelatedDp;
 import com.yixun.yixun_backend.service.RelatedDpService;
 import com.yixun.yixun_backend.mapper.RelatedDpMapper;
 import org.springframework.stereotype.Service;

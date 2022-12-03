@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.SearchinfoFocus;
+import com.yixun.yixun_backend.entity.SearchinfoFocus;
 import com.yixun.yixun_backend.service.SearchinfoFocusService;
 import com.yixun.yixun_backend.mapper.SearchinfoFocusMapper;
 import org.springframework.stereotype.Service;

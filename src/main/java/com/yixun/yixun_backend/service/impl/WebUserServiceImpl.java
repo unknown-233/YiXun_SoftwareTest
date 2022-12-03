@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.WebUser;
+import com.yixun.yixun_backend.entity.WebUser;
 import com.yixun.yixun_backend.service.WebUserService;
 import com.yixun.yixun_backend.mapper.WebUserMapper;
 import org.springframework.stereotype.Service;

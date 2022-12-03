@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.service;
 
-import com.yixun.yixun_backend.domain.News;
+import com.yixun.yixun_backend.entity.News;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

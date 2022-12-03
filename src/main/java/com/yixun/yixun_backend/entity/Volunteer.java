@@ -1,36 +1,34 @@
-package com.yixun.yixun_backend.domain;
+package com.yixun.yixun_backend.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
 
 /**
  * 
- * @TableName yixun_searchinfo_followup
+ * @TableName yixun_volunteer
  */
-@TableName(value ="yixun_searchinfo_followup")
+@TableName(value ="yixun_volunteer")
 @Data
-public class SearchinfoFollowup implements Serializable {
+public class Volunteer implements Serializable {
     /**
-     * 被跟进寻人信息编号
+     * 编号
      */
-    @TableId
-    private Integer searchinfoId;
-
-    /**
-     * 用户编号
-     */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer volId;
 
     /**
-     * 跟进开始时间
+     * 志愿时长
      */
-    private Date followtime;
+    private Integer volTime;
+
+    /**
+     * 对应用户编号
+     */
+    private Integer volUserId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

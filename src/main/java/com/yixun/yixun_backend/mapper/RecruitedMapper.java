@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.mapper;
 
-import com.yixun.yixun_backend.domain.Recruited;
+import com.yixun.yixun_backend.entity.Recruited;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

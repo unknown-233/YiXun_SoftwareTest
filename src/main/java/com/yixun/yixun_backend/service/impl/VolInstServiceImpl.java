@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.VolInst;
+import com.yixun.yixun_backend.entity.VolInst;
 import com.yixun.yixun_backend.service.VolInstService;
 import com.yixun.yixun_backend.mapper.VolInstMapper;
 import org.springframework.stereotype.Service;

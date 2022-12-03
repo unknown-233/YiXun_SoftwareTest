@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.mapper;
 
-import com.yixun.yixun_backend.domain.VolApply;
+import com.yixun.yixun_backend.entity.VolApply;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

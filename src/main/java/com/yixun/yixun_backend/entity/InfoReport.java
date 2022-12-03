@@ -1,4 +1,4 @@
-package com.yixun.yixun_backend.domain;
+package com.yixun.yixun_backend.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,41 +10,36 @@ import lombok.Data;
 
 /**
  * 
- * @TableName yixun_vol_apply
+ * @TableName yixun_info_report
  */
-@TableName(value ="yixun_vol_apply")
+@TableName(value ="yixun_info_report")
 @Data
-public class VolApply implements Serializable {
+public class InfoReport implements Serializable {
     /**
-     * 申请信息编号
+     * 寻人信息举报编号
      */
     @TableId(type = IdType.AUTO)
-    private Integer volApplyId;
+    private Integer infoReportId;
 
     /**
-     * 用户id
+     * 举报时间
+     */
+    private Date reportTime;
+
+    /**
+     * 举报内容
+     */
+    private String reportContent;
+
+    /**
+     * 寻人信息编号
+     */
+    private Integer searchinfoId;
+
+    /**
+     * 举报人编号
      */
     private Integer userId;
-
-    /**
-     * 是否被审核
-     */
-    private String isreviewed;
-
-    /**
-     * 申请者特长
-     */
-    private String specialty;
-
-    /**
-     * 申请背景
-     */
-    private String background;
-
-    /**
-     * 申请时间
-     */
-    private Date applicationTime;
 
     /**
      * 审核管理员id
@@ -52,9 +47,9 @@ public class VolApply implements Serializable {
     private Integer administratorId;
 
     /**
-     * 申请者职业
+     * 是否被审核过
      */
-    private String career;
+    private String isreviewed;
 
     /**
      * 审核是否通过

@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.CluesReport;
+import com.yixun.yixun_backend.entity.CluesReport;
 import com.yixun.yixun_backend.service.CluesReportService;
 import com.yixun.yixun_backend.mapper.CluesReportMapper;
 import org.springframework.stereotype.Service;

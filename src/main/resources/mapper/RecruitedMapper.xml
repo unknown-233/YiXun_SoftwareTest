@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yixun.yixun_backend.mapper.RecruitedMapper">
 
-    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.Recruited">
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.Recruited">
             <id property="volActId" column="VOL_ACT_ID" jdbcType="INTEGER"/>
             <id property="volId" column="VOL_ID" jdbcType="INTEGER"/>
             <result property="recruittime" column="RECRUITTIME" jdbcType="TIMESTAMP"/>

@@ -1,11 +1,10 @@
 package com.yixun.yixun_backend.controller;
 
 //import com.yixun.yixun_backend.entity.Address;
-import com.yixun.yixun_backend.domain.Address;
+import com.yixun.yixun_backend.entity.Address;
 import com.yixun.yixun_backend.mapper.AddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

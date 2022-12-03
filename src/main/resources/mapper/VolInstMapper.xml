@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yixun.yixun_backend.mapper.VolInstMapper">
 
-    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.VolInst">
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.VolInst">
             <id property="volInstId" column="VOL_INST_ID" jdbcType="INTEGER"/>
             <result property="instName" column="INST_NAME" jdbcType="VARCHAR"/>
             <result property="passwords" column="PASSWORDS" jdbcType="VARCHAR"/>

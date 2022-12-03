@@ -1,7 +1,7 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.domain.Address;
+import com.yixun.yixun_backend.entity.Address;
 import com.yixun.yixun_backend.service.AddressService;
 import com.yixun.yixun_backend.mapper.AddressMapper;
 import org.springframework.stereotype.Service;
