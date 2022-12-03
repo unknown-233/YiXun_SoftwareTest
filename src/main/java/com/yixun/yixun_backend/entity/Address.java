@@ -1,60 +1,60 @@
 package com.yixun.yixun_backend.entity;
 
 public class Address {
-    private int ADDRESS_ID;
-    private String AREA_ID;
-    private String DETAIL;
-    private String CITY_ID;
-    private String PROVINCE_ID;
+    private int addressID;
+    private String areaID;
+    private String detail;
+    private String cityID;
+    private String provinceID;
 
-    public int getADDRESS_ID() {
-        return ADDRESS_ID;
+    public int getAddressID() {
+        return addressID;
     }
 
-    public void setADDRESS_ID(int ADDRESS_ID) {
-        this.ADDRESS_ID = ADDRESS_ID;
+    public void setAddressID(int addressID) {
+        this.addressID = addressID;
     }
 
-    public String getAREA_ID() {
-        return AREA_ID;
+    public String getAreaID() {
+        return areaID;
     }
 
-    public void setAREA_ID(String AREA_ID) {
-        this.AREA_ID = AREA_ID;
+    public void setAreaID(String areaID) {
+        this.areaID = areaID;
     }
 
-    public String getDETAIL() {
-        return DETAIL;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDETAIL(String DETAIL) {
-        this.DETAIL = DETAIL;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
-    public String getCITY_ID() {
-        return CITY_ID;
+    public String getCityID() {
+        return cityID;
     }
 
-    public void setCITY_ID(String CITY_ID) {
-        this.CITY_ID = CITY_ID;
+    public void setCityID(String cityID) {
+        this.cityID = cityID;
     }
 
-    public String getPROVINCE_ID() {
-        return PROVINCE_ID;
+    public String getProvinceID() {
+        return provinceID;
     }
 
-    public void setPROVINCE_ID(String PROVINCE_ID) {
-        this.PROVINCE_ID = PROVINCE_ID;
+    public void setProvinceID(String provinceID) {
+        this.provinceID = provinceID;
     }
 
     @Override
     public String toString() {
         return "Address{" +
-                "ADDRESS_ID=" + ADDRESS_ID +
-                ", AREA_ID='" + AREA_ID + '\'' +
-                ", DETAIL='" + DETAIL + '\'' +
-                ", CITY_ID='" + CITY_ID + '\'' +
-                ", PROVINCE_ID='" + PROVINCE_ID + '\'' +
+                "addressID=" + addressID +
+                ", areaID='" + areaID + '\'' +
+                ", detail='" + detail + '\'' +
+                ", cityID='" + cityID + '\'' +
+                ", provinceID='" + provinceID + '\'' +
                 '}';
     }
 }
