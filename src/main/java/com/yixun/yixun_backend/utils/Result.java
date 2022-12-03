@@ -11,7 +11,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 public class Result {
     public int errorCode;
     public boolean status;
-    Map<String, Dynamic> data = new HashMap<String, Dynamic>();
+    public Map<String, Object> data = new HashMap<>();
     public Result()
     {
         errorCode = 300;
