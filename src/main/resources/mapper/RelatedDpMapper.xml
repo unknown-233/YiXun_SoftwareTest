@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yixun.yixun_backend.mapper.RelatedDpMapper">
+
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.RelatedDp">
+            <id property="dpId" column="DP_ID" jdbcType="INTEGER"/>
+            <result property="website" column="WEBSITE" jdbcType="VARCHAR"/>
+            <result property="administratorId" column="ADMINISTRATOR_ID" jdbcType="INTEGER"/>
+            <result property="dpPicUrl" column="DP_PIC_URL" jdbcType="VARCHAR"/>
+            <result property="contactMethod" column="CONTACT_METHOD" jdbcType="VARCHAR"/>
+            <result property="addressId" column="ADDRESS_ID" jdbcType="INTEGER"/>
+            <result property="dpName" column="DP_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        DP_ID,WEBSITE,ADMINISTRATOR_ID,
+        DP_PIC_URL,CONTACT_METHOD,ADDRESS_ID,
+        DP_NAME
+    </sql>
+</mapper>

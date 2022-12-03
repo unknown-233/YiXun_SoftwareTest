@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yixun.yixun_backend.mapper.WebUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.WebUser">
+            <id property="userId" column="USER_ID" jdbcType="INTEGER"/>
+            <result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
+            <result property="userPasswords" column="USER_PASSWORDS" jdbcType="VARCHAR"/>
+            <result property="fundationTime" column="FUNDATION_TIME" jdbcType="TIMESTAMP"/>
+            <result property="phoneNum" column="PHONE_NUM" jdbcType="VARCHAR"/>
+            <result property="mailboxNum" column="MAILBOX_NUM" jdbcType="VARCHAR"/>
+            <result property="userGender" column="USER_GENDER" jdbcType="VARCHAR"/>
+            <result property="userState" column="USER_STATE" jdbcType="VARCHAR"/>
+            <result property="addressId" column="ADDRESS_ID" jdbcType="INTEGER"/>
+            <result property="isactive" column="ISACTIVE" jdbcType="VARCHAR"/>
+            <result property="userHeadUrl" column="USER_HEAD_URL" jdbcType="VARCHAR"/>
+            <result property="birthday" column="BIRTHDAY" jdbcType="TIMESTAMP"/>
+            <result property="token" column="TOKEN" jdbcType="VARCHAR"/>
+            <result property="lastloginTime" column="LASTLOGIN_TIME" jdbcType="TIMESTAMP"/>
+            <result property="lastloginIp" column="LASTLOGIN_IP" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        USER_ID,USER_NAME,USER_PASSWORDS,
+        FUNDATION_TIME,PHONE_NUM,MAILBOX_NUM,
+        USER_GENDER,USER_STATE,ADDRESS_ID,
+        ISACTIVE,USER_HEAD_URL,BIRTHDAY,
+        TOKEN,LASTLOGIN_TIME,LASTLOGIN_IP
+    </sql>
+</mapper>

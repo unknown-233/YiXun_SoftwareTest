@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yixun.yixun_backend.mapper.ClueMapper">
+
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.domain.Clue">
+            <id property="clueId" column="CLUE_ID" jdbcType="INTEGER"/>
+            <result property="clueContent" column="CLUE_CONTENT" jdbcType="VARCHAR"/>
+            <result property="clueDate" column="CLUE_DATE" jdbcType="TIMESTAMP"/>
+            <result property="searchinfoId" column="SEARCHINFO_ID" jdbcType="INTEGER"/>
+            <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+            <result property="isactive" column="ISACTIVE" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        CLUE_ID,CLUE_CONTENT,CLUE_DATE,
+        SEARCHINFO_ID,USER_ID,ISACTIVE
+    </sql>
+</mapper>

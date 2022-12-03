@@ -1,6 +1,7 @@
 package com.yixun.yixun_backend.controller;
 
-import com.yixun.yixun_backend.entity.Address;
+//import com.yixun.yixun_backend.entity.Address;
+import com.yixun.yixun_backend.domain.Address;
 import com.yixun.yixun_backend.mapper.AddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,19 +26,8 @@ public class TestController {
     //查询所有用户
     public List query()
     {
-        List<Address> addresses=addressMapper.getAddress();
+        List<Address> addresses=addressMapper.selectList(null);
         System.out.println(addresses);
         return addresses;
-    }
-
-    @PostMapping("/address")
-    public String save(Address address)
-    {
-        int i=addressMapper.insert(address);
-        if(i>0) {
-            return "插入成功";
-        }else {
-            return "插入失败";
-        }
     }
 }
