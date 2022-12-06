@@ -1,5 +1,6 @@
 package com.yixun.yixun_backend.controller;
 
+import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,6 +10,7 @@ import com.yixun.yixun_backend.entity.News;
 import com.yixun.yixun_backend.entity.VolActivity;
 import com.yixun.yixun_backend.mapper.NewsMapper;
 import com.yixun.yixun_backend.service.NewsService;
+import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ public class NewsController {
 
     @Resource
     private NewsService newsService;
+    @Resource
+    private OssUploadService ossUploadService;
 
     //7.1 展示寻人资讯卡片
     @GetMapping("/GetAllNews")
@@ -111,4 +115,6 @@ public class NewsController {
             return Result.error();
         }
     }
+
+
 }
