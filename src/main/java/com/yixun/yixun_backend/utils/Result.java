@@ -19,7 +19,7 @@ public class Result {
         errorCode = 300;
         status = false;
     }
-<<<<<<< HEAD
+
     public String ReturnJson(){
         String jsonStr = JSON.toJSONString(this);
         return jsonStr;
@@ -28,15 +28,5 @@ public class Result {
     public static Result error() {
         return new Result();
     }
-
-=======
-//    public String ReturnJson(){
-//        String jsonStr = JSON.toJSONString(this);
-//        return jsonStr;
-//    }
->>>>>>> master
-    // deviceAlarmInfo对应的实体类
-//    String aa=JSON.toJSONString(Result,SerializerFeature.WRITE_MAP_NULL_FEATURES);
-//    JSONObject object= JSON.parseObject(aa);
 
     };
