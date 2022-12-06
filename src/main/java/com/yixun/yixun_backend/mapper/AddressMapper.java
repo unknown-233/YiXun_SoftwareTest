@@ -4,6 +4,8 @@ import com.yixun.yixun_backend.entity.Address;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author hunyingzhong
 * @description 针对表【yixun_address】的数据库操作Mapper
@@ -13,7 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface AddressMapper extends BaseMapper<Address> {
-
+    List<String> selectAreaListByCityID(String id);
 }
 
 
