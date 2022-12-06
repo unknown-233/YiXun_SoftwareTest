@@ -1,19 +1,25 @@
 package com.yixun.yixun_backend.controller;
 
+import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yixun.yixun_backend.dto.NewsDTO;
 import com.yixun.yixun_backend.entity.News;
+import com.yixun.yixun_backend.entity.VolApply;
+import com.yixun.yixun_backend.entity.WebUser;
 import com.yixun.yixun_backend.mapper.NewsMapper;
 import com.yixun.yixun_backend.service.NewsService;
+import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/api/News")
 @RestController
@@ -23,6 +29,8 @@ public class NewsController {
 
     @Resource
     private NewsService newsService;
+    @Resource
+    private OssUploadService ossUploadService;
 
     //7.1 展示寻人资讯卡片
     @GetMapping("/GetAllNews")
@@ -46,4 +54,6 @@ public class NewsController {
             return Result.error();
         }
     }
+
+
 }
