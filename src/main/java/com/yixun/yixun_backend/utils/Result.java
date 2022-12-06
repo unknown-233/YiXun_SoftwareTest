@@ -11,16 +11,30 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 public class Result {
     public int errorCode;
     public boolean status;
-    Map<String, Dynamic> data = new HashMap<String, Dynamic>();
+
+    public Map<String, Object> data = new HashMap<>();
+
     public Result()
     {
         errorCode = 300;
         status = false;
     }
+<<<<<<< HEAD
     public String ReturnJson(){
         String jsonStr = JSON.toJSONString(this);
         return jsonStr;
     }
+
+    public static Result error() {
+        return new Result();
+    }
+
+=======
+//    public String ReturnJson(){
+//        String jsonStr = JSON.toJSONString(this);
+//        return jsonStr;
+//    }
+>>>>>>> master
     // deviceAlarmInfo对应的实体类
 //    String aa=JSON.toJSONString(Result,SerializerFeature.WRITE_MAP_NULL_FEATURES);
 //    JSONObject object= JSON.parseObject(aa);

@@ -15,4 +15,8 @@
         ADMINISTRATOR_ID,ADMINISTRATOR_NAME,ADMINISTRATOR_PHONE,
         ADMINISTRATOR_CODE
     </sql>
+
+    <select id="selectRandomOne"  resultType="com.yixun.yixun_backend.entity.Administrators">
+        SELECT * From yixun_administrators ORDER BY RAND() LIMIT 1
+    </select>
 </mapper>

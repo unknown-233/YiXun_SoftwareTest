@@ -9,5 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2022-12-03 12:43:39
 */
 public interface AddressService extends IService<Address> {
-
+    String getProvinceID(int addressID);
+    String getAreaID(int addressID);
+    String getCityID(int addressID);
+    String getDetail(int addressID);
 }

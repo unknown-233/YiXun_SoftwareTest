@@ -13,4 +13,13 @@
     <sql id="Base_Column_List">
         VOL_ID,VOL_TIME,VOL_USER_ID
     </sql>
+
+    <select id="selectTopTenVolDTO"  resultType="com.yixun.yixun_backend.dto.VolunteerDTO">
+        SELECT vol.VOL_TIME,usr.USER_NAME,usr.USER_HEAD_URL
+        FROM yixun_volunteer as vol
+                 LEFT JOIN yixun_web_user as usr
+                           ON vol.VOL_USER_ID=usr.USER_ID
+        ORDER BY vol.VOL_TIME DESC
+            LIMIT 10
+    </select>
 </mapper>

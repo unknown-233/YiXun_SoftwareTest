@@ -1,12 +1,12 @@
 package com.yixun.yixun_backend.controller;
 
-//import com.yixun.yixun_backend.entity.Address;
-import com.yixun.yixun_backend.entity.Address;
+import com.yixun.yixun_backend.dto.NewsDTO;
 import com.yixun.yixun_backend.mapper.AddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,8 +25,13 @@ public class TestController {
     //查询所有用户
     public List query()
     {
-        List<Address> addresses=addressMapper.selectList(null);
-        System.out.println(addresses);
-        return addresses;
+        List<NewsDTO> newsDTOList=new ArrayList<>();
+        NewsDTO newsDTO=new NewsDTO();
+        newsDTO.setNewsContent("jhggj");
+        newsDTO.setTitle("sdjfsdjfjsh");
+        newsDTO.setCover("jhggj");
+        newsDTO.setNewsId(11);
+        newsDTOList.add(newsDTO);
+        return newsDTOList;
     }
 }

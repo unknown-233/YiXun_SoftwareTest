@@ -24,4 +24,12 @@
         VOL_INST_ID,RELEASE_TIME,SIGNUP_PEOPLE,
         ACT_CONTENT,VOL_ACT_NAME
     </sql>
+
+    <select id="selectVolActByVolID" parameterType="java.lang.Integer" resultType="com.yixun.yixun_backend.entity.VolActivity">
+        SELECT act.ACT_CONTENT,act.ACT_PIC_URL,act.ADDRESS_ID,act.CONTACT_METHOD,act.EXP_TIME,act.NEEDPEOPLE,act.RELEASE_TIME,act.SIGNUP_PEOPLE,act.SIGNUP_PEOPLE,act.VOL_ACT_ID,act.VOL_ACT_NAME
+        FROM yixun_vol_activity act
+                 INNER JOIN yixun_recruited re on act.VOL_ACT_ID=re.VOL_ACT_ID
+                 INNER JOIN yixun_volunteer vol on vol.VOL_ID=re.VOL_ID
+        WHERE re.VOL_ID=#{id}
+    </select>
 </mapper>

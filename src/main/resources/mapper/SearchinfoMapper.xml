@@ -31,4 +31,11 @@
         SOUGHT_PEOPLE_HEIGHT,SEARCHINFO_PHOTO_URL,CONTACT_METHOD,
         ISACTIVE
     </sql>
+
+    <select id="selectFocusSearchInfoByUserID" parameterType="java.lang.Integer" resultType="com.yixun.yixun_backend.entity.Searchinfo">
+        SELECT info.ADDRESS_ID, info.CONTACT_METHOD,info.ISACTIVE,info.ISREPORT,info.SEARCHINFO_DATE,info.SEARCHINFO_DATE,info.SEARCHINFO_ID,info.SEARCHINFO_LOSTDATE,info.SEARCHINFO_PHOTO_URL,info.SEARCH_TYPE,info.SOUGHT_PEOPLE_BIRTHDAY,info.SOUGHT_PEOPLE_DETAIL,info.SOUGHT_PEOPLE_GENDER,info.SOUGHT_PEOPLE_HEIGHT,info.SOUGHT_PEOPLE_NAME,info.SOUGHT_PEOPLE_STATE,info.USER_ID
+        FROM yixun_searchinfo_focus fo
+                 LEFT JOIN yixun_searchinfo info on fo.SEARCHINFO_ID=info.SEARCHINFO_ID
+        WHERE fo.USER_ID=#{id}
+    </select>
 </mapper>

@@ -2,6 +2,9 @@ package com.yixun.yixun_backend.mapper;
 
 import com.yixun.yixun_backend.entity.Searchinfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yixun.yixun_backend.entity.VolActivity;
+
+import java.util.List;
 
 /**
 * @author hunyingzhong
@@ -10,7 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.yixun.yixun_backend.domain.Searchinfo
 */
 public interface SearchinfoMapper extends BaseMapper<Searchinfo> {
-
+    List<Searchinfo> selectFocusSearchInfoByUserID(int id);
 }
 
 
