@@ -2,21 +2,23 @@ package com.yixun.yixun_backend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yixun.yixun_backend.dto.SerachinfoDTO;
 import com.yixun.yixun_backend.entity.Clue;
+import com.yixun.yixun_backend.entity.News;
 import com.yixun.yixun_backend.entity.Searchinfo;
 import com.yixun.yixun_backend.mapper.ClueMapper;
 import com.yixun.yixun_backend.mapper.SearchinfoMapper;
 import com.yixun.yixun_backend.service.SearchinfoService;
+import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,8 @@ public class UserOperationController {
 
     @Resource
     private SearchinfoService searchinfoService;
+    @Resource
+    private OssUploadService ossUploadService;
     //2.1 展示用户发布的所有寻人信息
     @GetMapping("/GetAllSearchInfoPublished")
     public Result GetAllSearchInfoPublished(int user_id,int pageNum, int pageSize)
@@ -143,6 +147,45 @@ public class UserOperationController {
             return Result.error();
         }
     }
+    //5.1-2上传寻人信息图片
+    @PutMapping("/AddSearchInfoPic")
+    public Result AddSearchInfoPic(@RequestBody Map<String, Object> inputData){
+        try{
+            Result result=new Result();
+            String idKey = "searchInfo_id";
+            int searchInfo_id = 0;
+            String img_base64Key = "searchInfo_pic";
+            String img_base64 = "";
+            if (inputData.containsKey(idKey)) {
+                searchInfo_id = (int) inputData.get(idKey);
+            }
+            if (inputData.containsKey(img_base64Key)) {
+                img_base64 = (String) inputData.get(img_base64Key);
+            }
+            Searchinfo searchinfo = searchinfoMapper.selectOne(new QueryWrapper<Searchinfo>().eq("NEWS_ID", searchInfo_id));
+            String type = "." + img_base64.split(",")[0].split(";")[0].split("/")[1];
+            img_base64 = img_base64.split("base64,")[1];
+
+            byte[] img_bytes = Base64.getDecoder().decode(img_base64);
+            ByteArrayInputStream stream = new ByteArrayInputStream(img_bytes, 0, img_bytes.length);
+
+            String path = "searchInfo_pic/" + Integer.toString(searchInfo_id) + type;
+            ossUploadService.uploadfile(stream, path);
+            String imgurl = "https://yixun-picture.oss-cn-shanghai.aliyuncs.com/" + path;
+            searchinfo.setSearchinfoPhotoUrl(imgurl);
+            searchinfoMapper.updateById(searchinfo);
+
+            result.data.put("searchInfo_pic", imgurl);
+
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
 
 }
 

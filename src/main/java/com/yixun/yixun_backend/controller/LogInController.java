@@ -1,5 +1,7 @@
 package com.yixun.yixun_backend.controller;
 
+import com.yixun.yixun_backend.entity.Address;
+import com.yixun.yixun_backend.utils.OssUploadService;
 import io.jsonwebtoken.Claims;
 import com.alibaba.fastjson.JSONObject;
 
@@ -22,9 +24,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletRegistration.Dynamic;
+import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.sql.Wrapper;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +48,8 @@ public class LogInController {
     private AdministratorsMapper administratorsMapper;
     @Resource
     private WebUserService webUserService;
+    @Resource
+    private OssUploadService ossUploadService;
 
     @PostMapping("/LogInCheck")
     public Result LogInCheck(@RequestBody Map<String,Object> inputData){
@@ -102,15 +108,77 @@ public class LogInController {
         message.errorCode = 200;
         return message;
     }
-//    @GetMapping("/ParseToken")
-//    public int ParseToken(String token){
-//
-//        int id=JWTutils.getCurrentUser(token);
-//        return id;
-//    }
-//    @GetMapping("/ifTokenLegal")
-//    public boolean ifTokenLegal(String token){
-//
-//        return JWTutils.ifLegal(token);
-//    }
+
+    @PutMapping("/UpLoadInfo")
+    public Result UpLoadInfo(@RequestBody Map<String,Object> inputData){
+        try{
+            Result result=new Result();
+            String userIdKey = "user_id";
+            int userId = 0;
+            String userGenderKey = "user_gender";
+            String userGender = "";
+            String userProvinceKey = "user_province";
+            String userProvince = "";
+            String userCityKey = "user_city";
+            String userCity = "";
+            String userAreaKey = "user_area";
+            String userArea = "";
+            String userAddressKey = "user_address";
+            String userAddress = "";
+            String userHeadKey = "user_head";
+            String img_base64 = "";
+            if (inputData.containsKey(userIdKey)) {
+                userId = (int) inputData.get(userIdKey);
+            }
+            if (inputData.containsKey(userGenderKey)) {
+                userGender = (String) inputData.get(userGenderKey);
+            }
+            if (inputData.containsKey(userProvinceKey)) {
+                userProvince = (String) inputData.get(userProvinceKey);
+            }
+            if (inputData.containsKey(userCityKey)) {
+                userCity = (String) inputData.get(userCityKey);
+            }
+            if (inputData.containsKey(userAreaKey)) {
+                userArea = (String) inputData.get(userAreaKey);
+            }
+            if (inputData.containsKey(userAddressKey)) {
+                userAddress = (String) inputData.get(userAddressKey);
+            }
+            if (inputData.containsKey(userHeadKey)) {
+                img_base64 = (String) inputData.get(userHeadKey);
+            }
+            WebUser user=webUserMapper.selectById(userId);
+            if(userProvince!=""){
+                Address address=new Address();
+                address.setDetail(userAddress);
+                address.setAreaId(userArea);
+                address.setProvinceId(userProvince);
+                address.setCityId(userCity);
+                addressMapper.insert(address);
+                user.setAddressId(address.getAddressId());
+            }
+            user.setUserGender(userGender);
+            if(img_base64!=""){
+                String type = "." + img_base64.split(",")[0].split(";")[0].split("/")[1];
+                img_base64 = img_base64.split("base64,")[1];
+
+                byte[] img_bytes = Base64.getDecoder().decode(img_base64);
+                ByteArrayInputStream stream = new ByteArrayInputStream(img_bytes, 0, img_bytes.length);
+
+                String path = "user_head/" + Integer.toString(userId) + type;
+                ossUploadService.uploadfile(stream, path);
+                String imgurl = "https://yixun-picture.oss-cn-shanghai.aliyuncs.com/" + path;
+                user.setUserHeadUrl(imgurl);
+                webUserMapper.updateById(user);
+                result.data.put("img_url", imgurl);
+            }
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 }
