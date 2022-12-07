@@ -16,9 +16,4 @@
         ADDRESS_ID,AREA_ID,DETAIL,
         CITY_ID,PROVINCE_ID
     </sql>
-
-    <select id="selectAreaListByCityID" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT AREA_ID FROM yixun_address WHERE CITY_ID=#{id}
-    </select>
-
 </mapper>

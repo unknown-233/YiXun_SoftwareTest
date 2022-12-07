@@ -3,7 +3,7 @@ package com.yixun.yixun_backend.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yixun.yixun_backend.dto.SerachinfoDTO;
+import com.yixun.yixun_backend.dto.SearchinfoDTO;
 import com.yixun.yixun_backend.dto.VolActivityDTO;
 import com.yixun.yixun_backend.dto.VolunteerDTO;
 import com.yixun.yixun_backend.entity.*;
@@ -40,7 +40,7 @@ public class VolunteerController {
 
     //3.1 展示志愿者跟进的所有寻人信息（LXK）
     @GetMapping("/GetFollowUpInfo")
-    public Result GetFollowInfo(int volid, int pagenum, int pagesize)
+    public Result GetFollowUpInfo(int volid, int pagenum, int pagesize)
     {
         try
         {
@@ -49,8 +49,8 @@ public class VolunteerController {
             QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
             wrapper.inSql("SEARCHINFO_ID","select SEARCHINFO_ID from yixun_searchinfo_followup where VOL_ID ="+volid);
             IPage iPage = searchinfoMapper.selectPage(page,wrapper);
-            List<SerachinfoDTO> dtoList=searchinfoService.cutIntoSerachinfoDTOList((List<Searchinfo>)iPage.getRecords());
-            result.data.put("searchInfo_list", dtoList);
+            List<SearchinfoDTO> dtoList=searchinfoService.cutIntoSearchinfoDTOList((List<Searchinfo>)iPage.getRecords());
+            result.data.put("followup_info", dtoList);
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
             result.status = true;

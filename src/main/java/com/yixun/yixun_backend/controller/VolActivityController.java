@@ -37,6 +37,8 @@ public class VolActivityController {
             Result result = new Result();
             Page<VolActivity> page = new Page<>(pageNum, pageSize);
             QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
+            String localTime=TimeTrans.myToString(new Date());
+            wrapper.orderByAsc("EXP_TIME").gt("EXP_TIME",localTime);
             IPage iPage = volActivityMapper.selectPage(page,wrapper);
             List<VolActivityDTO> dtoList=volActivityService.cutIntoVolActivityDTOList((List<VolActivity>)iPage.getRecords());
             result.data.put("activity_list", dtoList);
@@ -63,7 +65,7 @@ public class VolActivityController {
             String searchContent=(String)inputMap.get("search");
             Page<VolActivity> page = new Page<>(pageNum, pageSize);
             QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
-            wrapper.like("VOL_ACT_NAME",searchContent);
+            wrapper.like("VOL_ACT_NAME",searchContent).orderByDesc("EXP_TIME");
             IPage iPage = volActivityMapper.selectPage(page,wrapper);
             List<VolActivityDTO> dtoList=volActivityService.cutIntoVolActivityDTOList((List<VolActivity>)iPage.getRecords());
             result.data.put("activity_list", dtoList);

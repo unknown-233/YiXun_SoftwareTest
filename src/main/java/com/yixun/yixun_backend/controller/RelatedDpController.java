@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api/RelatedDp")
@@ -33,15 +34,14 @@ public class RelatedDpController {
         try
         {
             Result result = new Result();
-            List<String> areaList=addressMapper.selectAreaListByCityID(city);
-            for(String area : areaList){
-                QueryWrapper<RelatedDp> wrapper = new QueryWrapper<RelatedDp>();
-                wrapper.inSql("ADDRESS_ID","SELECT ADDRESS_ID FROM yixun_address WHERE AREA_ID="+area);
-                if(wrapper!=null)
-                {
-                    List<RelatedDpDTO> dtoList=relatedDpMapperService.cutIntoRelatedDpDTOList(relatedDpMapper.selectList(wrapper));
-                    result.data.put(area, dtoList);
-                }
+            //List<String> addressIDList=addressMapper.selectAddressIDListByCityID(city);
+            QueryWrapper<RelatedDp> wrapper = new QueryWrapper<RelatedDp>();
+            //wrapper.in("ADDRESS_ID",addressIDList);
+            List<RelatedDp> dpList=relatedDpMapper.selectList(wrapper);
+            List<RelatedDpDTO> dtoList=new ArrayList<>();
+            List<String> areaList=new ArrayList<>();
+            for(RelatedDp dp : dpList){
+                Address address=addressMapper.selectById(dp.getAddressId());
             }
             result.status = true;
             result.errorCode = 200;

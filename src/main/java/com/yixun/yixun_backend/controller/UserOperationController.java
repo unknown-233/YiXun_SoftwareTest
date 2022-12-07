@@ -3,17 +3,16 @@ package com.yixun.yixun_backend.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yixun.yixun_backend.dto.SerachinfoDTO;
+import com.yixun.yixun_backend.dto.ClueDTO;
+import com.yixun.yixun_backend.dto.SearchinfoDTO;
 import com.yixun.yixun_backend.entity.Clue;
 import com.yixun.yixun_backend.entity.Searchinfo;
 import com.yixun.yixun_backend.mapper.ClueMapper;
 import com.yixun.yixun_backend.mapper.SearchinfoMapper;
+import com.yixun.yixun_backend.service.ClueService;
 import com.yixun.yixun_backend.service.SearchinfoService;
 import com.yixun.yixun_backend.utils.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -31,6 +30,9 @@ public class UserOperationController {
 
     @Resource
     private SearchinfoService searchinfoService;
+
+    @Resource
+    private ClueService clueService;
     //2.1 展示用户发布的所有寻人信息
     @GetMapping("/GetAllSearchInfoPublished")
     public Result GetAllSearchInfoPublished(int user_id,int pageNum, int pageSize)
@@ -42,7 +44,7 @@ public class UserOperationController {
             QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
             wrapper.eq("USER_ID",user_id);
             IPage iPage = searchinfoMapper.selectPage(page,wrapper);
-            List<SerachinfoDTO> dtoList=searchinfoService.cutIntoSerachinfoDTOList((List<Searchinfo>)iPage.getRecords());
+            List<SearchinfoDTO> dtoList=searchinfoService.cutIntoSearchinfoDTOList((List<Searchinfo>)iPage.getRecords());
             result.data.put("searchInfo_list", dtoList);
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
@@ -66,9 +68,10 @@ public class UserOperationController {
             QueryWrapper<Clue> wrapper = new QueryWrapper<Clue>();
             wrapper.eq("USER_ID",user_id);
             IPage iPage = ClueMapper.selectPage(page, wrapper);
+            List<ClueDTO> dtoList=clueService.cutIntoClueDTOList((List<Clue>)iPage.getRecords());
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
-            result.data.put("clue_list", iPage.getRecords());
+            result.data.put("clue_list", dtoList);
             result.status = true;
             result.errorCode = 200;
             return result;
@@ -80,17 +83,17 @@ public class UserOperationController {
 
     //2.3 展示用户关注的所有寻人信息（LXK）
     @GetMapping("/GetFocusInfo")
-    public Result GetFocusInfo(int user_id,int pageNum, int pageSize)
+    public Result GetFocusInfo(int userid, int pagenum, int pagesize)
     {
         try
         {
             Result result = new Result();
-            Page<Searchinfo> page = new Page<>(pageNum, pageSize);
+            Page<Searchinfo> page = new Page<>(pagenum, pagesize);
             QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
-            wrapper.inSql("SEARCHINFO_ID","select SEARCHINFO_ID from yixun_searchinfo_focus where USER_ID ="+user_id);
+            wrapper.inSql("SEARCHINFO_ID","select SEARCHINFO_ID from yixun_searchinfo_focus where USER_ID ="+userid);
             IPage iPage = searchinfoMapper.selectPage(page,wrapper);
-            List<SerachinfoDTO> dtoList=searchinfoService.cutIntoSerachinfoDTOList((List<Searchinfo>)iPage.getRecords());
-            result.data.put("searchInfo_list", dtoList);
+            List<SearchinfoDTO> dtoList=searchinfoService.cutIntoSearchinfoDTOList((List<Searchinfo>)iPage.getRecords());
+            result.data.put("follow_info", dtoList);
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
             result.status = true;

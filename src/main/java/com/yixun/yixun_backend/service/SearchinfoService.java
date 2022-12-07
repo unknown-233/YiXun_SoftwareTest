@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.service;
 
-import com.yixun.yixun_backend.dto.SerachinfoDTO;
+import com.yixun.yixun_backend.dto.SearchinfoDTO;
 import com.yixun.yixun_backend.entity.Searchinfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,6 +12,6 @@ import java.util.List;
 * @createDate 2022-12-03 12:43:39
 */
 public interface SearchinfoService extends IService<Searchinfo> {
-    SerachinfoDTO cutIntoSerachinfoDTO(Searchinfo searchinfo);
-    List<SerachinfoDTO> cutIntoSerachinfoDTOList(List<Searchinfo> searchinfoList);
+    SearchinfoDTO cutIntoSearchinfoDTO(Searchinfo searchinfo);
+    List<SearchinfoDTO> cutIntoSearchinfoDTOList(List<Searchinfo> searchinfoList);
 }
