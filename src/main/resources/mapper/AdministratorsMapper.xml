@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.Administrators">
             <id property="administratorId" column="ADMINISTRATOR_ID" jdbcType="INTEGER"/>
             <result property="administratorName" column="ADMINISTRATOR_NAME" jdbcType="VARCHAR"/>
-            <result property="administratorPhone" column="ADMINISTRATOR_PHONE" jdbcType="VARCHAR"/>
+            <result property="administratorPhone" column="ADMINISTRATOR_PHONE" jdbcType="BIGINT"/>
             <result property="administratorCode" column="ADMINISTRATOR_CODE" jdbcType="VARCHAR"/>
     </resultMap>
 

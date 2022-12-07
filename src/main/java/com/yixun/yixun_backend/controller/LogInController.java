@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletRegistration.Dynamic;
+import java.math.BigInteger;
 import java.sql.Wrapper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,18 +50,17 @@ public class LogInController {
         Result message = new Result();
         String phoneKey="user_phone";
         String passwordKey="user_password";
-        long phone=0;
+        Long phone= Long.valueOf(0);
         String password="";
         String strphone="";
         if(inputData.containsKey(phoneKey)){
-            phone=Long.valueOf(String.valueOf(inputData.get(phoneKey)));
-            strphone=Long.toString(phone);
+            phone=(Long) inputData.get(phoneKey);
         }
         if(inputData.containsKey(passwordKey)){
             password=(String)inputData.get(passwordKey);
         }
         try{
-            WebUser user = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM", strphone).eq("USER_PASSWORDS", password));
+            WebUser user = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM", phone).eq("USER_PASSWORDS", password));
             if(user!=null){
                 if (user.getIsactive() == "N" || user.getUserState() == "N"){
                     message.data.put("message","账号已被注销或封禁");
@@ -68,7 +68,7 @@ public class LogInController {
                 }
                 Date date = new Date();
                 user.setLastloginTime(date);
-                webUserMapper.update(user,new UpdateWrapper<WebUser>().eq("PHONE_NUM", strphone).eq("USER_PASSWORDS", password));
+                webUserMapper.update(user,new UpdateWrapper<WebUser>().eq("PHONE_NUM", phone).eq("USER_PASSWORDS", password));
                 //保存数据库
                 Volunteer volunteer = volunteerMapper.selectOne(new QueryWrapper<Volunteer>().eq("VOL_USER_ID", user.getUserId()));
                 if(volunteer!=null){

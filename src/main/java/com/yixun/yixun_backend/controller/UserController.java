@@ -35,7 +35,7 @@ public class UserController {
         result.data.put("user_id", user.getUserId());
         result.data.put("user_name", user.getUserName());
         result.data.put("user_password", user.getUserPasswords());
-        result.data.put("user_head", user.getUserName());
+        result.data.put("user_head", user.getUserHeadUrl());
         result.data.put("user_fundationtime", user.getFundationTime());
         result.data.put("user_phonenum", user.getPhoneNum());
         result.data.put("user_mailbox", user.getMailboxNum());
