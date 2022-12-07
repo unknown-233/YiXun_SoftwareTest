@@ -35,7 +35,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/LogIn")
+@RequestMapping("/api/LogIn")
 public class LogInController {
     //用到哪些类就写哪些（实例化）
     @Resource

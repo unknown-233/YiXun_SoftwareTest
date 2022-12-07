@@ -1,9 +1,10 @@
 package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.dto.SerachinfoDTO;
+import com.yixun.yixun_backend.dto.SearchinfoDTO;
+import com.yixun.yixun_backend.entity.Address;
 import com.yixun.yixun_backend.entity.Searchinfo;
-import com.yixun.yixun_backend.service.AddressService;
+import com.yixun.yixun_backend.mapper.AddressMapper;
 import com.yixun.yixun_backend.service.SearchinfoService;
 import com.yixun.yixun_backend.mapper.SearchinfoMapper;
 import com.yixun.yixun_backend.utils.TimeTrans;
@@ -23,28 +24,29 @@ import java.util.List;
 public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchinfo>
     implements SearchinfoService{
     @Resource
-    private AddressService addressService;
+    private AddressMapper addressMapper;
 
-    public SerachinfoDTO cutIntoSerachinfoDTO(Searchinfo searchinfo){
-        SerachinfoDTO dto=new SerachinfoDTO();
+    public SearchinfoDTO cutIntoSearchinfoDTO(Searchinfo searchinfo){
+        SearchinfoDTO dto=new SearchinfoDTO();
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        dto.setSoughtPeopleName(searchinfo.getSoughtPeopleName());
-        dto.setArea(addressService.getAreaID(searchinfo.getAddressId()));
-        dto.setCity(addressService.getCityID(searchinfo.getAddressId()));
-        dto.setProvince(addressService.getProvinceID(searchinfo.getAddressId()));
-        dto.setDetail(addressService.getDetail(searchinfo.getAddressId()));
-        dto.setSearchinfoLostdate(TimeTrans.myToString(searchinfo.getSearchinfoLostdate()));
-        dto.setSearchinfoPhotoURL(searchinfo.getSearchinfoPhotoUrl());
-        dto.setSoughtPeopleBirthday(TimeTrans.myToString(searchinfo.getSoughtPeopleBirthday()));
-        dto.setSoughtPeopleGender(searchinfo.getSoughtPeopleGender());
-        dto.setSearchType(searchinfo.getSearchType());
+        dto.setSought_people_name(searchinfo.getSoughtPeopleName());
+        Address address=addressMapper.selectById(searchinfo.getAddressId());
+        dto.setArea_id(address.getAreaId());
+        dto.setCity_id(address.getCityId());
+        dto.setProvince_id(address.getProvinceId());
+        dto.setDetail(address.getDetail());
+        dto.setSearch_info_lostdate(TimeTrans.myToString(searchinfo.getSearchinfoLostdate()));
+        dto.setSearch_info_photourl(searchinfo.getSearchinfoPhotoUrl());
+        dto.setSought_people_birthday(TimeTrans.myToString(searchinfo.getSoughtPeopleBirthday()));
+        dto.setSearch_type(searchinfo.getSearchType());
+        dto.setSought_people_gender(searchinfo.getSoughtPeopleGender());
         return dto;
     }
 
-    public List<SerachinfoDTO> cutIntoSerachinfoDTOList(List<Searchinfo> searchinfoList){
-        List<SerachinfoDTO> dtoList=new ArrayList<>();
+    public List<SearchinfoDTO> cutIntoSearchinfoDTOList(List<Searchinfo> searchinfoList){
+        List<SearchinfoDTO> dtoList=new ArrayList<>();
         for(Searchinfo searchinfo : searchinfoList){
-            SerachinfoDTO dto=cutIntoSerachinfoDTO(searchinfo);
+            SearchinfoDTO dto= cutIntoSearchinfoDTO(searchinfo);
             dtoList.add(dto);
         }
         return dtoList;
