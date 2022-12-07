@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class VolunteerDTO {
-    @JsonProperty("VolTime")
+    @JsonProperty("VolunteerTime")
     private Integer VolTime;
 
     @JsonProperty("UserName")
