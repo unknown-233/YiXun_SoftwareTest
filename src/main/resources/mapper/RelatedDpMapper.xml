@@ -10,8 +10,11 @@
             <result property="administratorId" column="ADMINISTRATOR_ID" jdbcType="INTEGER"/>
             <result property="dpPicUrl" column="DP_PIC_URL" jdbcType="VARCHAR"/>
             <result property="contactMethod" column="CONTACT_METHOD" jdbcType="VARCHAR"/>
-            <result property="addressId" column="ADDRESS_ID" jdbcType="INTEGER"/>
             <result property="dpName" column="DP_NAME" jdbcType="VARCHAR"/>
+            <result property="areaId" column="AREA_ID" jdbcType="VARCHAR"/>
+            <result property="detail" column="DETAIL" jdbcType="VARCHAR"/>
+            <result property="cityId" column="CITY_ID" jdbcType="VARCHAR"/>
+            <result property="provinceId" column="PROVINCE_ID" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">

@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @createDate 2022-12-03 12:43:39
 * @Entity com.yixun.yixun_backend.domain.News
 */
-@Mapper
+
 public interface NewsMapper extends BaseMapper<News> {
 
 }

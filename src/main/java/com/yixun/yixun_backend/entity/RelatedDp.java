@@ -40,15 +40,31 @@ public class RelatedDp implements Serializable {
      */
     private String contactMethod;
 
-    /**
-     * 地址编号
-     */
-    private Integer addressId;
 
     /**
      * 部门名字
      */
     private String dpName;
+
+    /**
+     * 行政区编号
+     */
+    private String areaId;
+
+    /**
+     * 详细地址
+     */
+    private String detail;
+
+    /**
+     * 行政市编号
+     */
+    private String cityId;
+
+    /**
+     * 行政省编号
+     */
+    private String provinceId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
