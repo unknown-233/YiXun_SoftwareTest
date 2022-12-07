@@ -1,5 +1,6 @@
 package com.yixun.yixun_backend.mapper;
 
+import com.yixun.yixun_backend.dto.FollowVolDTO;
 import com.yixun.yixun_backend.entity.WebUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -12,7 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface WebUserMapper extends BaseMapper<WebUser> {
-
+    FollowVolDTO selectVolDTOByInfoID(int id);
 }
 
 

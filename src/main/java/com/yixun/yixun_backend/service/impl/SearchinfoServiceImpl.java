@@ -29,6 +29,7 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
     public SearchinfoDTO cutIntoSearchinfoDTO(Searchinfo searchinfo){
         SearchinfoDTO dto=new SearchinfoDTO();
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        dto.setSearch_info_id(searchinfo.getSearchinfoId());
         dto.setSought_people_name(searchinfo.getSoughtPeopleName());
         Address address=addressMapper.selectById(searchinfo.getAddressId());
         dto.setArea_id(address.getAreaId());
@@ -40,6 +41,7 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
         dto.setSought_people_birthday(TimeTrans.myToString(searchinfo.getSoughtPeopleBirthday()));
         dto.setSearch_type(searchinfo.getSearchType());
         dto.setSought_people_gender(searchinfo.getSoughtPeopleGender());
+        dto.setContact_method(searchinfo.getContactMethod());
         return dto;
     }
 

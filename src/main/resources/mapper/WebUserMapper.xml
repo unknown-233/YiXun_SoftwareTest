@@ -29,4 +29,13 @@
         ISACTIVE,USER_HEAD_URL,BIRTHDAY,
         TOKEN,LASTLOGIN_TIME,LASTLOGIN_IP
     </sql>
+
+    <select id="selectVolDTOByInfoID" parameterType="java.lang.Integer" resultType="com.yixun.yixun_backend.dto.FollowVolDTO">
+        SELECT usr.USER_NAME, usr.PHONE_NUM
+        FROM yixun_web_user as usr
+                 INNER JOIN yixun_volunteer as vol ON usr.USER_ID=vol.VOL_USER_ID
+                 INNER JOIN yixun_searchinfo_followup as fol ON fol.VOL_ID=vol.VOL_ID
+        WHERE fol.SEARCHINFO_ID=#{id}
+    </select>
+
 </mapper>

@@ -34,14 +34,28 @@ public class RelatedDpController {
         try
         {
             Result result = new Result();
-            //List<String> addressIDList=addressMapper.selectAddressIDListByCityID(city);
             QueryWrapper<RelatedDp> wrapper = new QueryWrapper<RelatedDp>();
-            //wrapper.in("ADDRESS_ID",addressIDList);
+            wrapper.eq("CITY_ID",city).orderByAsc("AREA_ID");
             List<RelatedDp> dpList=relatedDpMapper.selectList(wrapper);
             List<RelatedDpDTO> dtoList=new ArrayList<>();
-            List<String> areaList=new ArrayList<>();
-            for(RelatedDp dp : dpList){
-                Address address=addressMapper.selectById(dp.getAddressId());
+            if(dpList.isEmpty())
+                return Result.error();
+            else{
+                String area=dpList.get(0).getAreaId();
+                dtoList.add(relatedDpMapperService.cutIntoRelatedDpDTO(dpList.get(0)));
+                for(int i=1;i<dpList.size();i++){
+                    if(!dpList.get(i).getAreaId().equals(area))
+                    {
+                        result.data.put(area,new ArrayList<>(dtoList));
+                        dtoList.clear();
+                        area=dpList.get(i).getAreaId();
+                        dtoList.add(relatedDpMapperService.cutIntoRelatedDpDTO(dpList.get(i)));
+                    }
+                    else{
+                        dtoList.add(relatedDpMapperService.cutIntoRelatedDpDTO(dpList.get(i)));
+                    }
+                }
+                result.data.put(area, dtoList);
             }
             result.status = true;
             result.errorCode = 200;
@@ -65,15 +79,8 @@ public class RelatedDpController {
             result.data.put("DP_web", DP.getWebsite());
             result.data.put("DP_contact", DP.getContactMethod());
             result.data.put("DP_photo", DP.getDpPicUrl());
-
-            if (DP.getAddressId() != null)
-            {
-                Address address = addressMapper.selectById(DP.getAddressId());
-                result.data.put("DP_city", address.getCityId());
-                result.data.put("DP_address", address.getDetail());
-            }
-            else
-                result.data.put("DP_address", DP.getAddressId());
+            result.data.put("DP_city", DP.getCityId());
+            result.data.put("DP_address", DP.getDetail());
             result.status = true;
             result.errorCode = 200;
             return result;

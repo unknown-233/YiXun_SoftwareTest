@@ -26,21 +26,17 @@ import java.util.List;
 @Service
 public class RelatedDpServiceImpl extends ServiceImpl<RelatedDpMapper, RelatedDp>
     implements RelatedDpService{
-    @Resource
-    private AddressMapper addressMapper;
     public RelatedDpDTO cutIntoRelatedDpDTO(RelatedDp relatedDp){
         RelatedDpDTO dto=new RelatedDpDTO();
         dto.setDpId(relatedDp.getDpId());
         dto.setDpName(relatedDp.getDpName());
         dto.setContactMethod(relatedDp.getContactMethod());
-        Address address=addressMapper.selectById(relatedDp.getAddressId());
-        dto.setArea(address.getAreaId());
-        dto.setCity(address.getCityId());
-        dto.setProvince(address.getProvinceId());
-        dto.setDetail(address.getDetail());
+        dto.setArea(relatedDp.getAreaId());
+        dto.setCity(relatedDp.getCityId());
+        dto.setProvince(relatedDp.getProvinceId());
+        dto.setDetail(relatedDp.getDetail());
         return dto;
     }
-
     public List<RelatedDpDTO> cutIntoRelatedDpDTOList(List<RelatedDp> relatedDpList){
         List<RelatedDpDTO> dtoList=new ArrayList<>();
         for(RelatedDp relatedDp : relatedDpList){
