@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
@@ -42,7 +43,7 @@ public class WebUser implements Serializable {
     /**
      * 用户电话号码
      */
-    private String phoneNum;
+    private Long phoneNum;
 
     /**
      * 电子邮箱号

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
@@ -31,7 +32,7 @@ public class Administrators implements Serializable {
     /**
      * 手机号
      */
-    private String administratorPhone;
+    private Long administratorPhone;
 
     /**
      * 密码
