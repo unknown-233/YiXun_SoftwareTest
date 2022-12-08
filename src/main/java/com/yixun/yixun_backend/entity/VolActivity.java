@@ -47,11 +47,6 @@ public class VolActivity implements Serializable {
     private String contactMethod;
 
     /**
-     * 所属志愿机构
-     */
-    private Integer volInstId;
-
-    /**
      * 活动发布时间
      */
     private Date releaseTime;
