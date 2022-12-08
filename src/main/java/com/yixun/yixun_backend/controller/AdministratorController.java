@@ -133,8 +133,6 @@ public class AdministratorController {
             String contactMethod="";
             String needPeopleKey="need_people";
             int needPeople=0;
-            String volInstIdKey="volInst_Id";
-            int volInstId=0;
             if(inputData.containsKey(actNameKey)){
                 actName=(String)inputData.get(actNameKey);
             }
@@ -162,16 +160,12 @@ public class AdministratorController {
             if(inputData.containsKey(needPeopleKey)){
                 needPeople=(int)inputData.get(needPeopleKey);
             }
-            if(inputData.containsKey(volInstIdKey)){
-                volInstId=(int)inputData.get(volInstIdKey);
-            }
             VolActivity volActivity = new VolActivity();
             volActivity.setVolActName(actName);
             volActivity.setActContent(actContent);
-            volActivity.setExpTime(TimeTrans.myToDate(actTime));
+            volActivity.setExpTime(TimeTrans.myToDate_1(actTime));
             volActivity.setContactMethod(contactMethod);
             volActivity.setNeedpeople(needPeople);
-            volActivity.setVolInstId(volInstId);
             if(actProvince!=""){
                 Address address=new Address();
                 address.setDetail(actAddress);
@@ -179,9 +173,9 @@ public class AdministratorController {
                 address.setCityId(actCity);
                 address.setProvinceId(actProvince);
                 addressMapper.insert(address);
-                List<Address> tmpList=addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
-                Address newAddress = tmpList.get(0);
-                volActivity.setAddressId(newAddress.getAddressId());
+//                List<Address> tmpList=addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
+//                Address newAddress = tmpList.get(0);
+                volActivity.setAddressId(address.getAddressId());
             }
             volActivityMapper.insert(volActivity);
             List<VolActivity> tmpList=volActivityMapper.selectList(new QueryWrapper<VolActivity>().orderByDesc("VOL_ACT_ID"));

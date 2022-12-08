@@ -157,23 +157,23 @@ public class UserController {
             user.setMailboxNum(userEmail);
             if(userProvince!=""){
                 Address address=addressMapper.selectById(user.getAddressId());
-                address.setProvinceId(userProvince);
-                address.setCityId(userCity);
-                address.setAreaId(userArea);
-                address.setDetail(userAddress);
-                addressMapper.updateById(address);
+                if (address==null){
+                    Address address1=new Address();
+                    address.setProvinceId(userProvince);
+                    address.setCityId(userCity);
+                    address.setAreaId(userArea);
+                    address.setDetail(userAddress);
+                    addressMapper.insert(address);
+                }
+                else{
+                    address.setProvinceId(userProvince);
+                    address.setCityId(userCity);
+                    address.setAreaId(userArea);
+                    address.setDetail(userAddress);
+                    addressMapper.updateById(address);
+                }
             }
-            else{
-                Address address=new Address();
-                address.setProvinceId(userProvince);
-                address.setCityId(userCity);
-                address.setAreaId(userArea);
-                address.setDetail(userAddress);
-                addressMapper.insert(address);
-                List<Address> tmpList=addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
-                Address newAddress = tmpList.get(0);
-                user.setAddressId(newAddress.getAddressId());
-            }
+
             result.errorCode = 200;
             result.status = true;
             return result;
