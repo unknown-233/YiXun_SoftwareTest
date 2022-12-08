@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/api/Administrator")
 @RestController
@@ -360,7 +357,34 @@ public class AdministratorController {
             QueryWrapper<VolApply> wrapperN = new QueryWrapper<VolApply>();
             wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
             dto.put("vol_apply_notreviewed", volApplyMapper.selectCount(wrapperN));
-            result.data.put("vol_apply_review",dto);
+            List<Map<String, Object>> list=new ArrayList<>();
+            list.add(dto);
+            result.data.put("vol_apply_review",list);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    //1.7.2 获得需要审核的志愿者信息
+    @GetMapping("/GetVolApplyReviewed")
+    public Result GetVolApplyReviewed(int adminId)
+    {
+        try
+        {
+            Result result = new Result();
+            QueryWrapper<VolApply> wrapperY = new QueryWrapper<VolApply>();
+            wrapperY.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","Y");
+            Map<String, Object> dto = new HashMap<>();
+            dto.put("vol_apply_reviewed",volApplyMapper.selectCount(wrapperY));
+            QueryWrapper<VolApply> wrapperN = new QueryWrapper<VolApply>();
+            wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
+            dto.put("vol_apply_notreviewed", volApplyMapper.selectCount(wrapperN));
+            List<Map<String, Object>> list=new ArrayList<>();
+            list.add(dto);
+            result.data.put("vol_apply_review",list);
             result.status = true;
             result.errorCode = 200;
             return result;
