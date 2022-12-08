@@ -47,10 +47,10 @@ public class Searchinfocontroller {
             result.data.put("search_detail", searchinfo.getSoughtPeopleDetail());
             result.data.put("search_photo", searchinfo.getSearchinfoPhotoUrl());
             QueryWrapper<Clue> clueWrapper = new QueryWrapper<Clue>();
-            clueWrapper.eq("SEARCHINFO_ID",search_id);
+            clueWrapper.eq("SEARCHINFO_ID",search_id).eq("ISACTIVE","Y");
             List<Clue> clueDTOList=clueMapper.selectList(clueWrapper);
             result.data.put("search_clue",clueService.cutIntoClueDTOList(clueDTOList));
-            FollowVolDTO followVolDTO=webUserMapper.selectVolDTOByInfoID(search_id);
+            List<FollowVolDTO> followVolDTO=webUserMapper.selectVolDTOByInfoID(search_id);
             result.data.put("search_vols",followVolDTO);
             if (searchinfo.getAddressId() != null)
             {

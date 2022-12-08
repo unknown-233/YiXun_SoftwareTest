@@ -18,7 +18,7 @@ public class Recruited implements Serializable {
     /**
      * 志愿活动编号
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     private Integer volActId;
 
     /**

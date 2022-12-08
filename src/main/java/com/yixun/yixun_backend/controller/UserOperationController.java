@@ -2,25 +2,23 @@ package com.yixun.yixun_backend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yixun.yixun_backend.dto.ClueDTO;
 import com.yixun.yixun_backend.dto.SearchinfoDTO;
-import com.yixun.yixun_backend.entity.Clue;
-import com.yixun.yixun_backend.entity.News;
-import com.yixun.yixun_backend.entity.Searchinfo;
-import com.yixun.yixun_backend.mapper.ClueMapper;
-import com.yixun.yixun_backend.mapper.SearchinfoMapper;
+import com.yixun.yixun_backend.entity.*;
+import com.yixun.yixun_backend.mapper.*;
 import com.yixun.yixun_backend.service.ClueService;
 import com.yixun.yixun_backend.service.SearchinfoService;
 import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
+import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +26,15 @@ import java.util.Map;
 @RestController
 public class UserOperationController {
     @Resource
-    private ClueMapper ClueMapper;
-
+    private ClueMapper clueMapper;
+    @Resource
+    private CluesReportMapper cluesReportMapper;
+    @Resource
+    private InfoReportMapper infoReportMapper;
+    @Resource
+    private AdministratorsMapper administratorsMapper;
+    @Resource
+    private SearchinfoFocusMapper searchinfoFocusMapper;
     @Resource
     private SearchinfoMapper searchinfoMapper;
 
@@ -49,7 +54,7 @@ public class UserOperationController {
             Result result = new Result();
             Page<Searchinfo> page = new Page<>(pageNum, pageSize);
             QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
-            wrapper.eq("USER_ID",user_id);
+            wrapper.eq("USER_ID",user_id).eq("ISACTIVE","Y");
             IPage iPage = searchinfoMapper.selectPage(page,wrapper);
             List<SearchinfoDTO> dtoList=searchinfoService.cutIntoSearchinfoDTOList((List<Searchinfo>)iPage.getRecords());
             result.data.put("searchInfo_list", dtoList);
@@ -73,8 +78,8 @@ public class UserOperationController {
             Result result = new Result();
             Page<Clue> page = new Page<>(pageNum, pageSize);
             QueryWrapper<Clue> wrapper = new QueryWrapper<Clue>();
-            wrapper.eq("USER_ID",user_id);
-            IPage iPage = ClueMapper.selectPage(page, wrapper);
+            wrapper.eq("USER_ID",user_id).eq("ISACTIVE","Y");
+            IPage iPage = clueMapper.selectPage(page, wrapper);
             List<ClueDTO> dtoList=clueService.cutIntoClueDTOList((List<Clue>)iPage.getRecords());
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
@@ -192,6 +197,173 @@ public class UserOperationController {
         }
     }
 
+    //发布线索
+    @PostMapping("/AddSearchPeopleClue")
+    public Result AddSearchPeopleClue(@RequestBody Map<String, Object> inputMap){
+        try
+        {
+            Result result = new Result();
+            int user_id=(int)inputMap.get("user_id");
+            int searchinfo_id=(int)inputMap.get("searchinfo_id");
+            String clue_content=(String)inputMap.get("clue_content");
+
+            Clue newClue = new Clue();
+            newClue.setUserId(user_id);
+            newClue.setSearchinfoId(searchinfo_id);
+            newClue.setClueContent(clue_content);
+            newClue.setIsactive("Y");
+            newClue.setClueDate(new Date());
+            clueMapper.insert(newClue);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    //发布线索举报
+    @PostMapping("/AddSearchClueReport")
+    public Result AddSearchClueReport(@RequestBody Map<String, Object> inputMap){
+        try
+        {
+            Result result = new Result();
+            int user_id=(int)inputMap.get("user_id");
+            int clue_id=(int)inputMap.get("clue_id");
+            String report_content=(String)inputMap.get("report_content");
+
+            CluesReport newCluesReport = new CluesReport();
+            newCluesReport.setUserId(user_id);
+            newCluesReport.setClueId(clue_id);
+            newCluesReport.setReportContent(report_content);
+            newCluesReport.setReportTime(new Date());
+            newCluesReport.setIsreviewed("N");
+            newCluesReport.setIspass("N");
+            newCluesReport.setAdministratorId(administratorsMapper.selectRandomOne().getAdministratorId());
+            cluesReportMapper.insert(newCluesReport);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    //寻人信息举报
+    @PostMapping("/AddSearchInfoReport")
+    public Result AddSearchInfoReport(@RequestBody Map<String, Object> inputMap){
+        try
+        {
+            Result result = new Result();
+            int user_id=(int)inputMap.get("user_id");
+            int searchinfo_id=(int)inputMap.get("searchinfo_id");
+            String report_content=(String)inputMap.get("report_content");
+
+            InfoReport infoReport = new InfoReport();
+            infoReport.setUserId(user_id);
+            infoReport.setSearchinfoId(searchinfo_id);
+            infoReport.setReportContent(report_content);
+            infoReport.setIsreviewed("N");
+            infoReport.setIspass("N");
+            infoReport.setReportTime(new Date());
+            infoReport.setAdministratorId(administratorsMapper.selectRandomOne().getAdministratorId());
+            infoReportMapper.insert(infoReport);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    //关注寻人信息
+    @GetMapping("/UserFocus")
+    public Result UserFocus(int userid, int infoid)
+    {
+        try
+        {
+            Result result = new Result();
+            QueryWrapper<SearchinfoFocus> wrapper = new QueryWrapper<SearchinfoFocus>();
+            wrapper.eq("USER_ID",userid).eq("SEARCHINFO_ID",infoid);
+            int ifApply=searchinfoFocusMapper.selectCount(wrapper);
+            if(ifApply==1) //已关注
+            {
+                searchinfoFocusMapper.delete(wrapper);//从searchinfoFocus表中删去这条数据
+                result.data.put("state", false);
+            }
+            else
+            {
+                SearchinfoFocus focus = new SearchinfoFocus();
+                focus.setSearchinfoId(infoid);
+                focus.setUserId(userid);
+                focus.setFocustime(new Date());
+                searchinfoFocusMapper.insert(focus);
+                result.data.put("state", true);
+            }
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    //用户删除自己发布的寻人信息
+    @DeleteMapping("/UserDeleteInfo")
+    public Result UserDeleteInfo(int userid, int infoid){
+        try
+        {
+            Result result = new Result();
+            Searchinfo searchinfo=searchinfoMapper.selectById(infoid);
+            searchinfo.setIsactive("N");
+            searchinfoMapper.updateById(searchinfo);
+            //删除寻人信息相关举报
+            QueryWrapper<InfoReport> wrapper = new QueryWrapper<InfoReport>();
+            wrapper.eq("SEARCHINFO_ID",infoid);
+            List<InfoReport> infoRepoList=infoReportMapper.selectList(wrapper);
+            for(InfoReport inforepo:infoRepoList)
+            {
+                inforepo.setIsreviewed("Y");
+                inforepo.setIspass("Y");
+                infoReportMapper.updateById(inforepo);
+            }
+            //删除相关线索和举报
+            QueryWrapper<Clue> clueWrapper = new QueryWrapper<Clue>();
+            clueWrapper.eq("SEARCHINFO_ID",infoid);
+            List<Clue> clueList=clueMapper.selectList(clueWrapper);
+            for(Clue clue:clueList)
+            {
+                if(!clueService.deleteClue(clue.getClueId()))
+                {
+                    return Result.error();
+                }
+            }
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    //用户删除自己发布的寻人线索 *
+    @DeleteMapping("/UserDeleteClue")
+    public Result UserDeleteClue(int userid, int clueid)
+    {
+        Result result = new Result();
+        if(!clueService.deleteClue(clueid))
+        {
+            return Result.error();
+        }
+        result.status = true;
+        result.errorCode = 200;
+        return result;
+    }
 
 }
 

@@ -47,7 +47,7 @@ public class VolunteerController {
             Result result = new Result();
             Page<Searchinfo> page = new Page<>(pagenum, pagesize);
             QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
-            wrapper.inSql("SEARCHINFO_ID","select SEARCHINFO_ID from yixun_searchinfo_followup where VOL_ID ="+volid);
+            wrapper.inSql("SEARCHINFO_ID","select SEARCHINFO_ID from yixun_searchinfo_followup where VOL_ID ="+volid).eq("ISACTIVE","Y");
             IPage iPage = searchinfoMapper.selectPage(page,wrapper);
             List<SearchinfoDTO> dtoList=searchinfoService.cutIntoSearchinfoDTOList((List<Searchinfo>)iPage.getRecords());
             result.data.put("followup_info", dtoList);
