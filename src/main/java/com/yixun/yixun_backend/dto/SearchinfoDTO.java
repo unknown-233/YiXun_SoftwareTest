@@ -29,6 +29,4 @@ public class SearchinfoDTO {
     private String contact_method;
     @JsonProperty("sought_people_gender")
     private String sought_people_gender;
-
-
 }

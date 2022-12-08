@@ -6,14 +6,14 @@ import lombok.Data;
 @Data
 public class NewsDTO {
     @JsonProperty("NewsId")
-    public int NewsId;
+    private int NewsId;
 
     @JsonProperty("NewsContent")
-    public String NewsContent;
+    private String NewsContent;
 
     @JsonProperty("Cover")
-    public String Cover;
+    private String Cover;
 
     @JsonProperty("Title")
-    public String Title;
+    private String Title;
 }

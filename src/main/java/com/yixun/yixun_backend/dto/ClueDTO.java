@@ -6,11 +6,11 @@ import lombok.Data;
 @Data
 public class ClueDTO {
     @JsonProperty("ClueId")
-    public int ClueId;
+    private int ClueId;
     @JsonProperty("ClueContent")
-    public String ClueContent;
+    private String ClueContent;
     @JsonProperty("ClueDate")
-    public String ClueDate;
+    private String ClueDate;
     @JsonProperty("SearchinfoId")
-    public int SearchinfoId;
+    private int SearchinfoId;
 }

@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class FollowVolDTO {
     @JsonProperty("Name")
-    public String userName;
+    private String userName;
 
     @JsonProperty("PhoneNum")
-    public long phoneNum;
+    private long phoneNum;
 }

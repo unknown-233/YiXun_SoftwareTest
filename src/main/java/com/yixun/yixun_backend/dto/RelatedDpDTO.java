@@ -6,17 +6,17 @@ import lombok.Data;
 @Data
 public class RelatedDpDTO {
     @JsonProperty("DpId")
-    public int DpId;
+    private int DpId;
     @JsonProperty("DpName")
-    public String DpName;
+    private String DpName;
     @JsonProperty("ContactMethod")
-    public String ContactMethod;
+    private String ContactMethod;
     @JsonProperty("Province")
-    public String Province;
+    private String Province;
     @JsonProperty("City")
-    public String City;
+    private String City;
     @JsonProperty("Area")
-    public String Area;
+    private String Area;
     @JsonProperty("Detail")
-    public String Detail;
+    private String Detail;
 }

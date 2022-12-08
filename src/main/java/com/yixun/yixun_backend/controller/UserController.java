@@ -159,11 +159,11 @@ public class UserController {
                 Address address=addressMapper.selectById(user.getAddressId());
                 if (address==null){
                     Address address1=new Address();
-                    address.setProvinceId(userProvince);
-                    address.setCityId(userCity);
-                    address.setAreaId(userArea);
-                    address.setDetail(userAddress);
-                    addressMapper.insert(address);
+                    address1.setProvinceId(userProvince);
+                    address1.setCityId(userCity);
+                    address1.setAreaId(userArea);
+                    address1.setDetail(userAddress);
+                    addressMapper.insert(address1);
                 }
                 else{
                     address.setProvinceId(userProvince);
