@@ -11,7 +11,6 @@
             <result property="needpeople" column="NEEDPEOPLE" jdbcType="INTEGER"/>
             <result property="actPicUrl" column="ACT_PIC_URL" jdbcType="VARCHAR"/>
             <result property="contactMethod" column="CONTACT_METHOD" jdbcType="VARCHAR"/>
-            <result property="volInstId" column="VOL_INST_ID" jdbcType="INTEGER"/>
             <result property="releaseTime" column="RELEASE_TIME" jdbcType="TIMESTAMP"/>
             <result property="signupPeople" column="SIGNUP_PEOPLE" jdbcType="INTEGER"/>
             <result property="actContent" column="ACT_CONTENT" jdbcType="VARCHAR"/>
