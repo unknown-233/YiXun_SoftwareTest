@@ -14,5 +14,4 @@ public class UserInfoDTO {
     private int info_report_num;//举报的信息数
     private int clue_num;//发布的线索数
     private int clue_report_num;//举报的线索数
-
 }

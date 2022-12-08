@@ -1,9 +1,7 @@
 package com.yixun.yixun_backend.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import lombok.Data;
 
@@ -28,6 +26,7 @@ public class Address implements Serializable {
     /**
      * 详细地址
      */
+    @TableField(updateStrategy= FieldStrategy.IGNORED)
     private String detail;
 
     /**

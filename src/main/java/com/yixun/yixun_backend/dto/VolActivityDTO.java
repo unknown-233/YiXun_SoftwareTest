@@ -5,25 +5,25 @@ import lombok.Data;
 @Data
 public class VolActivityDTO {
     @JsonProperty("VolActId")
-    public int VolActId;//biaohao
+    private int VolActId;//biaohao
     @JsonProperty("VolActName")
-    public String VolActName;//mingzi
+    private String VolActName;//mingzi
     @JsonProperty("ExpTime")
-    public String ExpTime;//time
+    private String ExpTime;//time
     @JsonProperty("Detail")
-    public String Detail;
+    private String Detail;
     @JsonProperty("Province")
-    public String Province;
+    private String Province;
     @JsonProperty("City")
-    public String City;
+    private String City;
     @JsonProperty("Area")
-    public String Area;
+    private String Area;
     @JsonProperty("Needpeople")
-    public int Needpeople;
+    private int Needpeople;
     @JsonProperty("ActPicUrl")
-    public String ActPicUrl;
+    private String ActPicUrl;
     @JsonProperty("ContactMethod")
-    public String ContactMethod;
+    private String ContactMethod;
     @JsonProperty("SignupPeople")
-    public int SignupPeople;
+    private int SignupPeople;
 }

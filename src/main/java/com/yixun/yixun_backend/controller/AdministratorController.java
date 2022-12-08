@@ -1,19 +1,15 @@
 package com.yixun.yixun_backend.controller;
 
 
-import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yixun.yixun_backend.dto.SearchinfoDTO;
 import com.yixun.yixun_backend.dto.UserInfoDTO;
+import com.yixun.yixun_backend.dto.VolInfoDTO;
+import com.yixun.yixun_backend.dto.VolunteerDTO;
 import com.yixun.yixun_backend.entity.*;
-import com.yixun.yixun_backend.mapper.AddressMapper;
-import com.yixun.yixun_backend.mapper.NewsMapper;
-import com.yixun.yixun_backend.mapper.VolActivityMapper;
-import com.yixun.yixun_backend.mapper.WebUserMapper;
-import com.yixun.yixun_backend.service.NewsService;
+import com.yixun.yixun_backend.mapper.*;
+import com.yixun.yixun_backend.service.VolunteerService;
 import com.yixun.yixun_backend.service.WebUserService;
 import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
@@ -23,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +38,12 @@ public class AdministratorController {
     private WebUserMapper webUserMapper;
     @Resource
     private WebUserService webUserService;
-
+    @Resource
+    private VolunteerMapper volunteerMapper;
+    @Resource
+    private VolunteerService volunteerService;
+    @Resource
+    private VolApplyMapper volApplyMapper;
     @PostMapping("/ReleaseNews")
     public Result ReleaseNews(@RequestBody Map<String, Object> inputData) {
         try {
@@ -182,9 +183,9 @@ public class AdministratorController {
                 address.setCityId(actCity);
                 address.setProvinceId(actProvince);
                 addressMapper.insert(address);
-//                List<Address> tmpList=addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
-//                Address newAddress = tmpList.get(0);
-                volActivity.setAddressId(address.getAddressId());
+                List<Address> tmpList=addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
+                Address newAddress = tmpList.get(0);
+                volActivity.setAddressId(newAddress.getAddressId());
             }
             volActivityMapper.insert(volActivity);
             List<VolActivity> tmpList=volActivityMapper.selectList(new QueryWrapper<VolActivity>().orderByDesc("VOL_ACT_ID"));
@@ -321,4 +322,52 @@ public class AdministratorController {
             return Result.error();
         }
     }
+
+    //1.5 志愿者管理
+    @GetMapping("/GetAllVol")
+    public Result GetAllVol(int pagenum, int pagesize)
+    {
+        try
+        {
+            Result result = new Result();
+            Page<Volunteer> page = new Page<Volunteer>(pagenum, pagesize);
+            QueryWrapper<Volunteer> wrapper = new QueryWrapper<Volunteer>();
+            IPage iPage = volunteerMapper.selectPage(page,wrapper);
+            List<VolInfoDTO> dtoList=volunteerService.cutIntoVolInfoList((List<Volunteer>)iPage.getRecords());
+            result.data.put("vol_info", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    //1.7.1 获得申请审核数量 *
+    @GetMapping("/GetVolApplyCount")
+    public Result GetVolApplyCount(int adminId)
+    {
+        try
+        {
+            Result result = new Result();
+            QueryWrapper<VolApply> wrapperY = new QueryWrapper<VolApply>();
+            wrapperY.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","Y");
+            Map<String, Object> dto = new HashMap<>();
+            dto.put("vol_apply_reviewed",volApplyMapper.selectCount(wrapperY));
+            QueryWrapper<VolApply> wrapperN = new QueryWrapper<VolApply>();
+            wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
+            dto.put("vol_apply_notreviewed", volApplyMapper.selectCount(wrapperN));
+            result.data.put("vol_apply_review",dto);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
 }
