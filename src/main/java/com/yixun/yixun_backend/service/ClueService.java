@@ -14,4 +14,5 @@ import java.util.List;
 public interface ClueService extends IService<Clue> {
     ClueDTO cutIntoClueDTO(Clue clue);
     List<ClueDTO> cutIntoClueDTOList(List<Clue> clueList);
+    Boolean deleteClue(int clueID);
 }

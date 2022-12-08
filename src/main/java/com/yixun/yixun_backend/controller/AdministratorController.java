@@ -1,15 +1,20 @@
 package com.yixun.yixun_backend.controller;
 
 
+import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
-import com.yixun.yixun_backend.entity.Address;
-import com.yixun.yixun_backend.entity.News;
-import com.yixun.yixun_backend.entity.VolActivity;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yixun.yixun_backend.dto.SearchinfoDTO;
+import com.yixun.yixun_backend.dto.UserInfoDTO;
+import com.yixun.yixun_backend.entity.*;
 import com.yixun.yixun_backend.mapper.AddressMapper;
 import com.yixun.yixun_backend.mapper.NewsMapper;
 import com.yixun.yixun_backend.mapper.VolActivityMapper;
+import com.yixun.yixun_backend.mapper.WebUserMapper;
 import com.yixun.yixun_backend.service.NewsService;
+import com.yixun.yixun_backend.service.WebUserService;
 import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
@@ -33,6 +38,10 @@ public class AdministratorController {
     private AddressMapper addressMapper;
     @Resource
     private VolActivityMapper volActivityMapper;
+    @Resource
+    private WebUserMapper webUserMapper;
+    @Resource
+    private WebUserService webUserService;
 
     @PostMapping("/ReleaseNews")
     public Result ReleaseNews(@RequestBody Map<String, Object> inputData) {
@@ -229,6 +238,93 @@ public class AdministratorController {
         } catch (Exception e) {
             return Result.error();
         }
+    }
+    //1.4 用户管理
+    @GetMapping("/GetAllNorUser")
+    public Result GetAllNorUser(int pagenum, int pagesize)
+    {
+        try
+        {
+            Result result = new Result();
+            Page<WebUser> page = new Page<WebUser>(pagenum, pagesize);
+            QueryWrapper<WebUser> wrapper = new QueryWrapper<WebUser>();
+            IPage iPage = webUserMapper.selectPage(page,wrapper);
+            List<UserInfoDTO> dtoList=webUserService.cutIntoUserInfoList((List<WebUser>)iPage.getRecords());
+            result.data.put("user_info", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    //1.4.1 封禁用户
+    @PutMapping("/BanUser")
+    public Result BanUser(int userid)
+    {
+        try
+        {
+            Result result = new Result();
+            WebUser user=webUserMapper.selectById(userid);
+            if (user.getUserState().equals("N"))
+            {
+                user.setUserState("Y");
+            }
+            else
+            {
+                user.setUserState("N");
+            }
+            webUserMapper.updateById(user);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 
+    //1.4.2 删除用户
+    @PutMapping("/DeleteUser")
+    public Result DeleteUser(int userid)
+    {
+        try
+        {
+            Result result = new Result();
+            WebUser user=webUserMapper.selectById(userid);
+            user.setUserName("账号已注销");
+            user.setUserState("N");
+            user.setIsactive("N");
+            webUserMapper.updateById(user);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    //1.4.3 搜索用户名 *
+    @GetMapping("/GetUserByName")
+    public Result GetUserByName(String word, int pagenum, int pagesize) {
+        try {
+            Result result = new Result();
+            Page<WebUser> page = new Page<WebUser>(pagenum, pagesize);
+            QueryWrapper<WebUser> wrapper = new QueryWrapper<WebUser>();
+            wrapper.like("USER_NAME", word);
+            IPage iPage = webUserMapper.selectPage(page, wrapper);
+            List<UserInfoDTO> dtoList = webUserService.cutIntoUserInfoList((List<WebUser>) iPage.getRecords());
+            result.data.put("user_info", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        } catch (Exception e) {
+            return Result.error();
+        }
     }
 }
