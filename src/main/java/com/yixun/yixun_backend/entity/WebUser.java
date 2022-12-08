@@ -76,24 +76,9 @@ public class WebUser implements Serializable {
     private String userHeadUrl;
 
     /**
-     * 用户出生日期
-     */
-    private Date birthday;
-
-    /**
-     * 令牌
-     */
-    private String token;
-
-    /**
      * 最近登录时间
      */
     private Date lastloginTime;
-
-    /**
-     * 最近登录ip地址
-     */
-    private String lastloginIp;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

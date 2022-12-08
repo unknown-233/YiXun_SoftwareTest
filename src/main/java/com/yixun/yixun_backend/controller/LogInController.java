@@ -1,15 +1,12 @@
 package com.yixun.yixun_backend.controller;
 
-import com.yixun.yixun_backend.entity.Address;
+import com.yixun.yixun_backend.entity.*;
 import com.yixun.yixun_backend.utils.OssUploadService;
 import io.jsonwebtoken.Claims;
 import com.alibaba.fastjson.JSONObject;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.yixun.yixun_backend.entity.Administrators;
-import com.yixun.yixun_backend.entity.Volunteer;
-import com.yixun.yixun_backend.entity.WebUser;
 import com.yixun.yixun_backend.mapper.AddressMapper;
 import com.yixun.yixun_backend.mapper.AdministratorsMapper;
 import com.yixun.yixun_backend.mapper.VolunteerMapper;
@@ -180,50 +177,53 @@ public class LogInController {
             return Result.error();
         }
     }
+    @PostMapping("/Regist")
+    public Result Regist(@RequestBody Map<String,Object> inputData){
+        try{
+            Result result=new Result();
+            String userPhoneKey = "user_phone";
+            Long userPhone =  Long.valueOf(0);
+            String userPasswordKey = "user_password";
+            String userPassword = "";
+            String userNameKey = "user_name";
+            String userName = "";
+            String userEmailKey = "user_email";
+            String userEmail = "";
+            if (inputData.containsKey(userPhoneKey)) {
+                userPhone = (Long) inputData.get(userPhoneKey);
+            }
+            if (inputData.containsKey(userPasswordKey)) {
+                userPassword = (String) inputData.get(userPasswordKey);
+            }
+            if (inputData.containsKey(userNameKey)) {
+                userName = (String) inputData.get(userNameKey);
+            }
+            if (inputData.containsKey(userEmailKey)) {
+                userEmail = (String) inputData.get(userEmailKey);
+            }
+            WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM",userPhone));
+            if(user != null)
+            {
+                return Result.error();
+            }
+            else{
+                WebUser newUser = new WebUser();
+                newUser.setUserName(userName);
+                newUser.setPhoneNum(userPhone);
+                newUser.setMailboxNum(userEmail);
+                newUser.setUserPasswords(userPassword);
+                webUserMapper.insert(newUser);
+                List<WebUser> tmpList = webUserMapper.selectList(new QueryWrapper<WebUser>().orderByDesc("USER_ID"));
+                WebUser newAddedUser = tmpList.get(0);
+                result.data.put("user_id",newAddedUser.getUserId());
+                result.errorCode = 200;
+                result.status = true;
+            }
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 
-//    //@Author：刘睿萌
-//        [HttpPost("Regist")]
-//    public string Regist(dynamic new_user)
-//    {
-//        MessageFormat message = new MessageFormat();
-//
-//        //JsonElement jsonElement = new();
-//        //jsonElement.GetProperty().ToString();
-//        long user_phone = long.Parse(new_user.GetProperty("user_phone").ToString());
-//        string user_password = new_user.GetProperty("user_password").ToString();
-//        string user_name = new_user.GetProperty("user_name").ToString();
-//        string user_email = new_user.GetProperty("user_email").ToString();
-//
-//        try
-//        {
-//
-//
-//            var user = ctx.YixunWebUsers
-//                    .SingleOrDefault(b => b.PhoneNum == user_phone);
-//            if(user != null)
-//            {
-//                return message.ReturnJson();
-//            }
-//            else
-//            {
-//                YixunWebUser newUser = new YixunWebUser();
-//                newUser.UserName = user_name;
-//                newUser.PhoneNum = user_phone;
-//                newUser.UserPasswords = user_password;
-//                newUser.MailboxNum = user_email;
-//                ctx.YixunWebUsers.Add(newUser);
-//                ctx.SaveChanges();
-//                var user_id = ctx.YixunWebUsers.Select(s => s.UserId).Max();
-//                message.data.Add("user_id", user_id);
-//                message.status = true;
-//                message.errorCode = 200;
-//
-//            }
-//        }
-//        catch (Exception e)
-//        {
-//            Console.Write(e.ToString());
-//        }
-//        return message.ReturnJson();
-//    }
 }
