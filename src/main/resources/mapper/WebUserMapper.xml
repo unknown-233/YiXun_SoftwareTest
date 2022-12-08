@@ -16,10 +16,7 @@
             <result property="addressId" column="ADDRESS_ID" jdbcType="INTEGER"/>
             <result property="isactive" column="ISACTIVE" jdbcType="VARCHAR"/>
             <result property="userHeadUrl" column="USER_HEAD_URL" jdbcType="VARCHAR"/>
-            <result property="birthday" column="BIRTHDAY" jdbcType="TIMESTAMP"/>
-            <result property="token" column="TOKEN" jdbcType="VARCHAR"/>
             <result property="lastloginTime" column="LASTLOGIN_TIME" jdbcType="TIMESTAMP"/>
-            <result property="lastloginIp" column="LASTLOGIN_IP" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
