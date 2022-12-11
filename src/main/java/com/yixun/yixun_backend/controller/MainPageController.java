@@ -143,9 +143,11 @@ public class MainPageController {
             }
             if (birthday!=null)
             {
-                String tmp1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(birthday);
-
-                wrapper.eq("SOUGHT_PEOPLE_BIRTHDAY", tmp1);
+                Date tmp1=new SimpleDateFormat("yyyy-MM-dd").parse(birthday);
+                String tmp11=TimeTrans.myToString(tmp1);
+//                Searchinfo tmpinfo=searchinfoMapper.selectById(1);
+//                Date tmp2=tmpinfo.getSearchinfoDate();
+                wrapper.eq("SEARCHINFO_LOSTDATE", tmp11);
 
             }
             if (lostdate!=null)
@@ -154,7 +156,7 @@ public class MainPageController {
                 String tmp22=TimeTrans.myToString(tmp2);
 //                Searchinfo tmpinfo=searchinfoMapper.selectById(1);
 //                Date tmp2=tmpinfo.getSearchinfoDate();
-                wrapper.ge("SEARCHINFO_LOSTDATE", tmp22);
+                wrapper.eq("SEARCHINFO_LOSTDATE", tmp22);
             }
             wrapper.between("SOUGHT_PEOPLE_HEIGHT",height_low,height_high);
             if (!Objects.equals(search, ""))
