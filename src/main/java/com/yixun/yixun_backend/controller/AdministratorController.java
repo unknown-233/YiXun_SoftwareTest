@@ -53,13 +53,14 @@ public class AdministratorController {
     @Resource
     private VolApplyMapper volApplyMapper;
     @Resource
-    private  InfoReportMapper infoReportMapper;
+    private InfoReportMapper infoReportMapper;
     @Resource
     private SearchinfoMapper searchinfoMapper;
     @Resource
     private SearchinfoFocusMapper searchinfoFocusMapper;
     @Resource
     private SearchinfoFollowupMapper searchinfoFollowupMapper;
+
     @PostMapping("/ReleaseNews")
     public Result ReleaseNews(@RequestBody Map<String, Object> inputData) {
         try {
@@ -137,54 +138,55 @@ public class AdministratorController {
             return Result.error();
         }
     }
+
     @PostMapping("/ReleaseVolActivity")
-    public Result ReleaseVolActivity(@RequestBody Map<String,Object> inputData){
-        try{
-            Result result=new Result();
-            String actNameKey="act_name";
-            String actName="";
-            String actContentKey="act_content";
-            String actContent="";
-            String actTimeKey="act_time";
-            String actTime="";
-            String actProvinceKey="act_province";
-            String actProvince="";
-            String actCityKey="act_city";
-            String actCity="";
-            String actAreaKey="act_area";
-            String actArea="";
-            String actAddressKey="act_address";
-            String actAddress="";
-            String contactMethodKey="contact_method";
-            String contactMethod="";
-            String needPeopleKey="need_people";
-            int needPeople=0;
-            if(inputData.containsKey(actNameKey)){
-                actName=(String)inputData.get(actNameKey);
+    public Result ReleaseVolActivity(@RequestBody Map<String, Object> inputData) {
+        try {
+            Result result = new Result();
+            String actNameKey = "act_name";
+            String actName = "";
+            String actContentKey = "act_content";
+            String actContent = "";
+            String actTimeKey = "act_time";
+            String actTime = "";
+            String actProvinceKey = "act_province";
+            String actProvince = "";
+            String actCityKey = "act_city";
+            String actCity = "";
+            String actAreaKey = "act_area";
+            String actArea = "";
+            String actAddressKey = "act_address";
+            String actAddress = "";
+            String contactMethodKey = "contact_method";
+            String contactMethod = "";
+            String needPeopleKey = "need_people";
+            int needPeople = 0;
+            if (inputData.containsKey(actNameKey)) {
+                actName = (String) inputData.get(actNameKey);
             }
-            if(inputData.containsKey(actContentKey)){
-                actContent=(String)inputData.get(actContentKey);
+            if (inputData.containsKey(actContentKey)) {
+                actContent = (String) inputData.get(actContentKey);
             }
-            if(inputData.containsKey(actTimeKey)){
-                actTime=(String)inputData.get(actTimeKey);
+            if (inputData.containsKey(actTimeKey)) {
+                actTime = (String) inputData.get(actTimeKey);
             }
-            if(inputData.containsKey(actProvinceKey)){
-                actProvince=(String)inputData.get(actProvinceKey);
+            if (inputData.containsKey(actProvinceKey)) {
+                actProvince = (String) inputData.get(actProvinceKey);
             }
-            if(inputData.containsKey(actCityKey)){
-                actCity=(String)inputData.get(actCityKey);
+            if (inputData.containsKey(actCityKey)) {
+                actCity = (String) inputData.get(actCityKey);
             }
-            if(inputData.containsKey(actAreaKey)){
-                actArea=(String)inputData.get(actAreaKey);
+            if (inputData.containsKey(actAreaKey)) {
+                actArea = (String) inputData.get(actAreaKey);
             }
-            if(inputData.containsKey(actAddressKey)){
-                actAddress=(String)inputData.get(actAddressKey);
+            if (inputData.containsKey(actAddressKey)) {
+                actAddress = (String) inputData.get(actAddressKey);
             }
-            if(inputData.containsKey(contactMethodKey)){
-                contactMethod=(String)inputData.get(contactMethodKey);
+            if (inputData.containsKey(contactMethodKey)) {
+                contactMethod = (String) inputData.get(contactMethodKey);
             }
-            if(inputData.containsKey(needPeopleKey)){
-                needPeople=(int)inputData.get(needPeopleKey);
+            if (inputData.containsKey(needPeopleKey)) {
+                needPeople = (int) inputData.get(needPeopleKey);
             }
             VolActivity volActivity = new VolActivity();
             volActivity.setVolActName(actName);
@@ -192,33 +194,32 @@ public class AdministratorController {
             volActivity.setExpTime(TimeTrans.myToDate_1(actTime));
             volActivity.setContactMethod(contactMethod);
             volActivity.setNeedpeople(needPeople);
-            if(actProvince!=""){
-                Address address=new Address();
+            if (actProvince != "") {
+                Address address = new Address();
                 address.setDetail(actAddress);
                 address.setAreaId(actArea);
                 address.setCityId(actCity);
                 address.setProvinceId(actProvince);
                 addressMapper.insert(address);
-                List<Address> tmpList=addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
+                List<Address> tmpList = addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
                 Address newAddress = tmpList.get(0);
                 volActivity.setAddressId(newAddress.getAddressId());
             }
             volActivityMapper.insert(volActivity);
-            List<VolActivity> tmpList=volActivityMapper.selectList(new QueryWrapper<VolActivity>().orderByDesc("VOL_ACT_ID"));
+            List<VolActivity> tmpList = volActivityMapper.selectList(new QueryWrapper<VolActivity>().orderByDesc("VOL_ACT_ID"));
             VolActivity newVolActivity = tmpList.get(0);
             result.data.put("volAct_id", newVolActivity.getVolActId());
 
             result.errorCode = 200;
             result.status = true;
             return result;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @PutMapping("/AddVolActivityPic")
-    public Result AddVolActivityPic(@RequestBody Map<String,Object> inputData){
+    public Result AddVolActivityPic(@RequestBody Map<String, Object> inputData) {
         try {
             Result result = new Result();
             String idKey = "volAct_id";
@@ -250,62 +251,53 @@ public class AdministratorController {
             return Result.error();
         }
     }
+
     //1.4 用户管理
     @GetMapping("/GetAllNorUser")
-    public Result GetAllNorUser(int pagenum, int pagesize)
-    {
-        try
-        {
+    public Result GetAllNorUser(int pagenum, int pagesize) {
+        try {
             Result result = new Result();
             Page<WebUser> page = new Page<WebUser>(pagenum, pagesize);
             QueryWrapper<WebUser> wrapper = new QueryWrapper<WebUser>();
-            IPage iPage = webUserMapper.selectPage(page,wrapper);
-            List<UserInfoDTO> dtoList=webUserService.cutIntoUserInfoList((List<WebUser>)iPage.getRecords());
+            IPage iPage = webUserMapper.selectPage(page, wrapper);
+            List<UserInfoDTO> dtoList = webUserService.cutIntoUserInfoList((List<WebUser>) iPage.getRecords());
             result.data.put("user_info", dtoList);
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     //1.4.1 封禁用户
     @PutMapping("/BanUser")
-    public Result BanUser(int userid)
-    {
-        try
-        {
+    public Result BanUser(int userid) {
+        try {
             Result result = new Result();
-            WebUser user=webUserMapper.selectById(userid);
-            if (user.getUserState().equals("N"))
-            {
+            WebUser user = webUserMapper.selectById(userid);
+            if (user.getUserState().equals("N")) {
                 user.setUserState("Y");
-            }
-            else
-            {
+            } else {
                 user.setUserState("N");
             }
             webUserMapper.updateById(user);
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
 
     //1.4.2 删除用户
     @PutMapping("/DeleteUser")
-    public Result DeleteUser(int userid)
-    {
-        try
-        {
+    public Result DeleteUser(int userid) {
+        try {
             Result result = new Result();
-            WebUser user=webUserMapper.selectById(userid);
+            WebUser user = webUserMapper.selectById(userid);
             user.setUserName("账号已注销");
             user.setUserState("N");
             user.setIsactive("N");
@@ -313,11 +305,11 @@ public class AdministratorController {
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     //1.4.3 搜索用户名 *
     @GetMapping("/GetUserByName")
     public Result GetUserByName(String word, int pagenum, int pagesize) {
@@ -341,247 +333,239 @@ public class AdministratorController {
 
     //1.5 志愿者管理
     @GetMapping("/GetAllVol")
-    public Result GetAllVol(int pagenum, int pagesize)
-    {
-        try
-        {
+    public Result GetAllVol(int pagenum, int pagesize) {
+        try {
             Result result = new Result();
             Page<Volunteer> page = new Page<Volunteer>(pagenum, pagesize);
             QueryWrapper<Volunteer> wrapper = new QueryWrapper<Volunteer>();
-            IPage iPage = volunteerMapper.selectPage(page,wrapper);
-            List<VolInfoDTO> dtoList=volunteerService.cutIntoVolInfoList((List<Volunteer>)iPage.getRecords());
+            IPage iPage = volunteerMapper.selectPage(page, wrapper);
+            List<VolInfoDTO> dtoList = volunteerService.cutIntoVolInfoList((List<Volunteer>) iPage.getRecords());
             result.data.put("vol_info", dtoList);
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
 
     //1.7.1 获得申请审核数量 *
     @GetMapping("/GetVolApplyCount")
-    public Result GetVolApplyCount(int adminId)
-    {
-        try
-        {
+    public Result GetVolApplyCount(int adminId) {
+        try {
             Result result = new Result();
             QueryWrapper<VolApply> wrapperY = new QueryWrapper<VolApply>();
-            wrapperY.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","Y");
+            wrapperY.eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", "Y");
             Map<String, Object> dto = new HashMap<>();
-            dto.put("vol_apply_reviewed",volApplyMapper.selectCount(wrapperY));
+            dto.put("vol_apply_reviewed", volApplyMapper.selectCount(wrapperY));
             QueryWrapper<VolApply> wrapperN = new QueryWrapper<VolApply>();
-            wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
+            wrapperN.eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", "N");
             dto.put("vol_apply_notreviewed", volApplyMapper.selectCount(wrapperN));
-            List<Map<String, Object>> list=new ArrayList<>();
+            List<Map<String, Object>> list = new ArrayList<>();
             list.add(dto);
-            result.data.put("vol_apply_review",list);
+            result.data.put("vol_apply_review", list);
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @GetMapping("/GetInfoRepoCount")
-    public Result GetInfoRepoCount(int adminId){
-        try{
+    public Result GetInfoRepoCount(int adminId) {
+        try {
             Result result = new Result();
             QueryWrapper<InfoReport> wrapperY = new QueryWrapper<InfoReport>();
-            wrapperY.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","Y");
+            wrapperY.eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", "Y");
             Map<String, Object> dto = new HashMap<>();
-            dto.put("info_repo_reviewed",infoReportMapper.selectCount(wrapperY));
+            dto.put("info_repo_reviewed", infoReportMapper.selectCount(wrapperY));
             QueryWrapper<InfoReport> wrapperN = new QueryWrapper<InfoReport>();
-            wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
+            wrapperN.eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", "N");
             dto.put("info_repo_notreviewed", infoReportMapper.selectCount(wrapperN));
-            List<Map<String, Object>> list=new ArrayList<>();
+            List<Map<String, Object>> list = new ArrayList<>();
             list.add(dto);
-            result.data.put("info_repo_review",list);
+            result.data.put("info_repo_review", list);
 
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @GetMapping("/GetClueRepoCount")
-    public Result GetClueRepoCount(int adminId){
-        try{
-            Result result=new Result();
+    public Result GetClueRepoCount(int adminId) {
+        try {
+            Result result = new Result();
             QueryWrapper<CluesReport> wrapperY = new QueryWrapper<CluesReport>();
-            wrapperY.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","Y");
+            wrapperY.eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", "Y");
             Map<String, Object> dto = new HashMap<>();
-            dto.put("clue_repo_reviewed",cluesReportMapper.selectCount(wrapperY));
+            dto.put("clue_repo_reviewed", cluesReportMapper.selectCount(wrapperY));
             QueryWrapper<CluesReport> wrapperN = new QueryWrapper<CluesReport>();
-            wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
+            wrapperN.eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", "N");
             dto.put("clue_repo_notreviewed", cluesReportMapper.selectCount(wrapperN));
-            List<Map<String, Object>> list=new ArrayList<>();
+            List<Map<String, Object>> list = new ArrayList<>();
             list.add(dto);
-            result.data.put("clue_repo_review",list);
+            result.data.put("clue_repo_review", list);
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @GetMapping("/GetVolApplyReviewed")
-    public Result GetVolApplyReviewed(int adminId, int pagenum, int pagesize, String review){
-        try
-        {
+    public Result GetVolApplyReviewed(int adminId, int pagenum, int pagesize, String review) {
+        try {
             Result result = new Result();
-            int count=volApplyMapper.selectCount(new QueryWrapper<VolApply>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review));
+            int count = volApplyMapper.selectCount(new QueryWrapper<VolApply>().eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", review));
             result.data.put("total", count);
             Page<VolApply> page = new Page<VolApply>(pagenum, pagesize);
-            QueryWrapper<VolApply> wrapper = new QueryWrapper<VolApply>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review);
+            QueryWrapper<VolApply> wrapper = new QueryWrapper<VolApply>().eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", review);
 
-            IPage iPage = volApplyMapper.selectPage(page,wrapper);
-            List<VolApplyInfoDTO> dtoList=volApplyService.cutIntoVolApplyInfoDTOList((List<VolApply>)iPage.getRecords());
+            IPage iPage = volApplyMapper.selectPage(page, wrapper);
+            List<VolApplyInfoDTO> dtoList = volApplyService.cutIntoVolApplyInfoDTOList((List<VolApply>) iPage.getRecords());
             result.data.put("vol_apply", dtoList);
             result.data.put("getcount", iPage.getRecords().size());
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
 
     @PutMapping("/PassVolApply")
-    public Result PassVolApply(int volapplyid){
-        try{
+    public Result PassVolApply(int volapplyid) {
+        try {
             Result result = new Result();
-            VolApply volApply=volApplyMapper.selectById(volapplyid);
-            List<VolApply> applyList=volApplyMapper.selectList(new QueryWrapper<VolApply>().eq("USER_ID",volApply.getUserId()));
-            for(int i=0;i<applyList.size();i++){
-                VolApply apply=applyList.get(i);
+            VolApply volApply = volApplyMapper.selectById(volapplyid);
+            List<VolApply> applyList = volApplyMapper.selectList(new QueryWrapper<VolApply>().eq("USER_ID", volApply.getUserId()));
+            for (int i = 0; i < applyList.size(); i++) {
+                VolApply apply = applyList.get(i);
                 apply.setIsreviewed("Y");
                 apply.setIspass("Y");
                 volApplyMapper.updateById(apply);
             }
-            Volunteer volunteer=new Volunteer();
+            Volunteer volunteer = new Volunteer();
             volunteer.setVolUserId(volApply.getUserId());
             volunteerMapper.insert(volunteer);
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @PutMapping("/DenyVolApply")
-    public Result DenyVolApply(int volapplyid){
-        try{
+    public Result DenyVolApply(int volapplyid) {
+        try {
             Result result = new Result();
-            VolApply volApply=volApplyMapper.selectById(volapplyid);
+            VolApply volApply = volApplyMapper.selectById(volapplyid);
             volApply.setIspass("N");
             volApply.setIsreviewed("Y");
             volApplyMapper.updateById(volApply);
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @DeleteMapping("DeleteNews")
-    public Result DeleteNews(int newsid){
-        try{
+    public Result DeleteNews(int newsid) {
+        try {
             Result result = new Result();
-            News news=newsMapper.selectById(newsid);
+            News news = newsMapper.selectById(newsid);
             news.setIsactive("N");
             newsMapper.updateById(news);
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @GetMapping("/GetInfoRepoReviewed")
-    public Result GetInfoRepoReviewed(int adminId, int pagenum, int pagesize, String review){
-        try{
+    public Result GetInfoRepoReviewed(int adminId, int pagenum, int pagesize, String review) {
+        try {
             Result result = new Result();
-            int count=infoReportMapper.selectCount(new QueryWrapper<InfoReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review));
+            int count = infoReportMapper.selectCount(new QueryWrapper<InfoReport>().eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", review));
             result.data.put("total", count);
 
             Page<InfoReport> page = new Page<InfoReport>(pagenum, pagesize);
-            QueryWrapper<InfoReport> wrapper = new QueryWrapper<InfoReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review);
+            QueryWrapper<InfoReport> wrapper = new QueryWrapper<InfoReport>().eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", review);
 
-            IPage iPage = infoReportMapper.selectPage(page,wrapper);
-            List<InfoRepoInfoDTO> dtoList=infoReportService.cutIntoInfoRepoList((List<InfoReport>)iPage.getRecords());
+            IPage iPage = infoReportMapper.selectPage(page, wrapper);
+            List<InfoRepoInfoDTO> dtoList = infoReportService.cutIntoInfoRepoList((List<InfoReport>) iPage.getRecords());
             result.data.put("info_repo", dtoList);
             result.data.put("getcount", iPage.getRecords().size());
 
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @GetMapping("/GetClueRepoReviewed")
-    public Result GetClueRepoReviewed(int adminId, int pagenum, int pagesize, String review){
-        try{
+    public Result GetClueRepoReviewed(int adminId, int pagenum, int pagesize, String review) {
+        try {
             Result result = new Result();
-            int count=cluesReportMapper.selectCount(new QueryWrapper<CluesReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review));
+            int count = cluesReportMapper.selectCount(new QueryWrapper<CluesReport>().eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", review));
             result.data.put("total", count);
 
             Page<CluesReport> page = new Page<CluesReport>(pagenum, pagesize);
-            QueryWrapper<CluesReport> wrapper = new QueryWrapper<CluesReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review);
-            IPage iPage = cluesReportMapper.selectPage(page,wrapper);
-            List<ClueRepoInfoDTO> dtoList=cluesReportService.cutIntoCluesRepoList((List<CluesReport>)iPage.getRecords());
+            QueryWrapper<CluesReport> wrapper = new QueryWrapper<CluesReport>().eq("ADMINISTRATOR_ID", adminId).eq("ISREVIEWED", review);
+            IPage iPage = cluesReportMapper.selectPage(page, wrapper);
+            List<ClueRepoInfoDTO> dtoList = cluesReportService.cutIntoCluesRepoList((List<CluesReport>) iPage.getRecords());
             result.data.put("clue_repo", dtoList);
             result.data.put("getcount", iPage.getRecords().size());
 
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
 
     @DeleteMapping("/PassInfoRepo")
-    public Result PassInfoRepo(int infoid){
-        try{
-            Result result=new Result();
-            Searchinfo searchinfo=searchinfoMapper.selectById(infoid);
+    public Result PassInfoRepo(int infoid) {
+        try {
+            Result result = new Result();
+            Searchinfo searchinfo = searchinfoMapper.selectById(infoid);
             searchinfo.setIsactive("N");
             searchinfoMapper.updateById(searchinfo);
-            List<InfoReport> tmpList = infoReportMapper.selectList(new QueryWrapper<InfoReport>().eq("SEARCHINFO_ID",infoid));
-            for(int i=0;i<tmpList.size();i++ ) {
-                InfoReport tmp=tmpList.get(i);
+            List<InfoReport> tmpList = infoReportMapper.selectList(new QueryWrapper<InfoReport>().eq("SEARCHINFO_ID", infoid));
+            for (int i = 0; i < tmpList.size(); i++) {
+                InfoReport tmp = tmpList.get(i);
                 tmp.setIsreviewed("Y");
                 tmp.setIspass("Y");
                 infoReportMapper.updateById(tmp);
             }
             QueryWrapper<SearchinfoFocus> wrapper = new QueryWrapper<SearchinfoFocus>();
-            wrapper.eq("SEARCHINFO_ID",infoid);
+            wrapper.eq("SEARCHINFO_ID", infoid);
             searchinfoFocusMapper.delete(wrapper);//从searchinfoFocus表中删去数据
             QueryWrapper<SearchinfoFollowup> wrapper2 = new QueryWrapper<SearchinfoFollowup>();
-            wrapper2.eq("SEARCHINFO_ID",infoid);
+            wrapper2.eq("SEARCHINFO_ID", infoid);
             searchinfoFollowupMapper.delete(wrapper2);//从searchinfoFocus表中删去这条数据
-            List<Clue> clueList = clueMapper.selectList(new QueryWrapper<Clue>().eq("SEARCHINFO_ID",infoid));
-            for(int i=0;i<clueList.size();i++ ) {
-                Clue clue=clueList.get(i);
+            List<Clue> clueList = clueMapper.selectList(new QueryWrapper<Clue>().eq("SEARCHINFO_ID", infoid));
+            for (int i = 0; i < clueList.size(); i++) {
+                Clue clue = clueList.get(i);
                 clue.setIsactive("N");
-                List<CluesReport> cluesReportList = cluesReportMapper.selectList(new QueryWrapper<CluesReport>().eq("CLUE_ID",clue.getClueId()));
-                for(int j=0;j<cluesReportList.size();j++){
-                    CluesReport repo=cluesReportList.get(j);
+                List<CluesReport> cluesReportList = cluesReportMapper.selectList(new QueryWrapper<CluesReport>().eq("CLUE_ID", clue.getClueId()));
+                for (int j = 0; j < cluesReportList.size(); j++) {
+                    CluesReport repo = cluesReportList.get(j);
                     repo.setIspass("Y");
                     repo.setIsreviewed("Y");
                     cluesReportMapper.updateById(repo);
@@ -593,38 +577,38 @@ public class AdministratorController {
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     @PostMapping("/DenyInfoRepo")
-    public Result DenyInfoRepo(int inforepoid){
-        try{
-            Result result=new Result();
-            InfoReport infoReport=infoReportMapper.selectById(inforepoid);
+    public Result DenyInfoRepo(int inforepoid) {
+        try {
+            Result result = new Result();
+            InfoReport infoReport = infoReportMapper.selectById(inforepoid);
             infoReport.setIspass("N");
             infoReport.setIsreviewed("Y");
             infoReportMapper.updateById(infoReport);
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     //1.8.7 通过举报
     @PutMapping("/PassClueRepo")
-    public Result PassClueRepo(int clueId){
-        try{
-            Result result=new Result();
-            Clue clue=clueMapper.selectById(clueId);
+    public Result PassClueRepo(int clueId) {
+        try {
+            Result result = new Result();
+            Clue clue = clueMapper.selectById(clueId);
             clue.setIsactive("N");
             clueMapper.updateById(clue);
-            List<CluesReport> tmpList = cluesReportMapper.selectList(new QueryWrapper<CluesReport>().eq("CLUE_ID",clueId));
-            for(int i=0;i<tmpList.size();i++ ) {
-                CluesReport tmp=tmpList.get(i);
+            List<CluesReport> tmpList = cluesReportMapper.selectList(new QueryWrapper<CluesReport>().eq("CLUE_ID", clueId));
+            for (int i = 0; i < tmpList.size(); i++) {
+                CluesReport tmp = tmpList.get(i);
                 tmp.setIsreviewed("Y");
                 tmp.setIspass("Y");
                 cluesReportMapper.updateById(tmp);
@@ -633,17 +617,17 @@ public class AdministratorController {
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
+
     //1.8.8 拒绝举报
     @PutMapping("/DenyClueRepo")
-    public Result DenyClueRepo(int cluerepoid){
-        try{
-            Result result=new Result();
-            CluesReport cluesReport=cluesReportMapper.selectById(cluerepoid);
+    public Result DenyClueRepo(int cluerepoid) {
+        try {
+            Result result = new Result();
+            CluesReport cluesReport = cluesReportMapper.selectById(cluerepoid);
             cluesReport.setIspass("N");
             cluesReport.setIsreviewed("Y");
             cluesReportMapper.updateById(cluesReport);
@@ -651,31 +635,26 @@ public class AdministratorController {
             result.status = true;
             result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
 
     @GetMapping("/GetAllNews")
-    public Result GetAllNews(int pagenum, int pagesize){
-        try{
-            Result result=new Result();
+    public Result GetAllNews(int pagenum, int pagesize) {
+        try {
+            Result result = new Result();
             Page<News> page = new Page<>(pagenum, pagesize);
             QueryWrapper<News> wrapper = new QueryWrapper<News>();
-            List<NewsManageDTO> dtoList=new ArrayList<>();
-            IPage iPage = newsMapper.selectPage(page,wrapper);
-            dtoList=newsService.cutIntoNewsManageDTOList((List<News>)iPage.getRecords());
+            List<NewsManageDTO> dtoList = new ArrayList<>();
+            IPage iPage = newsMapper.selectPage(page, wrapper);
+            dtoList = newsService.cutIntoNewsManageDTOList((List<News>) iPage.getRecords());
 
             result.data.put("news_info", dtoList);
             result.data.put("total", iPage.getTotal());
             result.data.put("getcount", iPage.getRecords().size());
-
-            result.status = true;
-            result.errorCode = 200;
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Result.error();
         }
     }
