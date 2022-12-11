@@ -147,12 +147,13 @@ public class MainPageController {
                 String tmp11=TimeTrans.myToString(tmp1);
 //                Searchinfo tmpinfo=searchinfoMapper.selectById(1);
 //                Date tmp2=tmpinfo.getSearchinfoDate();
-                wrapper.eq("SEARCHINFO_LOSTDATE", tmp11);
+                wrapper.eq("SOUGHT_PEOPLE_BIRTHDAY", tmp11);
 
             }
             if (lostdate!=null)
             {
                 Date tmp2=new SimpleDateFormat("yyyy-MM-dd").parse(lostdate);
+//                Date noedate=new Date();
                 String tmp22=TimeTrans.myToString(tmp2);
 //                Searchinfo tmpinfo=searchinfoMapper.selectById(1);
 //                Date tmp2=tmpinfo.getSearchinfoDate();
