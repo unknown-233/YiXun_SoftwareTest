@@ -1,7 +1,10 @@
 package com.yixun.yixun_backend.service;
 
+import com.yixun.yixun_backend.dto.ClueRepoInfoDTO;
 import com.yixun.yixun_backend.entity.CluesReport;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author hunyingzhong
@@ -9,5 +12,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2022-12-03 12:43:39
 */
 public interface CluesReportService extends IService<CluesReport> {
-
+    ClueRepoInfoDTO cutIntoClueRepoInfoDTO(CluesReport repo);
+    List<ClueRepoInfoDTO> cutIntoCluesRepoList(List<CluesReport> list);
 }

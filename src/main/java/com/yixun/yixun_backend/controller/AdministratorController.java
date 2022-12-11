@@ -1,27 +1,23 @@
 package com.yixun.yixun_backend.controller;
 
 
+import com.alibaba.druid.sql.visitor.functions.Length;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yixun.yixun_backend.dto.UserInfoDTO;
-import com.yixun.yixun_backend.dto.VolInfoDTO;
-import com.yixun.yixun_backend.dto.VolunteerDTO;
+import com.yixun.yixun_backend.dto.*;
 import com.yixun.yixun_backend.entity.*;
 import com.yixun.yixun_backend.mapper.*;
-import com.yixun.yixun_backend.service.VolunteerService;
-import com.yixun.yixun_backend.service.WebUserService;
+import com.yixun.yixun_backend.service.*;
 import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
+import io.swagger.annotations.Example;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/api/Administrator")
 @RestController
@@ -37,13 +33,33 @@ public class AdministratorController {
     @Resource
     private WebUserMapper webUserMapper;
     @Resource
+    private CluesReportMapper cluesReportMapper;
+    @Resource
+    private ClueMapper clueMapper;
+    @Resource
     private WebUserService webUserService;
+    @Resource
+    private VolApplyService volApplyService;
+    @Resource
+    private InfoReportService infoReportService;
     @Resource
     private VolunteerMapper volunteerMapper;
     @Resource
     private VolunteerService volunteerService;
     @Resource
+    private CluesReportService cluesReportService;
+    @Resource
+    private NewsService newsService;
+    @Resource
     private VolApplyMapper volApplyMapper;
+    @Resource
+    private  InfoReportMapper infoReportMapper;
+    @Resource
+    private SearchinfoMapper searchinfoMapper;
+    @Resource
+    private SearchinfoFocusMapper searchinfoFocusMapper;
+    @Resource
+    private SearchinfoFollowupMapper searchinfoFollowupMapper;
     @PostMapping("/ReleaseNews")
     public Result ReleaseNews(@RequestBody Map<String, Object> inputData) {
         try {
@@ -360,7 +376,301 @@ public class AdministratorController {
             QueryWrapper<VolApply> wrapperN = new QueryWrapper<VolApply>();
             wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
             dto.put("vol_apply_notreviewed", volApplyMapper.selectCount(wrapperN));
-            result.data.put("vol_apply_review",dto);
+            List<Map<String, Object>> list=new ArrayList<>();
+            list.add(dto);
+            result.data.put("vol_apply_review",list);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @GetMapping("/GetInfoRepoCount")
+    public Result GetInfoRepoCount(int adminId){
+        try{
+            Result result = new Result();
+            QueryWrapper<InfoReport> wrapperY = new QueryWrapper<InfoReport>();
+            wrapperY.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","Y");
+            Map<String, Object> dto = new HashMap<>();
+            dto.put("info_repo_reviewed",infoReportMapper.selectCount(wrapperY));
+            QueryWrapper<InfoReport> wrapperN = new QueryWrapper<InfoReport>();
+            wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
+            dto.put("info_repo_notreviewed", infoReportMapper.selectCount(wrapperN));
+            List<Map<String, Object>> list=new ArrayList<>();
+            list.add(dto);
+            result.data.put("info_repo_review",list);
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @GetMapping("/GetClueRepoCount")
+    public Result GetClueRepoCount(int adminId){
+        try{
+            Result result=new Result();
+            QueryWrapper<CluesReport> wrapperY = new QueryWrapper<CluesReport>();
+            wrapperY.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","Y");
+            Map<String, Object> dto = new HashMap<>();
+            dto.put("clue_repo_reviewed",cluesReportMapper.selectCount(wrapperY));
+            QueryWrapper<CluesReport> wrapperN = new QueryWrapper<CluesReport>();
+            wrapperN.eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED","N");
+            dto.put("clue_repo_notreviewed", cluesReportMapper.selectCount(wrapperN));
+            List<Map<String, Object>> list=new ArrayList<>();
+            list.add(dto);
+            result.data.put("clue_repo_review",list);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @GetMapping("/GetVolApplyReviewed")
+    public Result GetVolApplyReviewed(int adminId, int pagenum, int pagesize, String review){
+        try
+        {
+            Result result = new Result();
+            int count=volApplyMapper.selectCount(new QueryWrapper<VolApply>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review));
+            result.data.put("total", count);
+            Page<VolApply> page = new Page<VolApply>(pagenum, pagesize);
+            QueryWrapper<VolApply> wrapper = new QueryWrapper<VolApply>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review);
+
+            IPage iPage = volApplyMapper.selectPage(page,wrapper);
+            List<VolApplyInfoDTO> dtoList=volApplyService.cutIntoVolApplyInfoDTOList((List<VolApply>)iPage.getRecords());
+            result.data.put("vol_apply", dtoList);
+            result.data.put("getcount", iPage.getRecords().size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    @PutMapping("/PassVolApply")
+    public Result PassVolApply(int volapplyid){
+        try{
+            Result result = new Result();
+            VolApply volApply=volApplyMapper.selectById(volapplyid);
+            List<VolApply> applyList=volApplyMapper.selectList(new QueryWrapper<VolApply>().eq("USER_ID",volApply.getUserId()));
+            for(int i=0;i<applyList.size();i++){
+                VolApply apply=applyList.get(i);
+                apply.setIsreviewed("Y");
+                apply.setIspass("Y");
+                volApplyMapper.updateById(apply);
+            }
+            Volunteer volunteer=new Volunteer();
+            volunteer.setVolUserId(volApply.getUserId());
+            volunteerMapper.insert(volunteer);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @PutMapping("/DenyVolApply")
+    public Result DenyVolApply(int volapplyid){
+        try{
+            Result result = new Result();
+            VolApply volApply=volApplyMapper.selectById(volapplyid);
+            volApply.setIspass("N");
+            volApply.setIsreviewed("Y");
+            volApplyMapper.updateById(volApply);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @DeleteMapping("DeleteNews")
+    public Result DeleteNews(int newsid){
+        try{
+            Result result = new Result();
+            News news=newsMapper.selectById(newsid);
+            news.setIsactive("N");
+            newsMapper.updateById(news);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @GetMapping("/GetInfoRepoReviewed")
+    public Result GetInfoRepoReviewed(int adminId, int pagenum, int pagesize, String review){
+        try{
+            Result result = new Result();
+            int count=infoReportMapper.selectCount(new QueryWrapper<InfoReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review));
+            result.data.put("total", count);
+
+            Page<InfoReport> page = new Page<InfoReport>(pagenum, pagesize);
+            QueryWrapper<InfoReport> wrapper = new QueryWrapper<InfoReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review);
+
+            IPage iPage = infoReportMapper.selectPage(page,wrapper);
+            List<InfoRepoInfoDTO> dtoList=infoReportService.cutIntoInfoRepoList((List<InfoReport>)iPage.getRecords());
+            result.data.put("info_repo", dtoList);
+            result.data.put("getcount", iPage.getRecords().size());
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @GetMapping("/GetClueRepoReviewed")
+    public Result GetClueRepoReviewed(int adminId, int pagenum, int pagesize, String review){
+        try{
+            Result result = new Result();
+            int count=cluesReportMapper.selectCount(new QueryWrapper<CluesReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review));
+            result.data.put("total", count);
+
+            Page<CluesReport> page = new Page<CluesReport>(pagenum, pagesize);
+            QueryWrapper<CluesReport> wrapper = new QueryWrapper<CluesReport>().eq("ADMINISTRATOR_ID",adminId).eq("ISREVIEWED",review);
+            IPage iPage = cluesReportMapper.selectPage(page,wrapper);
+            List<ClueRepoInfoDTO> dtoList=cluesReportService.cutIntoCluesRepoList((List<CluesReport>)iPage.getRecords());
+            result.data.put("clue_repo", dtoList);
+            result.data.put("getcount", iPage.getRecords().size());
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    @DeleteMapping("/PassInfoRepo")
+    public Result PassInfoRepo(int infoid){
+        try{
+            Result result=new Result();
+            Searchinfo searchinfo=searchinfoMapper.selectById(infoid);
+            searchinfo.setIsactive("N");
+            searchinfoMapper.updateById(searchinfo);
+            List<InfoReport> tmpList = infoReportMapper.selectList(new QueryWrapper<InfoReport>().eq("SEARCHINFO_ID",infoid));
+            for(int i=0;i<tmpList.size();i++ ) {
+                InfoReport tmp=tmpList.get(i);
+                tmp.setIsreviewed("Y");
+                tmp.setIspass("Y");
+                infoReportMapper.updateById(tmp);
+            }
+            QueryWrapper<SearchinfoFocus> wrapper = new QueryWrapper<SearchinfoFocus>();
+            wrapper.eq("SEARCHINFO_ID",infoid);
+            searchinfoFocusMapper.delete(wrapper);//从searchinfoFocus表中删去数据
+            QueryWrapper<SearchinfoFollowup> wrapper2 = new QueryWrapper<SearchinfoFollowup>();
+            wrapper2.eq("SEARCHINFO_ID",infoid);
+            searchinfoFollowupMapper.delete(wrapper2);//从searchinfoFocus表中删去这条数据
+            List<Clue> clueList = clueMapper.selectList(new QueryWrapper<Clue>().eq("SEARCHINFO_ID",infoid));
+            for(int i=0;i<clueList.size();i++ ) {
+                Clue clue=clueList.get(i);
+                clue.setIsactive("N");
+                List<CluesReport> cluesReportList = cluesReportMapper.selectList(new QueryWrapper<CluesReport>().eq("CLUE_ID",clue.getClueId()));
+                for(int j=0;j<cluesReportList.size();j++){
+                    CluesReport repo=cluesReportList.get(j);
+                    repo.setIspass("Y");
+                    repo.setIsreviewed("Y");
+                    cluesReportMapper.updateById(repo);
+                }
+                clueMapper.updateById(clue);
+            }
+
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    @PostMapping("/DenyInfoRepo")
+    public Result DenyInfoRepo(int inforepoid){
+        try{
+            Result result=new Result();
+            InfoReport infoReport=infoReportMapper.selectById(inforepoid);
+            infoReport.setIspass("N");
+            infoReport.setIsreviewed("Y");
+            infoReportMapper.updateById(infoReport);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    //1.8.7 通过举报
+    @PutMapping("/PassClueRepo")
+    public Result PassClueRepo(int clueId){
+        try{
+            Result result=new Result();
+            Clue clue=clueMapper.selectById(clueId);
+            clue.setIsactive("N");
+            clueMapper.updateById(clue);
+            List<CluesReport> tmpList = cluesReportMapper.selectList(new QueryWrapper<CluesReport>().eq("CLUE_ID",clueId));
+            for(int i=0;i<tmpList.size();i++ ) {
+                CluesReport tmp=tmpList.get(i);
+                tmp.setIsreviewed("Y");
+                tmp.setIspass("Y");
+                cluesReportMapper.updateById(tmp);
+            }
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    //1.8.8 拒绝举报
+    @PutMapping("/DenyClueRepo")
+    public Result DenyClueRepo(int cluerepoid){
+        try{
+            Result result=new Result();
+            CluesReport cluesReport=cluesReportMapper.selectById(cluerepoid);
+            cluesReport.setIspass("N");
+            cluesReport.setIsreviewed("Y");
+            cluesReportMapper.updateById(cluesReport);
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    @GetMapping("/GetAllNews")
+    public Result GetAllNews(int pagenum, int pagesize){
+        try{
+            Result result=new Result();
+            Page<News> page = new Page<>(pagenum, pagesize);
+            QueryWrapper<News> wrapper = new QueryWrapper<News>();
+            List<NewsManageDTO> dtoList=new ArrayList<>();
+            IPage iPage = newsMapper.selectPage(page,wrapper);
+            dtoList=newsService.cutIntoNewsManageDTOList((List<News>)iPage.getRecords());
+
+            result.data.put("news_info", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+
             result.status = true;
             result.errorCode = 200;
             return result;

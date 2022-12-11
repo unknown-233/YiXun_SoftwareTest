@@ -2,9 +2,11 @@ package com.yixun.yixun_backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.NewsDTO;
+import com.yixun.yixun_backend.dto.NewsManageDTO;
 import com.yixun.yixun_backend.entity.News;
 import com.yixun.yixun_backend.service.NewsService;
 import com.yixun.yixun_backend.mapper.NewsMapper;
+import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,7 +29,24 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News>
         dto.setTitle(news.getNewsHeadlines());
         return dto;
     }
-
+    public NewsManageDTO cutIntoNewsManageDTO(News news){
+        NewsManageDTO dto=new NewsManageDTO();
+        dto.setNews_time(TimeTrans.myToString(news.getNewsTime()));
+        dto.setNews_title(news.getNewsHeadlines());
+        dto.setNews_type(news.getNewsType());
+        dto.setNews_id(news.getNewsId());
+        dto.setAdministrator_id(news.getAdministratorId());
+        dto.setIsactive(news.getIsactive());
+        return dto;
+    }
+    public List<NewsManageDTO> cutIntoNewsManageDTOList(List<News> newsList){
+        List<NewsManageDTO> dtoList=new ArrayList<>();
+        for(News news : newsList){
+            NewsManageDTO dto=cutIntoNewsManageDTO(news);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
     public List<NewsDTO> cutIntoNewsDTOList(List<News> newsList){
         List<NewsDTO> dtoList=new ArrayList<>();
         for(News news : newsList){

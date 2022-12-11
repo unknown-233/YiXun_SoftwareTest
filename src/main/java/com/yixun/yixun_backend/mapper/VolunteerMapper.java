@@ -1,6 +1,7 @@
 package com.yixun.yixun_backend.mapper;
 
 import com.yixun.yixun_backend.dto.VolunteerDTO;
+import com.yixun.yixun_backend.entity.Administrators;
 import com.yixun.yixun_backend.entity.Volunteer;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,6 +17,7 @@ import java.util.List;
 @Mapper
 public interface VolunteerMapper extends BaseMapper<Volunteer> {
     List<VolunteerDTO> selectTopTenVolDTO();
+    public Volunteer selectRandomOne();
 }
 
 

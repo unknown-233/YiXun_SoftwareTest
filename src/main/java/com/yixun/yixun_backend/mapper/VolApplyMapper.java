@@ -1,7 +1,11 @@
 package com.yixun.yixun_backend.mapper;
 
+import com.yixun.yixun_backend.dto.InfoRepoInfoDTO;
+import com.yixun.yixun_backend.dto.VolApplyInfoDTO;
 import com.yixun.yixun_backend.entity.VolApply;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
 * @author hunyingzhong
@@ -10,7 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.yixun.yixun_backend.domain.VolApply
 */
 public interface VolApplyMapper extends BaseMapper<VolApply> {
-
+    List<VolApplyInfoDTO> cutIntoVolApplyInfoDTOList(List<VolApply> list);
 }
 
 

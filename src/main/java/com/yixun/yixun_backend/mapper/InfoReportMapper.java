@@ -1,7 +1,11 @@
 package com.yixun.yixun_backend.mapper;
 
+import com.yixun.yixun_backend.dto.ClueRepoInfoDTO;
+import com.yixun.yixun_backend.entity.CluesReport;
 import com.yixun.yixun_backend.entity.InfoReport;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
 * @author hunyingzhong
@@ -10,6 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.yixun.yixun_backend.domain.InfoReport
 */
 public interface InfoReportMapper extends BaseMapper<InfoReport> {
+    List<ClueRepoInfoDTO> cutIntoInfoRepoList(List<InfoReport> records);
 
 }
 

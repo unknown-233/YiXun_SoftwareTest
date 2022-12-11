@@ -42,6 +42,13 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
         dto.setSearch_type(searchinfo.getSearchType());
         dto.setSought_people_gender(searchinfo.getSoughtPeopleGender());
         dto.setContact_method(searchinfo.getContactMethod());
+        //new added
+        dto.setIsreport(searchinfo.getIsreport());
+        dto.setSearch_info_date(TimeTrans.myToString(searchinfo.getSearchinfoDate()));
+        dto.setSought_people_detail(searchinfo.getSoughtPeopleDetail());
+        dto.setSought_people_height(searchinfo.getSoughtPeopleHeight());
+        dto.setSought_people_state(searchinfo.getSoughtPeopleState());
+
         return dto;
     }
 

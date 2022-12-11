@@ -37,11 +37,16 @@ public class UserOperationController {
     private SearchinfoFocusMapper searchinfoFocusMapper;
     @Resource
     private SearchinfoMapper searchinfoMapper;
-
+    @Resource
+    private AddressMapper addressMapper;
+    @Resource
+    private SearchinfoFollowupMapper searchinfoFollowupMapper;
     @Resource
     private SearchinfoService searchinfoService;
     @Resource
     private OssUploadService ossUploadService;
+    @Resource
+    private VolunteerMapper volunteerMapper;
 
     @Resource
     private ClueService clueService;
@@ -118,13 +123,14 @@ public class UserOperationController {
     }
 
     //5.1 发布寻人信息（LXK)
-    @GetMapping("/AddSearchPeopleInfo")
+    @PostMapping("/AddSearchPeopleInfo")
     public Result AddSearchPeopleInfo(@RequestBody Map<String, Object> inputMap)
     {
         try
         {
             Result result=new Result();
-            int user_id = (int)inputMap.get("user_id");
+            String user_idStr = (String)inputMap.get("user_id");
+            int user_id=Integer.parseInt(user_idStr);
             String search_type =(String)inputMap.get("search_type");
             String sought_people_name = (String)inputMap.get("sought_people_name");
             String sought_people_gender =(String)inputMap.get("sought_people_gender");
@@ -143,13 +149,35 @@ public class UserOperationController {
             newSearchInfo.setSoughtPeopleGender(sought_people_gender);
             newSearchInfo.setSoughtPeopleHeight(sought_people_height);
             newSearchInfo.setSoughtPeopleDetail(sought_people_detail);
-            newSearchInfo.setSoughtPeopleBirthday(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sought_people_birthday));
+            newSearchInfo.setSoughtPeopleBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(sought_people_birthday));
             newSearchInfo.setSoughtPeopleState(sought_people_state);
             newSearchInfo.setIsreport(isreport);
-            newSearchInfo.setSearchinfoLostdate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(searchinfo_lostdate));
+            newSearchInfo.setSearchinfoLostdate(new SimpleDateFormat("yyyy-MM-dd").parse(searchinfo_lostdate));
             newSearchInfo.setContactMethod(contact_method);
 
-            //result.data.put("searchInfo_id", SearchinfoId);
+            String province_id = (String)inputMap.get("province_id");
+            String city_id = (String)inputMap.get("city_id");
+            String area_id = (String)inputMap.get("area_id");
+            String address_detail = (String)inputMap.get("address_detail");
+            if(province_id!=""){
+                Address address=new Address();
+                address.setProvinceId(province_id);
+                address.setCityId(city_id);
+                address.setAreaId(area_id);
+                address.setDetail(address_detail);
+                addressMapper.insert(address);
+                List<Address> tmpList=addressMapper.selectList(new QueryWrapper<Address>().orderByDesc("ADDRESS_ID"));
+                Address newAddress=tmpList.get(0);
+                newSearchInfo.setAddressId(newAddress.getAddressId());
+            }
+            searchinfoMapper.insert(newSearchInfo);
+            List<Searchinfo> tmp=searchinfoMapper.selectList(new QueryWrapper<Searchinfo>().orderByDesc("SEARCHINFO_ID"));
+            Searchinfo newSearchinfo=tmp.get(0);
+            result.data.put("searchInfo_id", newSearchinfo.getSearchinfoId());
+            SearchinfoFollowup follow=new SearchinfoFollowup();
+            follow.setSearchinfoId(newSearchinfo.getSearchinfoId());
+            follow.setVolId(volunteerMapper.selectRandomOne().getVolId());
+            searchinfoFollowupMapper.insert(follow);
             result.errorCode = 200;
             result.status = true;
             return result;
@@ -173,7 +201,7 @@ public class UserOperationController {
             if (inputData.containsKey(img_base64Key)) {
                 img_base64 = (String) inputData.get(img_base64Key);
             }
-            Searchinfo searchinfo = searchinfoMapper.selectOne(new QueryWrapper<Searchinfo>().eq("NEWS_ID", searchInfo_id));
+            Searchinfo searchinfo = searchinfoMapper.selectOne(new QueryWrapper<Searchinfo>().eq("SEARCHINFO_ID", searchInfo_id));
             String type = "." + img_base64.split(",")[0].split(";")[0].split("/")[1];
             img_base64 = img_base64.split("base64,")[1];
 

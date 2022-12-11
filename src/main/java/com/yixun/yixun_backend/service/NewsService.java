@@ -1,6 +1,7 @@
 package com.yixun.yixun_backend.service;
 
 import com.yixun.yixun_backend.dto.NewsDTO;
+import com.yixun.yixun_backend.dto.NewsManageDTO;
 import com.yixun.yixun_backend.entity.News;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -14,4 +15,6 @@ import java.util.List;
 public interface NewsService extends IService<News> {
     NewsDTO cutIntoNewsDTO(News news);
     List<NewsDTO> cutIntoNewsDTOList(List<News> newsList);
+    NewsManageDTO cutIntoNewsManageDTO(News news);
+    List<NewsManageDTO> cutIntoNewsManageDTOList(List<News> newsList);
 }

@@ -22,4 +22,7 @@
         ORDER BY vol.VOL_TIME DESC
             LIMIT 10
     </select>
+    <select id="selectRandomOne"  resultType="com.yixun.yixun_backend.entity.Volunteer">
+        SELECT * From yixun_volunteer ORDER BY RAND() LIMIT 1
+    </select>
 </mapper>
