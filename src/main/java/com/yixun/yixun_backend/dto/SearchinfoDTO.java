@@ -29,16 +29,5 @@ public class SearchinfoDTO {
     private String contact_method;
     @JsonProperty("sought_people_gender")
     private String sought_people_gender;
-    //new added
-    @JsonProperty("sought_people_height")
-    private String sought_people_height;
-    @JsonProperty("sought_people_detail")
-    private String sought_people_detail;
-    @JsonProperty("isreport")
-    private String isreport;
-    @JsonProperty("search_info_date")
-    private String search_info_date;
-    @JsonProperty("sought_people_state")
-    private String sought_people_state;
 
 }

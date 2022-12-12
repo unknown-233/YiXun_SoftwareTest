@@ -119,12 +119,13 @@ public class MainPageController {
     public Result ScreenSearchInfo(@RequestBody Map<String,Object> inputData){
         try{
             Result result=new Result();
-            String search_type_1 = (String) inputData.get("search_type_1");
-            String search_type_2 = (String) inputData.get("search_type_2");
-            String search_type_3 = (String) inputData.get("search_type_3");
-            String search_type_4 = (String) inputData.get("search_type_4");
-            String search_type_5 = (String) inputData.get("search_type_5");
-            String search_type_6 = (String) inputData.get("search_type_6");
+            String search_type_1 = (String) inputData.get("search_type_1")!=null? (String) inputData.get("search_type_1"):"pass";
+            String search_type_2 = (String) inputData.get("search_type_2")!=null? (String) inputData.get("search_type_2"):"pass";
+            String search_type_3 = (String) inputData.get("search_type_3")!=null? (String) inputData.get("search_type_3"):"pass";
+            String search_type_4 = (String) inputData.get("search_type_4")!=null? (String) inputData.get("search_type_4"):"pass";
+            String search_type_5 = (String) inputData.get("search_type_5")!=null? (String) inputData.get("search_type_5"):"pass";
+            String search_type_6 = (String) inputData.get("search_type_6")!=null? (String) inputData.get("search_type_6"):"pass";
+
             String gender = (String) inputData.get("gender");
             String birthday = (String) inputData.get("birthday");
             String lostdate = (String) inputData.get("lostdate");
@@ -137,27 +138,30 @@ public class MainPageController {
             String city = (String) inputData.get("city");
             String area = (String) inputData.get("area");
             QueryWrapper<Searchinfo> wrapper=new QueryWrapper<Searchinfo>();
+            String tmp2="";
+            String tmp1="";
             if (gender!=null)
             {
                 wrapper.eq("SOUGHT_PEOPLE_GENDER",gender);
             }
             if (birthday!=null)
             {
-                Date tmp1=new SimpleDateFormat("yyyy-MM-dd").parse(birthday);
-                String tmp11=TimeTrans.myToString(tmp1);
+                Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(birthday);
+                tmp1=TimeTrans.myToString(date1);
 //                Searchinfo tmpinfo=searchinfoMapper.selectById(1);
 //                Date tmp2=tmpinfo.getSearchinfoDate();
-                wrapper.eq("SOUGHT_PEOPLE_BIRTHDAY", tmp11);
+                wrapper.eq("SOUGHT_PEOPLE_BIRTHDAY", tmp1);
 
             }
             if (lostdate!=null)
             {
-                Date tmp2=new SimpleDateFormat("yyyy-MM-dd").parse(lostdate);
+                Date date2=new SimpleDateFormat("yyyy-MM-dd").parse(lostdate);
 //                Date noedate=new Date();
-                String tmp22=TimeTrans.myToString(tmp2);
+                tmp2=TimeTrans.myToString(date2);
 //                Searchinfo tmpinfo=searchinfoMapper.selectById(1);
 //                Date tmp2=tmpinfo.getSearchinfoDate();
-                wrapper.eq("SEARCHINFO_LOSTDATE", tmp22);
+                //wrapper.eq("SEARCHINFO_LOSTDATE", date2);
+                wrapper.inSql("SEARCHINFO_LOSTDATE","select SEARCHINFO_LOSTDATE from yixun_searchinfo where SEARCHINFO_LOSTDATE='"+tmp2+"'");
             }
             wrapper.between("SOUGHT_PEOPLE_HEIGHT",height_low,height_high);
             if (!Objects.equals(search, ""))
@@ -180,13 +184,15 @@ public class MainPageController {
             {
                 wrapper.inSql("ADDRESS_ID","select ADDRESS_ID from yixun_address where AREA_ID="+area);
             }
-            wrapper.like("SOUGHT_PEOPLE_NAME",search).or().like("SOUGHT_PEOPLE_DETAIL",search);
-            if(!(search_type_1==null && search_type_2==null && search_type_3==null&&search_type_4==null && search_type_5==null&& search_type_6==null)){
+            if(!(Objects.equals(search_type_1, "pass") && Objects.equals(search_type_2, "pass") && Objects.equals(search_type_3, "pass")&&Objects.equals(search_type_4, "pass") && Objects.equals(search_type_5, "pass")&& Objects.equals(search_type_6, "pass"))){
                 wrapper.and(i ->i.eq("SEARCH_TYPE",search_type_1).or().eq("SEARCH_TYPE",search_type_2).or().eq("SEARCH_TYPE",search_type_3).or().eq("SEARCH_TYPE",search_type_4).or().eq("SEARCH_TYPE",search_type_5).or().eq("SEARCH_TYPE",search_type_6));
             }
+            //wrapper.and(i ->i.eq("SEARCH_TYPE",search_type_1).or().eq("SEARCH_TYPE",search_type_2).or().eq("SEARCH_TYPE",search_type_3).or().eq("SEARCH_TYPE",search_type_4).or().eq("SEARCH_TYPE",search_type_5).or().eq("SEARCH_TYPE",search_type_6));
+
             Page<Searchinfo> page = new Page<>(pageNum, pageSize);
             IPage<Searchinfo> iPage = searchinfoMapper.selectPage(page,wrapper);
-            List<SearchinfoDTO> list =searchinfoService.cutIntoSearchinfoDTOList((List<Searchinfo>)iPage.getRecords());
+            List<Searchinfo> list =iPage.getRecords();
+            //List<SearchinfoDTO> list =searchinfoService.cutIntoSearchinfoDTOList(iPage.getRecords());
             result.data.put("searchInfo_list", list);
             result.data.put("getcount", list.size());
             result.data.put("total", iPage.getTotal());
