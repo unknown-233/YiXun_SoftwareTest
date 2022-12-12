@@ -191,9 +191,10 @@ public class MainPageController {
 
             Page<Searchinfo> page = new Page<>(pageNum, pageSize);
             IPage<Searchinfo> iPage = searchinfoMapper.selectPage(page,wrapper);
-            List<Searchinfo> list =iPage.getRecords();
-            //List<SearchinfoDTO> list =searchinfoService.cutIntoSearchinfoDTOList(iPage.getRecords());
+            //List<Searchinfo> list =iPage.getRecords();
+            List<SearchinfoDTO> list =searchinfoService.cutIntoSearchinfoDTOList(iPage.getRecords());
             result.data.put("searchInfo_list", list);
+
             result.data.put("getcount", list.size());
             result.data.put("total", iPage.getTotal());
             result.errorCode = 200;
