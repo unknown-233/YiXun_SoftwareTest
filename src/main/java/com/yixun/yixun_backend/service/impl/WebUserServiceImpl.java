@@ -3,21 +3,23 @@ package com.yixun.yixun_backend.service.impl;
 import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.assist.ISqlRunner;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.NewsDTO;
 import com.yixun.yixun_backend.dto.UserInfoDTO;
 import com.yixun.yixun_backend.entity.*;
 import com.yixun.yixun_backend.mapper.*;
 import com.yixun.yixun_backend.service.WebUserService;
+import com.yixun.yixun_backend.utils.JWTutils;
+import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.util.*;
 
 /**
 * @author hunyingzhong
@@ -35,32 +37,17 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
     @Resource
     private CluesReportMapper cluesReportMapper;
     @Resource
+    private WebUserMapper webUserMapper;
+    @Resource
+    private VolunteerMapper volunteerMapper;
+    @Resource
+    private AddressMapper addressMapper;
+    @Resource
+    private AdministratorsMapper administratorsMapper;
+    @Resource
+    private OssUploadService ossUploadService;
+    @Resource
     private ClueMapper clueMapper;
-//    public boolean CheckPassword(@RequestBody Map<String,Object> inputData){
-//        Result result=new Result();
-//        try{
-//            String phoneKey="user_id";
-//            String passwordKey="user_password";
-//            int id=0;
-//            String password="";
-//            if(inputData.containsKey(phoneKey)){
-//                id=(int)inputData.get(phoneKey);
-//            }
-//            if(inputData.containsKey(passwordKey)){
-//                password=(String)inputData.get(passwordKey);
-//            }
-//
-//            WebUser user1 = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("USER_ID", id).eq("USER_PASSWORDS", password));
-//            result.data.put("")
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//            result.data.put("message","用户不正确或输入密码有误！");
-//            return result;
-//        }
-//        return result;
-//    }
     public UserInfoDTO cutIntoUserInfoDTO(WebUser user){
         UserInfoDTO dto=new UserInfoDTO();
         dto.setIsactive(user.getIsactive());
@@ -96,7 +83,352 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
         }
         return dtoList;
     }
+    public Result IfCorrectToLogIn(@RequestBody Map<String,Object> inputData){
+        Result message = new Result();
+        String phoneKey="user_phone";
+        String passwordKey="user_password";
+        Long phone= Long.valueOf(0);
+        String password="";
+        if(inputData.containsKey(phoneKey)){
+            phone=(Long) inputData.get(phoneKey);
+        }
+        if(inputData.containsKey(passwordKey)){
+            password=(String)inputData.get(passwordKey);
+        }
+        try{
+            WebUser user = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM", phone).eq("USER_PASSWORDS", password));
+            if(user!=null){
+                if (user.getIsactive() == "N" || user.getUserState() == "N"){
+                    message.data.put("message","账号已被注销或封禁");
+                    return message;
+                }
+                Date date = new Date();
+                user.setLastloginTime(date);
+                webUserMapper.update(user,new UpdateWrapper<WebUser>().eq("PHONE_NUM", phone).eq("USER_PASSWORDS", password));
+                //保存数据库
+                Volunteer volunteer = volunteerMapper.selectOne(new QueryWrapper<Volunteer>().eq("VOL_USER_ID", user.getUserId()));
+                if(volunteer!=null){
+                    String token= JWTutils.generateToken(Integer.toString(user.getUserId()),user.getUserPasswords());
+                    message.data.put("user_token",token);
+                    String vol_token= JWTutils.generateToken(Integer.toString(volunteer.getVolId()),user.getUserPasswords());
+                    message.data.put("identity", "volunteer");
+                    message.data.put("vol_id", volunteer.getVolId());
+                    message.data.put("user_id", volunteer.getVolUserId());
+                }
+                else{
+                    String token= JWTutils.generateToken(Integer.toString(user.getUserId()),user.getUserPasswords());
+                    message.data.put("user_token",token);
+                    message.data.put("identity", "user");
+                    message.data.put("id", user.getUserId());
+                }
+            }
+            else{
+                Administrators administrator = administratorsMapper.selectOne(new QueryWrapper<Administrators>().eq("ADMINISTRATOR_PHONE", phone).eq("ADMINISTRATOR_CODE", password));
+                message.data.put("identity", "administrator");
+                message.data.put("id", administrator.getAdministratorId());
+                String token= JWTutils.generateToken(Integer.toString(administrator.getAdministratorId()),administrator.getAdministratorCode());
+                message.data.put("user_token",token);
+            }
+        }
+        catch (Exception e){
+            message.data.put("message","用户不正确或密码错误！");
+            return message;
+        }
+        message.status = true;
+        message.errorCode = 200;
+        return message;
+    }
+    public Result AddUserInfomation(@RequestBody Map<String,Object> inputData){
+        try{
+            Result result=new Result();
+            String userIdKey = "user_id";
+            int userId = 0;
+            String userGenderKey = "user_gender";
+            String userGender = "";
+            String userProvinceKey = "user_province";
+            String userProvince = "";
+            String userCityKey = "user_city";
+            String userCity = "";
+            String userAreaKey = "user_area";
+            String userArea = "";
+            String userAddressKey = "user_address";
+            String userAddress = "";
+            String userHeadKey = "user_head";
+            String img_base64 = "";
+            if (inputData.containsKey(userIdKey)) {
+                userId = (int) inputData.get(userIdKey);
+            }
+            if (inputData.containsKey(userGenderKey)) {
+                userGender = (String) inputData.get(userGenderKey);
+            }
+            if (inputData.containsKey(userProvinceKey)) {
+                userProvince = (String) inputData.get(userProvinceKey);
+            }
+            if (inputData.containsKey(userCityKey)) {
+                userCity = (String) inputData.get(userCityKey);
+            }
+            if (inputData.containsKey(userAreaKey)) {
+                userArea = (String) inputData.get(userAreaKey);
+            }
+            if (inputData.containsKey(userAddressKey)) {
+                userAddress = (String) inputData.get(userAddressKey);
+            }
+            if (inputData.containsKey(userHeadKey)) {
+                img_base64 = (String) inputData.get(userHeadKey);
+            }
+            WebUser user=webUserMapper.selectById(userId);
+            if(userProvince!=""){
+                Address address=new Address();
+                address.setDetail(userAddress);
+                address.setAreaId(userArea);
+                address.setProvinceId(userProvince);
+                address.setCityId(userCity);
+                addressMapper.insert(address);
+                user.setAddressId(address.getAddressId());
+            }
+            user.setUserGender(userGender);
+            if(img_base64!=""){
+                String type = "." + img_base64.split(",")[0].split(";")[0].split("/")[1];
+                img_base64 = img_base64.split("base64,")[1];
 
+                byte[] img_bytes = Base64.getDecoder().decode(img_base64);
+                ByteArrayInputStream stream = new ByteArrayInputStream(img_bytes, 0, img_bytes.length);
+
+                String path = "user_head/" + Integer.toString(userId) + type;
+                ossUploadService.uploadfile(stream, path);
+                String imgurl = "https://yixun-picture.oss-cn-shanghai.aliyuncs.com/" + path;
+                user.setUserHeadUrl(imgurl);
+                webUserMapper.updateById(user);
+                result.data.put("img_url", imgurl);
+            }
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result AddWebUser(@RequestBody Map<String,Object> inputData){
+        try{
+            Result result=new Result();
+            String userPhoneKey = "user_phone";
+            Long userPhone =  Long.valueOf(0);
+            String userPasswordKey = "user_password";
+            String userPassword = "";
+            String userNameKey = "user_name";
+            String userName = "";
+            String userEmailKey = "user_email";
+            String userEmail = "";
+            if (inputData.containsKey(userPhoneKey)) {
+                userPhone = (Long) inputData.get(userPhoneKey);
+            }
+            if (inputData.containsKey(userPasswordKey)) {
+                userPassword = (String) inputData.get(userPasswordKey);
+            }
+            if (inputData.containsKey(userNameKey)) {
+                userName = (String) inputData.get(userNameKey);
+            }
+            if (inputData.containsKey(userEmailKey)) {
+                userEmail = (String) inputData.get(userEmailKey);
+            }
+            WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM",userPhone));
+            if(user != null)
+            {
+                return Result.error();
+            }
+            else{
+                WebUser newUser = new WebUser();
+                newUser.setUserName(userName);
+                newUser.setPhoneNum(userPhone);
+                newUser.setMailboxNum(userEmail);
+                newUser.setUserPasswords(userPassword);
+                webUserMapper.insert(newUser);
+                List<WebUser> tmpList = webUserMapper.selectList(new QueryWrapper<WebUser>().orderByDesc("USER_ID"));
+                WebUser newAddedUser = tmpList.get(0);
+                result.data.put("user_id",newAddedUser.getUserId());
+                result.errorCode = 200;
+                result.status = true;
+            }
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result GetUserInfomation(int user_id)
+    {
+        Result result = new Result();
+        WebUser user=webUserMapper.selectById(user_id);
+        result.data.put("user_id", user.getUserId());
+        result.data.put("user_name", user.getUserName());
+        result.data.put("user_password", user.getUserPasswords());
+        result.data.put("user_head", user.getUserHeadUrl());
+        result.data.put("user_fundationtime", user.getFundationTime());
+        result.data.put("user_phonenum", user.getPhoneNum());
+        result.data.put("user_mailbox", user.getMailboxNum());
+        result.data.put("user_gender", user.getUserGender());
+
+        if (user.getAddressId() != null)
+        {
+            Address address = addressMapper.selectById(user.getAddressId());
+            result.data.put("user_province", address.getProvinceId());
+            result.data.put("user_city", address.getCityId());
+            result.data.put("user_area", address.getAreaId());
+            result.data.put("user_address", address.getDetail());
+        }
+        else
+        {
+            result.data.put("user_province", null);
+            result.data.put("user_city", null);
+            result.data.put("user_area", null);
+            result.data.put("user_address", null);
+        }
+        result.status = true;
+        result.errorCode = 200;
+        return result;
+    }
+    public Result UpdateUserPassword(@RequestBody Map<String, Object> inputMap)
+    {
+        try
+        {
+            String idKey = "user_id";
+            String oldPasswordKey = "user_password";
+            String newPasswordKey = "new_password";
+            Result result=new Result();
+            int userId=0;
+            String oldPassword="";
+            String newPassword="";
+            if (inputMap.containsKey(idKey) && inputMap.containsKey(oldPasswordKey) && inputMap.containsKey(newPasswordKey)){
+                userId = (int) inputMap.get(idKey);
+                oldPassword = (String)inputMap.get(oldPasswordKey);
+                newPassword = (String)inputMap.get(newPasswordKey);
+            } else{
+                return Result.error();
+            }
+            WebUser user=webUserMapper.selectById(userId);
+            if(user.getUserPasswords().equals(oldPassword)) {
+                user.setUserPasswords(newPassword);
+                webUserMapper.updateById(user);
+            }else{
+                return Result.error();
+            }
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result UpdateUserInfomation(@RequestBody Map<String, Object> inputData){
+        try{
+            Result result=new Result();
+            String uerNameKey="user_name";
+            String userName="";
+            String userEmailKey="user_email";
+            String userEmail="";
+            String userProvinceKey="user_province";
+            String userProvince="";
+            String userCityKey="user_city";
+            String userCity="";
+            String userAreaKey="user_area";
+            String userArea="";
+            String userAddressKey="user_address";
+            String userAddress="";
+            String userIdKey="user_id";
+            int userId=0;
+            String userPhoneKey="user_phone";
+            long userPhone=0;
+
+            if(inputData.containsKey(uerNameKey)){
+                userName=(String)inputData.get(uerNameKey);
+            }
+            if(inputData.containsKey(userEmailKey)){
+                userEmail=(String)inputData.get(userEmailKey);
+            }
+            if(inputData.containsKey(userProvinceKey)){
+                userProvince=(String)inputData.get(userProvinceKey);
+            }
+            if(inputData.containsKey(userCityKey)){
+                userCity=(String)inputData.get(userCityKey);
+            }
+            if(inputData.containsKey(userAreaKey)){
+                userArea=(String)inputData.get(userAreaKey);
+            }
+            if(inputData.containsKey(userAddressKey)){
+                userAddress=(String)inputData.get(userAddressKey);
+            }
+            if(inputData.containsKey(userIdKey)){
+                userId=(int)inputData.get(userIdKey);
+            }
+            if(inputData.containsKey(userPhoneKey)){
+                userPhone=(long)inputData.get(userPhoneKey);
+            }
+            WebUser user=webUserMapper.selectById(userId);
+            user.setUserName(userName);
+            user.setPhoneNum(userPhone);
+            user.setMailboxNum(userEmail);
+            if(userProvince!=""){
+                Address address=addressMapper.selectById(user.getAddressId());
+                if (address==null){
+                    Address address1=new Address();
+                    address1.setProvinceId(userProvince);
+                    address1.setCityId(userCity);
+                    address1.setAreaId(userArea);
+                    address1.setDetail(userAddress);
+                    addressMapper.insert(address1);
+                }
+                else{
+                    address.setProvinceId(userProvince);
+                    address.setCityId(userCity);
+                    address.setAreaId(userArea);
+                    address.setDetail(userAddress);
+                    addressMapper.updateById(address);
+                }
+            }
+
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result upDateUserProfilePic(@RequestBody Map<String, Object> inputData){
+        try{
+            Result result=new Result();
+            String userIdKey="user_id";
+            int userId=0;
+            String img_base64Key = "user_head";
+            String img_base64 = "";
+            if(inputData.containsKey(userIdKey)){
+                userId=(int)inputData.get(userIdKey);
+            }
+            if (inputData.containsKey(img_base64Key)) {
+                img_base64 = (String) inputData.get(img_base64Key);
+            }
+
+            WebUser user=webUserMapper.selectById(userId);
+            String type = "." + img_base64.split(",")[0].split(";")[0].split("/")[1];
+            img_base64 = img_base64.split("base64,")[1];
+            byte[] img_bytes = Base64.getDecoder().decode(img_base64);
+            ByteArrayInputStream stream = new ByteArrayInputStream(img_bytes, 0, img_bytes.length);
+            String path = "user_head/" + Integer.toString(userId) + type;
+            ossUploadService.uploadfile(stream, path);
+            String imgurl = "https://yixun-picture.oss-cn-shanghai.aliyuncs.com/" + path;
+            user.setUserHeadUrl(imgurl);
+            webUserMapper.updateById(user);
+            result.data.put("img_url", imgurl);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 }
 
 

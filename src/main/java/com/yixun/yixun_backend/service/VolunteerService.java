@@ -3,6 +3,7 @@ package com.yixun.yixun_backend.service;
 import com.yixun.yixun_backend.dto.VolInfoDTO;
 import com.yixun.yixun_backend.entity.Volunteer;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yixun.yixun_backend.utils.Result;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ import java.util.List;
 public interface VolunteerService extends IService<Volunteer> {
     VolInfoDTO cutIntoVolInfoDTO(Volunteer vol);
     List<VolInfoDTO> cutIntoVolInfoList(List<Volunteer> volList);
-
+    public String GetVolunteerNumber();
+    public Result GetTenVolunteer();
 }

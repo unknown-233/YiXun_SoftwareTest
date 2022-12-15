@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.UserInfoDTO;
 import com.yixun.yixun_backend.dto.VolInfoDTO;
+import com.yixun.yixun_backend.dto.VolunteerDTO;
 import com.yixun.yixun_backend.entity.*;
 import com.yixun.yixun_backend.mapper.*;
 import com.yixun.yixun_backend.service.VolunteerService;
+import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
     private SearchinfoFollowupMapper searchinfoFollowupMapper;
     @Resource
     private RecruitedMapper recruitedMapper;
+    @Resource
+    private VolunteerMapper volunteerMapper;
 
     public VolInfoDTO cutIntoVolInfoDTO(Volunteer vol){
         //用户
@@ -63,7 +67,33 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         }
         return dtoList;
     }
-
+    public String GetVolunteerNumber()
+    {
+        try
+        {
+            QueryWrapper<Volunteer> wrapper = new QueryWrapper<Volunteer>();
+            String count=String.valueOf(volunteerMapper.selectCount(wrapper));
+            return count;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+    public Result GetTenVolunteer()
+    {
+        try
+        {
+            Result result=new Result();
+            List<VolunteerDTO> dtoList=volunteerMapper.selectTopTenVolDTO();
+            result.data.put("AllVolActivity_list", dtoList);
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 }
 
 

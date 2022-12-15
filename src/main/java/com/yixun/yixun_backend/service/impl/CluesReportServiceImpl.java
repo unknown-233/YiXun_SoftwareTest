@@ -3,13 +3,19 @@ package com.yixun.yixun_backend.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.ClueRepoInfoDTO;
 import com.yixun.yixun_backend.entity.CluesReport;
+import com.yixun.yixun_backend.mapper.AdministratorsMapper;
 import com.yixun.yixun_backend.service.CluesReportService;
 import com.yixun.yixun_backend.mapper.CluesReportMapper;
+import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author hunyingzhong
@@ -19,7 +25,10 @@ import java.util.List;
 @Service
 public class CluesReportServiceImpl extends ServiceImpl<CluesReportMapper, CluesReport>
     implements CluesReportService{
-
+    @Resource
+    private CluesReportMapper cluesReportMapper;
+    @Resource
+    private AdministratorsMapper administratorsMapper;
         public ClueRepoInfoDTO cutIntoClueRepoInfoDTO(CluesReport repo) {
             ClueRepoInfoDTO clueRepoInfoDTO=new ClueRepoInfoDTO();
             clueRepoInfoDTO.setClue_repo_id(repo.getClueReportId());
@@ -38,6 +47,32 @@ public class CluesReportServiceImpl extends ServiceImpl<CluesReportMapper, Clues
             }
             return dtoList;
         }
+
+    public Result AddOneClueReport(@RequestBody Map<String, Object> inputMap){
+        try
+        {
+            Result result = new Result();
+            int user_id=(int)inputMap.get("user_id");
+            int clue_id=(int)inputMap.get("clue_id");
+            String report_content=(String)inputMap.get("report_content");
+
+            CluesReport newCluesReport = new CluesReport();
+            newCluesReport.setUserId(user_id);
+            newCluesReport.setClueId(clue_id);
+            newCluesReport.setReportContent(report_content);
+            newCluesReport.setReportTime(new Date());
+            newCluesReport.setIsreviewed("N");
+            newCluesReport.setIspass("N");
+            newCluesReport.setAdministratorId(administratorsMapper.selectRandomOne().getAdministratorId());
+            cluesReportMapper.insert(newCluesReport);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
     }
 
 

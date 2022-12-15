@@ -27,45 +27,6 @@ public class JWTutils {
                 .withExpiresAt(DateUtil.offsetHour(new Date(), 2)) // 2小时后token过期
                 .sign(Algorithm.HMAC256(password)); // 以 password 作为 token 的密钥
     }
-
-    //生成token
-//    public static String generateToken(String userId){
-//        Date now= new Date();
-//        Date expiration= new Date(now.getTime()+1000* EXPIRE);
-//
-////        String JwtToken = Jwts.builder()
-////                .setHeaderParam("typ", "JWT")
-////                .setHeaderParam("alg", "HS256")
-////                .setSubject("guli-user")
-////                .setIssuedAt(new Date())
-////                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
-////                .claim("id", id)
-////                .claim("nickname", nickname)
-////                .signWith(SignatureAlgorithm.HS256, APP_SECRET)
-////                .compact();
-//        String token=Jwts.builder()
-//                .setHeaderParam("type","JWT")
-//                .setSubject(userId)
-//                .setIssuedAt(now)
-//                .setExpiration(expiration)
-//                .signWith(SignatureAlgorithm.HS512,APP_SECRET)
-//                .compact();
-//        return token;
-//    }
-    //验证token
-//    public static boolean ifLegal(String token){
-//        try {
-//            Jwts.parser()
-//                    .setSigningKey(APP_SECRET)
-//                    .parseClaimsJws(token);
-//            // OK, we can trust this token
-//            return true;
-//        } catch (JwtException e) {
-//            //don't trust the token!
-//            return false;
-//        }
-//    }
-    //解析token
     public static int getCurrentUser() {
         try {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

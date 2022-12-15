@@ -19,11 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class JwtInterceptor implements HandlerInterceptor {
 
-//    @Autowired
-//    private IUserService userService;
     @Resource
     private WebUserMapper webUserMapper;
-//    public static String APP_SECRET= "abcdfghiabcdfghiabcdfghiabcdfghi";
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");
@@ -32,14 +29,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         if(!(handler instanceof HandlerMethod)){
             return true;
         }
-//        else {
-//            HandlerMethod h = (HandlerMethod) handler;
-//            AuthAccess authAccess = h.getMethodAnnotation(AuthAccess.class);
-//            if (authAccess != null) {
-//                return true;
-//            }
-//        }
-        // 执行认证
         if (StrUtil.isBlank(token)) {
             throw new ServiceException(Constants.CODE_401, "无token，请重新登录");
         }

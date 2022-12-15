@@ -11,14 +11,17 @@ import com.yixun.yixun_backend.mapper.AddressMapper;
 import com.yixun.yixun_backend.service.AddressService;
 import com.yixun.yixun_backend.service.VolActivityService;
 import com.yixun.yixun_backend.mapper.VolActivityMapper;
+import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author hunyingzhong
@@ -28,11 +31,10 @@ import java.util.List;
 @Service
 public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolActivity>
     implements VolActivityService{
-//    @Resource
-//    private AddressService addressService;
-@Resource
-private AddressMapper addressMapper;
-
+    @Resource
+    private AddressMapper addressMapper;
+    @Resource
+    private VolActivityMapper volActivityMapper;
 
     public VolActivityDTO cutIntoVolActivityDTO(VolActivity volActivity){
         VolActivityDTO dto=new VolActivityDTO();
@@ -59,6 +61,92 @@ private AddressMapper addressMapper;
             dtoList.add(dto);
         }
         return dtoList;
+    }
+    public Result GetVolActivities(int pageNum, int pageSize)
+    {
+        try
+        {
+            Result result = new Result();
+            Page<VolActivity> page = new Page<>(pageNum, pageSize);
+            QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
+            String localTime=TimeTrans.myToString(new Date());
+            wrapper.orderByAsc("EXP_TIME").gt("EXP_TIME",localTime);
+            IPage iPage = volActivityMapper.selectPage(page,wrapper);
+            List<VolActivityDTO> dtoList=cutIntoVolActivityDTOList((List<VolActivity>)iPage.getRecords());
+            result.data.put("activity_list", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result GetVolActivityByWord(@RequestBody Map<String, Object> inputMap)
+    {
+        try
+        {
+            Result result = new Result();
+            int pageNum=(int)inputMap.get("pageNum");
+            int pageSize=(int)inputMap.get("pageSize");
+            String searchContent=(String)inputMap.get("search");
+            Page<VolActivity> page = new Page<>(pageNum, pageSize);
+            QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
+            wrapper.like("VOL_ACT_NAME",searchContent).orderByDesc("EXP_TIME");
+            IPage iPage = volActivityMapper.selectPage(page,wrapper);
+            List<VolActivityDTO> dtoList=cutIntoVolActivityDTOList((List<VolActivity>)iPage.getRecords());
+            result.data.put("activity_list", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result GetVolActivityDetail(int VolActId)
+    {
+        try
+        {
+            Result result = new Result();
+            VolActivity volActivity =volActivityMapper.selectById(VolActId);
+            Address address;
+            if(volActivity.getAddressId()!= null && addressMapper.selectById(volActivity.getAddressId())!=null) {
+                address = addressMapper.selectById(volActivity.getAddressId());
+                result.data.put("activity_province", address.getProvinceId());
+                result.data.put("activity_city", address.getCityId());
+                result.data.put("activity_area", address.getAreaId());
+                result.data.put("activity_address", address.getDetail());
+            }
+            else {
+                address = addressMapper.selectById(volActivity.getAddressId());
+                result.data.put("activity_province", null);
+                result.data.put("activity_city", null);
+                result.data.put("activity_area", null);
+                result.data.put("activity_address", null);
+            }
+            result.data.put("activity_id", volActivity.getVolActId());
+            result.data.put("activity_name", volActivity.getVolActName());
+            result.data.put("activity_pic", volActivity.getActPicUrl());
+            result.data.put("activity_needpeople", volActivity.getNeedpeople());
+            result.data.put("activity_signupPeople", volActivity.getSignupPeople());
+            result.data.put("activity_expTime", TimeTrans.myToString(volActivity.getExpTime()));
+            result.data.put("activity_contactMethod", volActivity.getContactMethod());
+            result.data.put("activity_content", volActivity.getActContent());
+
+            var is_overdue = volActivity.getExpTime().after(new Date());
+            result.data.put("is_overdue", is_overdue);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
     }
 
 }
