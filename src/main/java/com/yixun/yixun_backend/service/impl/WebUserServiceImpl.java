@@ -54,6 +54,7 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
         dto.setUser_state(user.getUserState());
         dto.setUser_id(user.getUserId());
         dto.setUser_name(user.getUserName());
+        dto.setPhone_num(user.getPhoneNum());
         dto.setFundation_time(TimeTrans.myToString(user.getFundationTime()));
         //发布的寻人信息数
         QueryWrapper<Searchinfo> wrapperSearchinfo = new QueryWrapper<Searchinfo>();
