@@ -27,4 +27,5 @@ public interface SearchinfoService extends IService<Searchinfo> {
     public Result AddSearchInfo(@RequestBody Map<String, Object> inputMap);
     public Result AddSearchInfoPic(@RequestBody Map<String, Object> inputData);
     public Result DeleteInfoByUser(int userid, int infoid);
+    public Result UpdateInfoByUser(@RequestBody Map<String, Object> inputMap);
 }

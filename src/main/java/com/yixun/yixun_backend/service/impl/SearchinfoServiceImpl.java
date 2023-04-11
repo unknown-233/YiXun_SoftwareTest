@@ -442,6 +442,68 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             return Result.error();
         }
     }
+
+    public Result UpdateInfoByUser(@RequestBody Map<String, Object> inputMap)
+    {
+        try{
+            Result result = new Result();
+            String info_idStr = (String)inputMap.get("searchinfo_id");
+            int info_id=Integer.parseInt(info_idStr);
+            String search_type =(String)inputMap.get("search_type");
+            String sought_people_name = (String)inputMap.get("sought_people_name");
+            String sought_people_gender =(String)inputMap.get("sought_people_gender");
+            String sought_people_height =(String)inputMap.get("sought_people_height");
+            String sought_people_detail = (String)inputMap.get("sought_people_detail");
+            String sought_people_birthday =(String)inputMap.get("sought_people_birthday");
+            String sought_people_state = (String)inputMap.get("sought_people_state");
+            String isreport = (String)inputMap.get("isreport");
+            String searchinfo_lostdate = (String)inputMap.get("searchinfo_lostdate");
+            String contact_method = (String)inputMap.get("contact_method");
+            Searchinfo searchinfo=searchinfoMapper.selectById(info_id);
+            searchinfo.setSearchType(search_type);
+            searchinfo.setSoughtPeopleName(sought_people_name);
+            searchinfo.setSoughtPeopleGender(sought_people_gender);
+            searchinfo.setSoughtPeopleHeight(sought_people_height);
+            searchinfo.setSoughtPeopleDetail(sought_people_detail);
+            searchinfo.setSoughtPeopleBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(sought_people_birthday));
+            searchinfo.setSoughtPeopleState(sought_people_state);
+            searchinfo.setIsreport(isreport);
+            searchinfo.setSearchinfoLostdate(new SimpleDateFormat("yyyy-MM-dd").parse(searchinfo_lostdate));
+            searchinfo.setContactMethod(contact_method);
+            String province_id = (String)inputMap.get("province_id");
+            String city_id = (String)inputMap.get("city_id");
+            String area_id = (String)inputMap.get("area_id");
+            String address_detail = (String)inputMap.get("address_detail");
+            if(province_id!=""){
+                Address address=addressMapper.selectById(searchinfo.getAddressId());
+                if (address==null){
+                    Address address1=new Address();
+                    address1.setProvinceId(province_id);
+                    address1.setCityId(city_id);
+                    address1.setAreaId(area_id);
+                    address1.setDetail(address_detail);
+                    addressMapper.insert(address1);
+                }
+                else{
+                    address.setProvinceId(province_id);
+                    address.setCityId(city_id);
+                    address.setAreaId(area_id);
+                    address.setDetail(address_detail);
+                    addressMapper.updateById(address);
+                }
+            }
+            searchinfoMapper.updateById(searchinfo);
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+
 }
 
 
