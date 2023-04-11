@@ -609,6 +609,108 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             return Result.error();
         }
     }
+
+    public Result UpdateVolActivity(@RequestBody Map<String, Object> inputData)
+    {
+        try{
+            Result result = new Result();
+            String actIdKey="act_id";
+            String actNameKey = "act_name";
+            String actName = "";
+            String actContentKey = "act_content";
+            String actContent = "";
+            String actTimeKey = "act_time";
+            String actTime = "";
+            String actProvinceKey = "act_province";
+            String actProvince = "";
+            String actCityKey = "act_city";
+            String actCity = "";
+            String actAreaKey = "act_area";
+            String actArea = "";
+            String actAddressKey = "act_address";
+            String actAddress = "";
+            String contactMethodKey = "contact_method";
+            String contactMethod = "";
+            String needPeopleKey = "need_people";
+            int needPeople = 0;
+            int actId=-1;
+            if (inputData.containsKey(needPeopleKey)) {
+                actId = (int) inputData.get(actIdKey);
+            }
+            if (inputData.containsKey(actNameKey)) {
+                actName = (String) inputData.get(actNameKey);
+            }
+            if (inputData.containsKey(actContentKey)) {
+                actContent = (String) inputData.get(actContentKey);
+            }
+            if (inputData.containsKey(actTimeKey)) {
+                actTime = (String) inputData.get(actTimeKey);
+            }
+            if (inputData.containsKey(actProvinceKey)) {
+                actProvince = (String) inputData.get(actProvinceKey);
+            }
+            if (inputData.containsKey(actCityKey)) {
+                actCity = (String) inputData.get(actCityKey);
+            }
+            if (inputData.containsKey(actAreaKey)) {
+                actArea = (String) inputData.get(actAreaKey);
+            }
+            if (inputData.containsKey(actAddressKey)) {
+                actAddress = (String) inputData.get(actAddressKey);
+            }
+            if (inputData.containsKey(contactMethodKey)) {
+                contactMethod = (String) inputData.get(contactMethodKey);
+            }
+            if (inputData.containsKey(needPeopleKey)) {
+                needPeople = (int) inputData.get(needPeopleKey);
+            }
+            VolActivity volActivity=volActivityMapper.selectById(actId);
+            volActivity.setVolActName(actName);
+            volActivity.setActContent(actContent);
+            volActivity.setExpTime(TimeTrans.myToDate_1(actTime));
+
+            volActivity.setContactMethod(contactMethod);
+            volActivity.setNeedpeople(needPeople);
+            if(actProvince!=""){
+                Address address=addressMapper.selectById(volActivity.getAddressId());
+                if (address==null){
+                    Address address1=new Address();
+                    address1.setProvinceId(actProvince);
+                    address1.setCityId(actCity);
+                    address1.setAreaId(actArea);
+                    address1.setDetail(actAddress);
+                    addressMapper.insert(address1);
+                }
+                else{
+                    address.setProvinceId(actProvince);
+                    address.setCityId(actCity);
+                    address.setAreaId(actArea);
+                    address.setDetail(actAddress);
+                    addressMapper.updateById(address);
+                }
+            }
+            volActivityMapper.updateById(volActivity);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result DeleteVolActivity(int actId)
+    {
+        try{
+            Result result = new Result();
+            volActivityMapper.deleteById(actId);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 }
 
 

@@ -36,4 +36,6 @@ public interface AdministratorsService extends IService<Administrators> {
     public Result UpdateClueRepToPass(int clueId);
     public Result UpdateClueRepoToDeny(int cluerepoid);
     public Result GetAllNews(int pagenum, int pagesize);
+    public Result UpdateVolActivity(@RequestBody Map<String, Object> inputMap);
+    public Result DeleteVolActivity(int actId);
 }

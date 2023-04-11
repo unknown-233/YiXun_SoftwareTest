@@ -1,8 +1,11 @@
 package com.yixun.yixun_backend.controller;
 
 
+import com.yixun.yixun_backend.entity.Address;
+import com.yixun.yixun_backend.entity.VolActivity;
 import com.yixun.yixun_backend.service.*;
 import com.yixun.yixun_backend.utils.Result;
+import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -183,5 +186,18 @@ public class AdministratorController {
         result= administratorsService.GetAllNews(pagenum,pagesize);
         return result;
     }
-
+    @PutMapping("/ChangeVolActivity")
+    public Result ChangeVolActivity(@RequestBody Map<String, Object> inputMap)
+    {
+        Result result=new Result();
+        result= administratorsService.UpdateVolActivity(inputMap);
+        return result;
+    }
+    @DeleteMapping("/DeleteVolActivity")
+    public Result DeleteVolActivity(int actId)
+    {
+        Result result=new Result();
+        result= administratorsService.DeleteVolActivity(actId);
+        return result;
+    }
 }
