@@ -23,6 +23,7 @@ public class Searchinfocontroller {
         return result;
     }
 
+    @GetMapping("/GetSearchInfoToChange")
     public Result GetSearchInfoToChange(int searchinfoId)
     {
         Result result=new Result();

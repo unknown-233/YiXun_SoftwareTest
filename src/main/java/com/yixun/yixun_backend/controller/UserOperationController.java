@@ -116,8 +116,8 @@ public class UserOperationController {
         return result;
     }
 
-    @PutMapping("/UserChangeInfo")
-    public Result UserChangeInfo(@RequestBody Map<String, Object> inputMap){
+    @PutMapping("/UserChangeSearchInfo")
+    public Result UserChangeSearchInfo(@RequestBody Map<String, Object> inputMap){
         Result result=new Result();
         result=searchinfoService.UpdateInfoByUser(inputMap);
         return result;
