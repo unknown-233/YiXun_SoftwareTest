@@ -26,4 +26,6 @@ public class VolActivityDTO {
     private String ContactMethod;
     @JsonProperty("SignupPeople")
     private int SignupPeople;
+    @JsonProperty("ReleaseTime")
+    private String ReleaseTime;
 }

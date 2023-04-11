@@ -503,6 +503,45 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
         }
     }
 
+    public Result GetSearchInfoToChange(int searchinfoId)
+    {
+        try{
+            Result result=new Result();
+            Searchinfo searchinfo=searchinfoMapper.selectById(searchinfoId);
+            result.data.put("search_type", searchinfo.getSearchType());
+            result.data.put("search_name", searchinfo.getSoughtPeopleName());
+            result.data.put("search_gender", searchinfo.getSoughtPeopleGender());
+            result.data.put("search_detail", searchinfo.getSoughtPeopleDetail());
+            result.data.put("search_birthday", TimeTrans.myToString(searchinfo.getSoughtPeopleBirthday()));
+            result.data.put("searchinfo_lostdate", TimeTrans.myToString(searchinfo.getSearchinfoLostdate()));
+            result.data.put("contact_method",searchinfo.getContactMethod());
+            result.data.put("search_state",searchinfo.getSoughtPeopleState());
+            result.data.put("isreport", searchinfo.getIsreport());
+            result.data.put("search_height", searchinfo.getSoughtPeopleHeight());
+            result.data.put("search_photo", searchinfo.getSearchinfoPhotoUrl());
+            if (searchinfo.getAddressId() != null)
+            {
+                Address address=addressMapper.selectById(searchinfo.getAddressId());
+                result.data.put("search_province", address.getProvinceId());
+                result.data.put("search_city", address.getCityId());
+                result.data.put("search_area", address.getAreaId());
+                result.data.put("search_address", address.getDetail());
+            }
+            else
+            {
+                result.data.put("search_province", null);
+                result.data.put("search_city", null);
+                result.data.put("search_area", null);
+                result.data.put("search_address", null);
+            }
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 
 }
 

@@ -23,4 +23,12 @@ public class Searchinfocontroller {
         return result;
     }
 
+    public Result GetSearchInfoToChange(int searchinfoId)
+    {
+        Result result=new Result();
+        result=searchinfoService.GetSearchInfoToChange(searchinfoId);
+        return result;
+
+    }
+
 }

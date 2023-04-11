@@ -51,6 +51,7 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
         dto.setActPicUrl(volActivity.getActPicUrl());
         dto.setContactMethod(volActivity.getContactMethod());
         dto.setSignupPeople(volActivity.getSignupPeople());
+        dto.setReleaseTime(TimeTrans.myToString(volActivity.getReleaseTime()));
         return dto;
     }
 
@@ -70,7 +71,8 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
             Page<VolActivity> page = new Page<>(pageNum, pageSize);
             QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
             String localTime=TimeTrans.myToString(new Date());
-            wrapper.orderByAsc("EXP_TIME").gt("EXP_TIME",localTime);
+            //传回一个发布时间
+            wrapper.orderByAsc("VOL_ACT_ID");
             IPage iPage = volActivityMapper.selectPage(page,wrapper);
             List<VolActivityDTO> dtoList=cutIntoVolActivityDTOList((List<VolActivity>)iPage.getRecords());
             result.data.put("activity_list", dtoList);

@@ -1,7 +1,9 @@
 package com.yixun.yixun_backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.*;
@@ -65,6 +67,8 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
     private SearchinfoFocusMapper searchinfoFocusMapper;
     @Resource
     private SearchinfoFollowupMapper searchinfoFollowupMapper;
+    @Resource
+    private RecruitedMapper recruitedMapper;
     public Result Addnews(@RequestBody Map<String, Object> inputData) {
         try {
             Result result = new Result();
@@ -702,7 +706,14 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
     {
         try{
             Result result = new Result();
-            volActivityMapper.deleteById(actId);
+
+            LambdaQueryWrapper<Recruited> wrapper2 = new QueryWrapper<Recruited>().lambda().eq(Recruited::getVolActId, actId);
+            recruitedMapper.delete(wrapper2);
+            //原来的方法只能删掉一行，这个可以删掉所有符合条件的
+            QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
+            wrapper.eq("VOL_ACT_ID", actId);
+            searchinfoMapper.delete(wrapper);//从searchinfoFocus表中删去这条数据
+
             result.status = true;
             result.errorCode = 200;
             return result;
