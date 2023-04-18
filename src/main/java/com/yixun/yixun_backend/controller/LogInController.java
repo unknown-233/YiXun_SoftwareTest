@@ -31,8 +31,8 @@ public class LogInController {
     @PostMapping("/Regist")
     public Result Regist(@RequestBody Map<String,Object> inputData){
         Result result=new Result();
-        //result=webUserService.AddWebUser(inputData);
-        result=webUserService.N_AddWebUser(inputData);
+        result=webUserService.AddWebUser(inputData);
+        //result=webUserService.N_AddWebUser(inputData);
         return result;
     }
 
