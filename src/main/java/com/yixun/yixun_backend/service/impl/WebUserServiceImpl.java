@@ -1,25 +1,23 @@
 package com.yixun.yixun_backend.service.impl;
 
-import cn.hutool.system.UserInfo;
-import com.baomidou.mybatisplus.core.assist.ISqlRunner;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yixun.yixun_backend.dto.NewsDTO;
 import com.yixun.yixun_backend.dto.UserInfoDTO;
 import com.yixun.yixun_backend.entity.*;
+import com.yixun.yixun_backend.entity.Address;
 import com.yixun.yixun_backend.mapper.*;
 import com.yixun.yixun_backend.service.WebUserService;
-import com.yixun.yixun_backend.utils.JWTutils;
-import com.yixun.yixun_backend.utils.OssUploadService;
-import com.yixun.yixun_backend.utils.Result;
-import com.yixun.yixun_backend.utils.TimeTrans;
+import com.yixun.yixun_backend.utils.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.util.*;
+
+//my code
+import java.util.Random;
 
 /**
 * @author hunyingzhong
@@ -48,6 +46,9 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
     private OssUploadService ossUploadService;
     @Resource
     private ClueMapper clueMapper;
+
+
+
     public UserInfoDTO cutIntoUserInfoDTO(WebUser user){
         UserInfoDTO dto=new UserInfoDTO();
         dto.setIsactive(user.getIsactive());
@@ -430,6 +431,164 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
             return Result.error();
         }
     }
+
+    //my code
+    public String SendEmailVerification(String email){
+        try{
+            // 随机生成6位验证码
+            Random random = new Random();
+            String code = "";//要生成的验证码
+            for(int i=0; i<6; i++) {
+                code += random.nextInt(10);
+            }
+
+            ArrayList<String> emailArray = new ArrayList<>();
+            //测试，收取邮件的邮箱，可以填写自己的发送邮件的邮箱
+            emailArray.add(email);
+
+            MailSenderUtil.sendMailToUserArray(emailArray,MailConst.NOTIFICATION_MAIL_TITLE,MailConst.NOTIFICATION_MAIL_CONTENT+code);
+
+            return code;
+        }
+        catch (Exception e)
+        {
+            return e.getMessage();
+        }
+    }
+
+    //复写了之前的，别忘了删掉
+    public Result N_UpdateUserPassword(@RequestBody Map<String, Object> inputMap)
+    {
+        try{
+            Result result=new Result();
+            int userid=(int)inputMap.get("user_id");
+            String oldPassword = (String)inputMap.get("user_password");
+            String newPassword = (String)inputMap.get("new_password");
+            String verification = (String)inputMap.get("user_verification");
+            String right_veri = (String)inputMap.get("verification");
+            if(verification==right_veri)
+            {
+                WebUser user=webUserMapper.selectById(userid);
+                if(user.getUserPasswords().equals(oldPassword)) {
+                    user.setUserPasswords(newPassword);
+                    webUserMapper.updateById(user);
+                }else{
+                    return Result.error();
+                }
+            }
+            else{
+                return Result.error();
+            }
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result N_AddWebUser(@RequestBody Map<String,Object> inputData){
+        try{
+            Result result=new Result();
+            String userPhoneKey = "user_phone";
+            Long userPhone =  Long.valueOf(0);
+            String userPasswordKey = "user_password";
+            String userPassword = "";
+            String userNameKey = "user_name";
+            String userName = "";
+            String userEmailKey = "user_email";
+            String userEmail = "";
+            if (inputData.containsKey(userPhoneKey)) {
+                userPhone = (Long) inputData.get(userPhoneKey);
+            }
+            if (inputData.containsKey(userPasswordKey)) {
+                userPassword = (String) inputData.get(userPasswordKey);
+            }
+            if (inputData.containsKey(userNameKey)) {
+                userName = (String) inputData.get(userNameKey);
+            }
+            if (inputData.containsKey(userEmailKey)) {
+                userEmail = (String) inputData.get(userEmailKey);
+            }
+            String verification = (String)inputData.get("user_verification");
+            String right_veri = (String)inputData.get("verification");
+            WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM",userPhone));
+            if(!verification.equals (right_veri)){
+                return Result.error();
+            }
+            if(user != null)
+            {
+                return Result.error();
+            }
+            else{
+                WebUser newUser = new WebUser();
+                newUser.setUserName(userName);
+                newUser.setPhoneNum(userPhone);
+                newUser.setMailboxNum(userEmail);
+                newUser.setUserPasswords(userPassword);
+                webUserMapper.insert(newUser);
+                List<WebUser> tmpList = webUserMapper.selectList(new QueryWrapper<WebUser>().orderByDesc("USER_ID"));
+                WebUser newAddedUser = tmpList.get(0);
+                result.data.put("user_id",newAddedUser.getUserId());
+                result.errorCode = 200;
+                result.status = true;
+            }
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+    public Result N_IfCorrectToLogIn(@RequestBody Map<String,Object> inputMap){
+        Result message = new Result();
+        try{
+            String email = (String)inputMap.get("user_email");
+            String password = (String)inputMap.get("user_password");
+            WebUser user = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("MAILBOX_NUM", email).eq("USER_PASSWORDS", password));
+            if(user!=null){
+                if (user.getIsactive() == "N" || user.getUserState() == "N"){
+                    message.data.put("message","账号已被注销或封禁");
+                    return message;
+                }
+                Date date = new Date();
+                user.setLastloginTime(date);
+                webUserMapper.updateById(user);
+                //webUserMapper.update(user,new UpdateWrapper<WebUser>().eq("PHONE_NUM", phone).eq("USER_PASSWORDS", password));
+                //保存数据库
+                Volunteer volunteer = volunteerMapper.selectOne(new QueryWrapper<Volunteer>().eq("VOL_USER_ID", user.getUserId()));
+                if(volunteer!=null){
+                    String token= JWTutils.generateToken(Integer.toString(user.getUserId()),user.getUserPasswords());
+                    message.data.put("user_token",token);
+                    String vol_token= JWTutils.generateToken(Integer.toString(volunteer.getVolId()),user.getUserPasswords());
+                    message.data.put("identity", "volunteer");
+                    message.data.put("vol_id", volunteer.getVolId());
+                    message.data.put("user_id", volunteer.getVolUserId());
+                }
+                else{
+                    String token= JWTutils.generateToken(Integer.toString(user.getUserId()),user.getUserPasswords());
+                    message.data.put("user_token",token);
+                    message.data.put("identity", "user");
+                    message.data.put("id", user.getUserId());
+                }
+            }
+            else{
+                Administrators administrator = administratorsMapper.selectOne(new QueryWrapper<Administrators>().eq("ADMINISTRATOR_PHONE", phone).eq("ADMINISTRATOR_CODE", password));
+                message.data.put("identity", "administrator");
+                message.data.put("id", administrator.getAdministratorId());
+                String token= JWTutils.generateToken(Integer.toString(administrator.getAdministratorId()),administrator.getAdministratorCode());
+                message.data.put("user_token",token);
+            }
+        }
+        catch (Exception e){
+            message.data.put("message","用户不正确或密码错误！");
+            return message;
+        }
+        message.status = true;
+        message.errorCode = 200;
+        return message;
+    }
+
 }
 
 

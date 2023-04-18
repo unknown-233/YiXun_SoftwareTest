@@ -17,7 +17,8 @@ public class LogInController {
     @PostMapping("/LogInCheck")
     public Result LogInCheck(@RequestBody Map<String,Object> inputData){
         Result result=new Result();
-        result=webUserService.IfCorrectToLogIn(inputData);
+        //result=webUserService.IfCorrectToLogIn(inputData);
+        result=webUserService.N_IfCorrectToLogIn(inputData);
         return result;
     }
 
@@ -30,8 +31,17 @@ public class LogInController {
     @PostMapping("/Regist")
     public Result Regist(@RequestBody Map<String,Object> inputData){
         Result result=new Result();
-        result=webUserService.AddWebUser(inputData);
+        //result=webUserService.AddWebUser(inputData);
+        result=webUserService.N_AddWebUser(inputData);
         return result;
     }
+
+//    my code
+    @PostMapping("/GetVerification")
+    public String GetVerification(String email){
+        String code=webUserService.SendEmailVerification(email);
+        return code;
+    }
+
 
 }

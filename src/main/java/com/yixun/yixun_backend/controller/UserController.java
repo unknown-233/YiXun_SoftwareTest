@@ -32,11 +32,13 @@ public class UserController {
     }
 
     //1.3-1 修改个人密码
+    //这里进行了改动
     @PutMapping("/ChangePassword")
     public Result ChangePassword(@RequestBody Map<String, Object> inputMap)
     {
         Result result=new Result();
         result=webUserService.UpdateUserPassword(inputMap);
+        result=webUserService.N_UpdateUserPassword(inputMap);
         return result;
     }
 
