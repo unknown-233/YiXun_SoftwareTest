@@ -18,7 +18,7 @@ public class LogInController {
     public Result LogInCheck(@RequestBody Map<String,Object> inputData){
         Result result=new Result();
         //result=webUserService.IfCorrectToLogIn(inputData);
-        result=webUserService.N_IfCorrectToLogIn(inputData);
+        result=webUserService.IfCorrectToLogIn(inputData);
         return result;
     }
 

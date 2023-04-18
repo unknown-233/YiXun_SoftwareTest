@@ -573,7 +573,7 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
                 }
             }
             else{
-                Administrators administrator = administratorsMapper.selectOne(new QueryWrapper<Administrators>().eq("ADMINISTRATOR_PHONE", phone).eq("ADMINISTRATOR_CODE", password));
+                Administrators administrator = administratorsMapper.selectOne(new QueryWrapper<Administrators>().eq("ADMINISTRATOR_EMAIL", email).eq("ADMINISTRATOR_CODE", password));
                 message.data.put("identity", "administrator");
                 message.data.put("id", administrator.getAdministratorId());
                 String token= JWTutils.generateToken(Integer.toString(administrator.getAdministratorId()),administrator.getAdministratorCode());

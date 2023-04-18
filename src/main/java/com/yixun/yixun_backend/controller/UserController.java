@@ -38,7 +38,6 @@ public class UserController {
     {
         Result result=new Result();
         result=webUserService.UpdateUserPassword(inputMap);
-        result=webUserService.N_UpdateUserPassword(inputMap);
         return result;
     }
 
