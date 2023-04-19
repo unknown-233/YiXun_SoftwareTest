@@ -28,4 +28,6 @@ public interface WebUserService extends IService<WebUser> {
     public Result N_UpdateUserPassword(@RequestBody Map<String, Object> inputMap);
     public Result N_AddWebUser(@RequestBody Map<String,Object> inputData);
     public Result N_IfCorrectToLogIn(@RequestBody Map<String,Object> inputMap);
+    public Result SendEmailVerificationToVerify(String email);
+    public Result UpdateToNewPassword(@RequestBody Map<String, Object> inputMap);
 }

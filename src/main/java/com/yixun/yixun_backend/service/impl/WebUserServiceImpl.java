@@ -459,32 +459,58 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
             return e.getMessage();
         }
     }
-//    public String SendRegistedEmailVerification(String email){
-//        try{
-//            // 随机生成6位验证码
-//            Random random = new Random();
-//            String code = "";//要生成的验证码
-//            for(int i=0; i<6; i++) {
-//                code += random.nextInt(10);
-//            }
-//            WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("MAILBOX_NUM",email));
-//            if(user != null)
-//            {
-//                return "false";
-//            }
-//            ArrayList<String> emailArray = new ArrayList<>();
-//            //测试，收取邮件的邮箱，可以填写自己的发送邮件的邮箱
-//            emailArray.add(email);
-//
-//            MailSenderUtil.sendMailToUserArray(emailArray,MailConst.NOTIFICATION_MAIL_TITLE,MailConst.NOTIFICATION_MAIL_CONTENT+code);
-//
-//            return code;
-//        }
-//        catch (Exception e)
-//        {
-//            return e.getMessage();
-//        }
-//    }
+    public Result SendEmailVerificationToVerify(String email){
+        try{
+            Result result=new Result();
+            // 随机生成6位验证码
+            Random random = new Random();
+            String code = "";//要生成的验证码
+            for(int i=0; i<6; i++) {
+                code += random.nextInt(10);
+            }
+            WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("MAILBOX_NUM",email));
+            if(user != null)
+            {
+                ArrayList<String> emailArray = new ArrayList<>();
+                //测试，收取邮件的邮箱，可以填写自己的发送邮件的邮箱
+                emailArray.add(email);
+                MailSenderUtil.sendMailToUserArray(emailArray,MailConst.NOTIFICATION_MAIL_TITLE,MailConst.NOTIFICATION_MAIL_CONTENT+code);
+                result.data.put("verification",code);
+                result.data.put("isRegisted","true");
+                result.data.put("user_id",user.getUserId());
+                result.errorCode = 200;
+                result.status = true;
+                return result;
+            }
+            else{
+                result.data.put("isRegisted","false");
+                result.errorCode = 200;
+                result.status = true;
+                return result;
+            }
+        }
+        catch (Exception e)
+        {
+            return Result.error();
+        }
+    }
+    public Result UpdateToNewPassword(@RequestBody Map<String, Object> inputMap){
+        try{
+            Result result=new Result();
+            int userid=(int)inputMap.get("user_id");
+            String newPassword = (String)inputMap.get("new_password");
+            WebUser user=webUserMapper.selectById(userid);
+            user.setUserPasswords(newPassword);
+            webUserMapper.updateById(user);
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e)
+        {
+            return Result.error();
+        }
+    }
 
     //复写了之前的，别忘了删掉
     public Result N_UpdateUserPassword(@RequestBody Map<String, Object> inputMap)

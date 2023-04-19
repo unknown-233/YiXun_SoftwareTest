@@ -42,6 +42,17 @@ public class LogInController {
         String code=webUserService.SendEmailVerification(email);
         return code;
     }
-
+    @PostMapping("/GetVerificationToVerify")
+    public Result GetVerificationToVerify(String email){
+        Result result=new Result();
+        result=webUserService.SendEmailVerificationToVerify(email);
+        return result;
+    }
+    @PutMapping("/ForgetPassword")
+    public Result ForgetPassword(@RequestBody Map<String, Object> inputMap){
+        Result result=new Result();
+        result=webUserService.UpdateToNewPassword(inputMap);
+        return result;
+    }
 
 }
