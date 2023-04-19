@@ -3,7 +3,7 @@ public class MailConst {
     //你的进行发送邮件的邮箱
     public static final String USER_NAME = "liuruimeng291@163.com";
     //授权密码
-    public static final String  PWD_CODE = "FOAKIRQJGIZDUFSM";
+    public static final String  PWD_CODE = "";
     public static final String MAIL_HOST = "smtp.163.com";
     public static final String MAIL_SMTP_AUTH = "true";
 

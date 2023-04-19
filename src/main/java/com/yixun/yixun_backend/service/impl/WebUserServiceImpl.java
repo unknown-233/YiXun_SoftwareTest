@@ -441,7 +441,11 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
             for(int i=0; i<6; i++) {
                 code += random.nextInt(10);
             }
-
+            WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("MAILBOX_NUM",email));
+            if(user != null)
+            {
+                return "false";
+            }
             ArrayList<String> emailArray = new ArrayList<>();
             //测试，收取邮件的邮箱，可以填写自己的发送邮件的邮箱
             emailArray.add(email);
@@ -455,6 +459,32 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
             return e.getMessage();
         }
     }
+//    public String SendRegistedEmailVerification(String email){
+//        try{
+//            // 随机生成6位验证码
+//            Random random = new Random();
+//            String code = "";//要生成的验证码
+//            for(int i=0; i<6; i++) {
+//                code += random.nextInt(10);
+//            }
+//            WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("MAILBOX_NUM",email));
+//            if(user != null)
+//            {
+//                return "false";
+//            }
+//            ArrayList<String> emailArray = new ArrayList<>();
+//            //测试，收取邮件的邮箱，可以填写自己的发送邮件的邮箱
+//            emailArray.add(email);
+//
+//            MailSenderUtil.sendMailToUserArray(emailArray,MailConst.NOTIFICATION_MAIL_TITLE,MailConst.NOTIFICATION_MAIL_CONTENT+code);
+//
+//            return code;
+//        }
+//        catch (Exception e)
+//        {
+//            return e.getMessage();
+//        }
+//    }
 
     //复写了之前的，别忘了删掉
     public Result N_UpdateUserPassword(@RequestBody Map<String, Object> inputMap)
@@ -588,6 +618,7 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
         message.errorCode = 200;
         return message;
     }
+
 
 }
 
