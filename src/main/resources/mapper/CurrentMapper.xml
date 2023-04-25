@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yixun.yixun_backend.mapper.CurrentMapper">
+
+    <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.Current">
+            <id property="currentId" column="CURRENT_ID" jdbcType="INTEGER"/>
+            <result property="totalIncome" column="TOTAL_INCOME" jdbcType="INTEGER"/>
+            <result property="totalOutcome" column="TOTAL_OUTCOME" jdbcType="INTEGER"/>
+            <result property="currentMoney" column="CURRENT_MONEY" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        CURRENT_ID,TOTAL_INCOME,TOTAL_OUTCOME,
+        CURRENT_MONEY
+    </sql>
+</mapper>

@@ -95,6 +95,10 @@ public class Searchinfo implements Serializable {
      * 记录是否存在
      */
     private String isactive;
+    /**
+     * 记录是否已找到
+     */
+    private String whetherFound;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -21,6 +21,7 @@
             <result property="searchinfoPhotoUrl" column="SEARCHINFO_PHOTO_URL" jdbcType="VARCHAR"/>
             <result property="contactMethod" column="CONTACT_METHOD" jdbcType="VARCHAR"/>
             <result property="isactive" column="ISACTIVE" jdbcType="VARCHAR"/>
+            <result property="whetherFound" column="WHETHER_FOUND" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -29,7 +30,7 @@
         SOUGHT_PEOPLE_DETAIL,USER_ID,SEARCH_TYPE,
         ISREPORT,ADDRESS_ID,SEARCHINFO_LOSTDATE,
         SOUGHT_PEOPLE_HEIGHT,SEARCHINFO_PHOTO_URL,CONTACT_METHOD,
-        ISACTIVE
+        ISACTIVE,WHETHER_FOUND
     </sql>
 
     <select id="selectFocusSearchInfoByUserID" parameterType="java.lang.Integer" resultType="com.yixun.yixun_backend.entity.Searchinfo">

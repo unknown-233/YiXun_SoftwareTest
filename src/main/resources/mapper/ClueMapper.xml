@@ -11,10 +11,11 @@
             <result property="searchinfoId" column="SEARCHINFO_ID" jdbcType="INTEGER"/>
             <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
             <result property="isactive" column="ISACTIVE" jdbcType="VARCHAR"/>
+            <result property="whetherConfirmed" column="WHETHER_CONFIRMED" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         CLUE_ID,CLUE_CONTENT,CLUE_DATE,
-        SEARCHINFO_ID,USER_ID,ISACTIVE
+        SEARCHINFO_ID,USER_ID,ISACTIVE,WHETHER_CONFIRMED
     </sql>
 </mapper>
