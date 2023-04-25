@@ -38,6 +38,10 @@ public class Administrators implements Serializable {
      * 密码
      */
     private String administratorCode;
+    /**
+     * 邮箱
+     */
+    private String administratorEmail;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

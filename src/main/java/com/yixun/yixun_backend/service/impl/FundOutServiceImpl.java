@@ -1,5 +1,6 @@
 package com.yixun.yixun_backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,17 +8,21 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.FundOutDTO;
 import com.yixun.yixun_backend.dto.SearchinfoDTO;
 import com.yixun.yixun_backend.entity.FundOut;
+import com.yixun.yixun_backend.entity.Recruited;
 import com.yixun.yixun_backend.entity.Searchinfo;
+import com.yixun.yixun_backend.entity.VolActivity;
 import com.yixun.yixun_backend.service.FundOutService;
 import com.yixun.yixun_backend.mapper.FundOutMapper;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author dell
@@ -66,6 +71,47 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             return Result.error();
         }
     }
+    
+    public Result AddFundOut(@RequestBody Map<String, Object> inputData){
+        try {
+            Result result = new Result();
+            int ammount = (int)inputData.get("fund_out_amount");
+            int administrator_id = (int)inputData.get("administrator_id");
+            String usage = (String)inputData.get("fund_out_usage");
+            String time = (String) inputData.get("fund_out_time");
+            FundOut fundOut = new FundOut();
+            fundOut.setFundOutTime(TimeTrans.myToDate_1(time));
+            fundOut.setUsage(usage);
+            fundOut.setAdministratorId(administrator_id);
+            fundOut.setAmmount(ammount);
+            fundOutMapper.insert(fundOut);
+
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        } catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result DeleteFundOut(int fundOutId)
+    {
+        try{
+            Result result = new Result();
+
+            LambdaQueryWrapper<FundOut> wrapper2 = new QueryWrapper<FundOut>().lambda().eq(FundOut::getFundOutId, fundOutId);
+            fundOutMapper.delete(wrapper2);
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+
+
 }
 
 
