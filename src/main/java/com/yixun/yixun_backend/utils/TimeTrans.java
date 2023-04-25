@@ -33,4 +33,14 @@ public class TimeTrans {
         }
         return myDate;
     }
+    public static Date myToBeginningOfMonth(String str){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date myDate = null;
+        try {
+            myDate = sdf.parse(str);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return myDate;
+    }
 }

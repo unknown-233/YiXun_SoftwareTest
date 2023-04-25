@@ -41,7 +41,7 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         dto.setFund_out_id(fundOut.getFundOutId());
         dto.setFund_out_amount(fundOut.getAmmount());
-        dto.setFund_out_usage(fundOut.getUsage());
+        dto.setFund_out_usage(fundOut.getFundOutUsage());
         dto.setFund_out_time(TimeTrans.myToString(fundOut.getFundOutTime()));
         return dto;
     }
@@ -68,7 +68,9 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             result.errorCode = 200;
             return result;
         } catch (Exception e) {
-            return Result.error();
+            Result result = new Result();
+            result.data.put("error",e.getMessage());
+            return result;
         }
     }
 
@@ -81,7 +83,7 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             String time = (String) inputData.get("fund_out_time");
             FundOut fundOut = new FundOut();
             fundOut.setFundOutTime(TimeTrans.myToDate_1(time));
-            fundOut.setUsage(usage);
+            fundOut.setFundOutUsage(usage);
             fundOut.setAdministratorId(administrator_id);
             fundOut.setAmmount(ammount);
             fundOutMapper.insert(fundOut);
