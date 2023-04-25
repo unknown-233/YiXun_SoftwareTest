@@ -8,14 +8,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 import lombok.Data;
-@TableName(value ="yixun_outcome")
+@TableName(value ="yixun_fund_out")
 @Data
-public class Outcome implements Serializable {
+public class FundOut implements Serializable {
     /**
      * 支出编号
      */
     @TableId(type = IdType.AUTO)
-    private Integer outcomeId;
+    private Integer fundOutId;
 
     /**
      * 支出管理员
@@ -31,6 +31,11 @@ public class Outcome implements Serializable {
      * 资金使用
      */
     private String usage;
+
+    /**
+     * 支出时间
+     */
+    private Date fundOutTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

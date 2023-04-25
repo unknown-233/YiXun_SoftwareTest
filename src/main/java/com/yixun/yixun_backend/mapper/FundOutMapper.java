@@ -1,6 +1,6 @@
 package com.yixun.yixun_backend.mapper;
 
-import com.yixun.yixun_backend.entity.Outcome;
+import com.yixun.yixun_backend.entity.FundOut;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-04-25 19:51:46
 * @Entity com.yixun.yixun_backend.entity.Outcome
 */
-public interface OutcomeMapper extends BaseMapper<Outcome> {
+public interface FundOutMapper extends BaseMapper<FundOut> {
 
 }
 
