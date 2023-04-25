@@ -17,4 +17,6 @@ public interface VolunteerService extends IService<Volunteer> {
     List<VolInfoDTO> cutIntoVolInfoList(List<Volunteer> volList);
     public String GetVolunteerNumber();
     public Result GetTenVolunteer();
+    public Result UpdateSearchinfoToFound(int searchinfoId);
+    public Result UpdateClueConfirmed(int clueId);
 }

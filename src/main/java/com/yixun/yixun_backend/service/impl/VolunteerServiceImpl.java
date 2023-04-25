@@ -32,6 +32,10 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
     private RecruitedMapper recruitedMapper;
     @Resource
     private VolunteerMapper volunteerMapper;
+    @Resource
+    private SearchinfoMapper searchinfoMapper;
+    @Resource
+    private ClueMapper clueMapper;
 
     public VolInfoDTO cutIntoVolInfoDTO(Volunteer vol){
         //用户
@@ -94,6 +98,40 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
             return Result.error();
         }
     }
+    public Result UpdateSearchinfoToFound(int searchinfoId){
+        try
+        {
+            Result result=new Result();
+            Searchinfo searchinfo=searchinfoMapper.selectById(searchinfoId);
+            searchinfo.setWhetherFound("Y");
+            searchinfoMapper.updateById(searchinfo);
+
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+    public Result UpdateClueConfirmed(int clueId){
+        try
+        {
+            Result result=new Result();
+            Clue clue=clueMapper.selectById(clueId);
+            clue.setWhetherConfirmed("Y");
+            clueMapper.updateById(clue);
+
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
+
+
 }
 
 

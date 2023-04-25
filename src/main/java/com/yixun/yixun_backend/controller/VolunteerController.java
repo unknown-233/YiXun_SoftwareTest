@@ -81,4 +81,19 @@ public class VolunteerController {
         result=volunteerService.GetTenVolunteer();
         return result;
     }
+    @PutMapping("/ChangeSearchinfoToFound")
+    public Result ChangeSearchinfoToFound(int searchinfoId)
+    {
+        Result result=new Result();
+        result=volunteerService.UpdateSearchinfoToFound(searchinfoId);
+        return result;
+    }
+    @PutMapping("/ChangeClueConfirmed")
+    public Result ChangeClueConfirmed(int clueId)
+    {
+        Result result=new Result();
+        result=volunteerService.UpdateClueConfirmed(clueId);
+        return result;
+    }
+
 }

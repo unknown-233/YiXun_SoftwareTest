@@ -71,7 +71,7 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             return Result.error();
         }
     }
-    
+
     public Result AddFundOut(@RequestBody Map<String, Object> inputData){
         try {
             Result result = new Result();
