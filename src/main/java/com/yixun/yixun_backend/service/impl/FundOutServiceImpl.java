@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Date;
 /**
 * @author dell
 * @description 针对表【yixun_outcome】的数据库操作Service实现
@@ -121,7 +121,9 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
 
             Page<FundOut> page = new Page<FundOut>(pageNum, pageSize);
             QueryWrapper<FundOut> wrapper = new QueryWrapper<FundOut>();
-
+            Date start=TimeTrans.myToBeginningOfMonth(startTime);
+            Date end=TimeTrans.myToEndOfMonth(endTime);
+            wrapper.between("FUND_OUT_TIME", start, end);
             IPage iPage = fundOutMapper.selectPage(page, wrapper);
             List<FundOutDTO> dtoList = cutIntoFundOutList((List<FundOut>) iPage.getRecords());
             result.data.put("fund_out", dtoList);
