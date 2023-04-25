@@ -43,5 +43,10 @@ public class FinanceController {
         result=fundOutService.DeleteFundOut(fundOutId);
         return result;
     }
-
+    @GetMapping("/GetFundOutByYear")
+    public Result GetFundOutByYear(@RequestBody Map<String, Object> inputData){
+        Result result=new Result();
+        result=fundOutService.GetFundOutByYear(inputData);
+        return result;
+    }
 }

@@ -109,7 +109,22 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             return Result.error();
         }
     }
+    public Result GetFundOutByYear(@RequestBody Map<String, Object> inputData){
+        try{
+            Result result = new Result();
+            int pageNum = (int)inputData.get("pageNum");
+            int pageSize = (int)inputData.get("pageSize");
+            String startTime = (String)inputData.get("startTime");
+            String endTime = (String)inputData.get("endTime");
 
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+            catch (Exception e) {
+            return Result.error();
+        }
+    }
 
 
 }
