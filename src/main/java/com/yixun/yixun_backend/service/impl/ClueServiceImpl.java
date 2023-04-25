@@ -41,6 +41,7 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
         dto.setClueContent(clue.getClueContent());
         dto.setClueDate(TimeTrans.myToString(clue.getClueDate()));
         dto.setSearchinfoId(clue.getSearchinfoId());
+        dto.setWhetherConfirmed(clue.getWhetherConfirmed());
         return dto;
     }
 

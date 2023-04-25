@@ -117,6 +117,15 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             String startTime = (String)inputData.get("startTime");
             String endTime = (String)inputData.get("endTime");
 
+            Page<FundOut> page = new Page<FundOut>(pageNum, pageSize);
+            QueryWrapper<FundOut> wrapper = new QueryWrapper<FundOut>();
+
+            IPage iPage = fundOutMapper.selectPage(page, wrapper);
+            List<FundOutDTO> dtoList = cutIntoFundOutList((List<FundOut>) iPage.getRecords());
+            result.data.put("fund_out", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+
             result.status = true;
             result.errorCode = 200;
             return result;
