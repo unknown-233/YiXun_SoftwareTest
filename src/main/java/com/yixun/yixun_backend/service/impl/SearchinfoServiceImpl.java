@@ -263,6 +263,7 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             result.data.put("search_clue",clueService.cutIntoClueDTOList(clueDTOList));
             List<FollowVolDTO> followVolDTO=webUserMapper.selectVolDTOByInfoID(search_id);
             result.data.put("search_vols",followVolDTO);
+            result.data.put("whether_found",searchinfo.getWhetherFound());
             if (searchinfo.getAddressId() != null)
             {
                 Address address=addressMapper.selectById(searchinfo.getAddressId());
