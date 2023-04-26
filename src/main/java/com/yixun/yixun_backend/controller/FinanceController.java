@@ -15,11 +15,19 @@ public class FinanceController {
     private FundOutService fundOutService;
     @Resource
     private CurrentService currentService;
+    @Resource
+    private IncomeService incomeService;
 
     @GetMapping("/GetAllFundOut")
     public Result GetAllFundOut(int pageNum, int pageSize){
         Result result=new Result();
         result=fundOutService.GetAllFundOut(pageNum,pageSize);
+        return result;
+    }
+    @GetMapping("/GetAllIncome")
+    public Result GetAllIncome(int pageNum, int pageSize){
+        Result result=new Result();
+        result=incomeService.GetAllIncome(pageNum,pageSize);
         return result;
     }
     @PostMapping("/AddFundOut")

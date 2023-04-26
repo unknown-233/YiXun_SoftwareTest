@@ -12,6 +12,12 @@ public class TimeTrans {
         String strDate = sdf.format(date);
         return strDate;
     }
+    public static String myToDateString(Date date)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = sdf.format(date);
+        return strDate;
+    }
 
     public static Date myToDate(String str)
     {

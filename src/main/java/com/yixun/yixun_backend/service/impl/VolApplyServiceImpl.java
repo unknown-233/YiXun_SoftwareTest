@@ -3,22 +3,22 @@ package com.yixun.yixun_backend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.VolApplyInfoDTO;
+import com.yixun.yixun_backend.entity.VolActivity;
 import com.yixun.yixun_backend.entity.VolApply;
 import com.yixun.yixun_backend.entity.WebUser;
 import com.yixun.yixun_backend.mapper.AdministratorsMapper;
 import com.yixun.yixun_backend.mapper.WebUserMapper;
 import com.yixun.yixun_backend.service.VolApplyService;
 import com.yixun.yixun_backend.mapper.VolApplyMapper;
+import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.util.*;
 
 /**
 * @author hunyingzhong
@@ -34,6 +34,8 @@ public class VolApplyServiceImpl extends ServiceImpl<VolApplyMapper, VolApply>
     private VolApplyMapper volApplyMapper;
     @Resource
     private WebUserMapper webUserMapper;
+    @Resource
+    private OssUploadService ossUploadService;
     public VolApplyInfoDTO cutIntoVolApplyInfoList(VolApply apply) {
         VolApplyInfoDTO volApplyInfoDTO=new VolApplyInfoDTO();
         volApplyInfoDTO.setVol_apply_id(apply.getVolApplyId());
@@ -115,6 +117,41 @@ public class VolApplyServiceImpl extends ServiceImpl<VolApplyMapper, VolApply>
             return Result.error();
         }
     }
+
+    //要看看能不能用
+//    public Result AddResume(@RequestBody Map<String, Object> inputData) {
+//        try {
+//            Result result = new Result();
+//            String idKey = "user_id";
+//            int userId = 0;
+//            String img_base64Key = "resume";
+//            String img_base64 = "";
+//            if (inputData.containsKey(idKey)) {
+//                userId = (int) inputData.get(idKey);
+//            }
+//            if (inputData.containsKey(img_base64Key)) {
+//                img_base64 = (String) inputData.get(img_base64Key);
+//            }
+//            WebUser user = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("USER_ID", userId));
+//            String type = "." + img_base64.split(",")[0].split(";")[0].split("/")[1];
+//            img_base64 = img_base64.split("base64,")[1];
+//
+//            byte[] img_bytes = Base64.getDecoder().decode(img_base64);
+//            ByteArrayInputStream stream = new ByteArrayInputStream(img_bytes, 0, img_bytes.length);
+//
+//            String path = "Apply/" + Integer.toString(userId) + type;
+//            ossUploadService.uploadfile(stream, path);
+//            String imgurl = "https://yixun-picture.oss-cn-shanghai.aliyuncs.com/" + path;
+//            //还没改
+//            volActivity.setActPicUrl(imgurl);
+//            volActivityMapper.updateById(volActivity);
+//            result.errorCode = 200;
+//            result.status = true;
+//            return result;
+//        } catch (Exception e) {
+//            return Result.error();
+//        }
+//    }
 }
 
 
