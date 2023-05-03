@@ -30,7 +30,7 @@ public class FundOut implements Serializable {
     /**
      * 资金使用
      */
-    private String usage;
+    private String fundOutUsage;
 
     /**
      * 支出时间

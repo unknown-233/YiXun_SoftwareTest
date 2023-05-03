@@ -31,7 +31,7 @@ public class Income implements Serializable {
     /**
      * 捐赠时间
      */
-    private Date time;
+    private Date incomeTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

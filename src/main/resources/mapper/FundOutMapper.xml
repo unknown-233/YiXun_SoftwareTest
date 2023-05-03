@@ -5,15 +5,15 @@
 <mapper namespace="com.yixun.yixun_backend.mapper.FundOutMapper">
 
     <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.FundOut">
-            <id property="fundOutId" column="OUTCOME_ID" jdbcType="INTEGER"/>
+            <id property="fundOutId" column="FUND_OUT_ID" jdbcType="INTEGER"/>
             <result property="administratorId" column="ADMINISTRATOR_ID" jdbcType="INTEGER"/>
             <result property="ammount" column="AMMOUNT" jdbcType="INTEGER"/>
-            <result property="usage" column="USAGE" jdbcType="VARCHAR"/>
-        <result property="fundOutTime" column="TIME" jdbcType="TIMESTAMP"/>
+            <result property="fundOutUsage" column="FUND_OUT_USAGE" jdbcType="VARCHAR"/>
+        <result property="fundOutTime" column="FUND_OUT_TIME" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        OUTCOME_ID,ADMINISTRATOR_ID,AMMOUNT,
-        USAGE,FUND_OUT_TIME
+        FUND_OUT_ID,ADMINISTRATOR_ID,AMMOUNT,
+        FUND_OUT_USAGE,FUND_OUT_TIME
     </sql>
 </mapper>

@@ -8,11 +8,11 @@
             <id property="incomeId" column="INCOME_ID" jdbcType="INTEGER"/>
             <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
             <result property="ammount" column="AMMOUNT" jdbcType="INTEGER"/>
-            <result property="time" column="TIME" jdbcType="TIMESTAMP"/>
+            <result property="incomeTime" column="INCOME_TIME" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         INCOME_ID,USER_ID,AMMOUNT,
-        TIME
+        INCOME_TIME
     </sql>
 </mapper>

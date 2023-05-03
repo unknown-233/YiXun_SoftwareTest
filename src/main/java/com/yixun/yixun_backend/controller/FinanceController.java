@@ -15,11 +15,19 @@ public class FinanceController {
     private FundOutService fundOutService;
     @Resource
     private CurrentService currentService;
+    @Resource
+    private IncomeService incomeService;
 
     @GetMapping("/GetAllFundOut")
     public Result GetAllFundOut(int pageNum, int pageSize){
         Result result=new Result();
         result=fundOutService.GetAllFundOut(pageNum,pageSize);
+        return result;
+    }
+    @GetMapping("/GetAllIncome")
+    public Result GetAllIncome(int pageNum, int pageSize){
+        Result result=new Result();
+        result=incomeService.GetAllIncome(pageNum,pageSize);
         return result;
     }
     @PostMapping("/AddFundOut")
@@ -43,5 +51,10 @@ public class FinanceController {
         result=fundOutService.DeleteFundOut(fundOutId);
         return result;
     }
-
+    @PostMapping("/GetFundOutByYear")
+    public Result GetFundOutByYear(@RequestBody Map<String, Object> inputData){
+        Result result=new Result();
+        result=fundOutService.GetFundOutByYear(inputData);
+        return result;
+    }
 }

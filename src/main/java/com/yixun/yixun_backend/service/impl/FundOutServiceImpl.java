@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Date;
 /**
 * @author dell
 * @description 针对表【yixun_outcome】的数据库操作Service实现
@@ -41,7 +41,7 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         dto.setFund_out_id(fundOut.getFundOutId());
         dto.setFund_out_amount(fundOut.getAmmount());
-        dto.setFund_out_usage(fundOut.getUsage());
+        dto.setFund_out_usage(fundOut.getFundOutUsage());
         dto.setFund_out_time(TimeTrans.myToString(fundOut.getFundOutTime()));
         return dto;
     }
@@ -68,10 +68,12 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             result.errorCode = 200;
             return result;
         } catch (Exception e) {
-            return Result.error();
+            Result result = new Result();
+            result.data.put("error",e.getMessage());
+            return result;
         }
     }
-    
+
     public Result AddFundOut(@RequestBody Map<String, Object> inputData){
         try {
             Result result = new Result();
@@ -81,7 +83,7 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             String time = (String) inputData.get("fund_out_time");
             FundOut fundOut = new FundOut();
             fundOut.setFundOutTime(TimeTrans.myToDate_1(time));
-            fundOut.setUsage(usage);
+            fundOut.setFundOutUsage(usage);
             fundOut.setAdministratorId(administrator_id);
             fundOut.setAmmount(ammount);
             fundOutMapper.insert(fundOut);
@@ -109,7 +111,33 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             return Result.error();
         }
     }
+    public Result GetFundOutByYear(@RequestBody Map<String, Object> inputData){
+        try{
+            Result result = new Result();
+            int pageNum = (int)inputData.get("pageNum");
+            int pageSize = (int)inputData.get("pageSize");
+            String startTime = (String)inputData.get("startTime");
+            String endTime = (String)inputData.get("endTime");
 
+            Page<FundOut> page = new Page<FundOut>(pageNum, pageSize);
+            QueryWrapper<FundOut> wrapper = new QueryWrapper<FundOut>();
+            Date start=TimeTrans.myToBeginningOfMonth(startTime);
+            Date end=TimeTrans.myToEndOfMonth(endTime);
+            wrapper.between("FUND_OUT_TIME", start, end);
+            IPage iPage = fundOutMapper.selectPage(page, wrapper);
+            List<FundOutDTO> dtoList = cutIntoFundOutList((List<FundOut>) iPage.getRecords());
+            result.data.put("fund_out", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+            catch (Exception e) {
+            return Result.error();
+        }
+    }
 
 
 }

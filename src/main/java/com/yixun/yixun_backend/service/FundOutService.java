@@ -20,6 +20,7 @@ public interface FundOutService extends IService<FundOut> {
     public Result GetAllFundOut(int pageNum, int pageSize);
     public Result AddFundOut(@RequestBody Map<String, Object> inputData);
     public Result DeleteFundOut(int fundOutId);
+    public Result GetFundOutByYear(@RequestBody Map<String, Object> inputData);
 
 
 }

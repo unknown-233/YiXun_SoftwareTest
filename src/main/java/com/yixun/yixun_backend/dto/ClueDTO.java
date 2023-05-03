@@ -13,4 +13,6 @@ public class ClueDTO {
     private String ClueDate;
     @JsonProperty("SearchinfoId")
     private int SearchinfoId;
+    @JsonProperty("WhetherConfirmed")
+    private String WhetherConfirmed;
 }

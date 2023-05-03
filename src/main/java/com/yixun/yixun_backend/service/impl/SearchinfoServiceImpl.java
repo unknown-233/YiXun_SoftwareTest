@@ -85,7 +85,7 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             Page<Searchinfo> page = new Page<>(pageNum, pageSize);
             QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
             List<SearchinfoDTO> dtoList=new ArrayList<>();
-            wrapper.eq("ISACTIVE","Y").orderByAsc("SEARCHINFO_DATE");
+            wrapper.eq("ISACTIVE","Y").eq("WHETHER_FOUND","N").orderByAsc("SEARCHINFO_DATE");
             IPage iPage = searchinfoMapper.selectPage(page,wrapper);
             dtoList=cutIntoSearchinfoDTOList((List<Searchinfo>)iPage.getRecords());
             result.data.put("searchInfo_list", dtoList);
@@ -263,6 +263,7 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             result.data.put("search_clue",clueService.cutIntoClueDTOList(clueDTOList));
             List<FollowVolDTO> followVolDTO=webUserMapper.selectVolDTOByInfoID(search_id);
             result.data.put("search_vols",followVolDTO);
+            result.data.put("whether_found",searchinfo.getWhetherFound());
             if (searchinfo.getAddressId() != null)
             {
                 Address address=addressMapper.selectById(searchinfo.getAddressId());
