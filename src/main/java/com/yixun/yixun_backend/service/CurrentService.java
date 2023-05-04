@@ -11,4 +11,5 @@ import com.yixun.yixun_backend.utils.Result;
 */
 public interface CurrentService extends IService<Current> {
     public Result GetTotalFinance();
+    public double GetTotalIncome();
 }

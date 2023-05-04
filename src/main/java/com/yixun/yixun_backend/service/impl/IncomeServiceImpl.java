@@ -72,6 +72,11 @@ public class IncomeServiceImpl extends ServiceImpl<IncomeMapper, Income>
             return result;
         }
     }
+    public int GetDonateHead(){
+        QueryWrapper<Income> wrapper = new QueryWrapper<Income>();
+        int num=incomeMapper.selectCount(wrapper);
+        return num;
+    }
 }
 
 

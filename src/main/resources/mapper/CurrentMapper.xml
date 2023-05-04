@@ -6,9 +6,9 @@
 
     <resultMap id="BaseResultMap" type="com.yixun.yixun_backend.entity.Current">
             <id property="currentId" column="CURRENT_ID" jdbcType="INTEGER"/>
-            <result property="totalIncome" column="TOTAL_INCOME" jdbcType="INTEGER"/>
-            <result property="totalOutcome" column="TOTAL_OUTCOME" jdbcType="INTEGER"/>
-            <result property="currentMoney" column="CURRENT_MONEY" jdbcType="INTEGER"/>
+            <result property="totalIncome" column="TOTAL_INCOME" jdbcType="DOUBLE"/>
+            <result property="totalOutcome" column="TOTAL_OUTCOME" jdbcType="DOUBLE"/>
+            <result property="currentMoney" column="CURRENT_MONEY" jdbcType="DOUBLE"/>
     </resultMap>
 
     <sql id="Base_Column_List">

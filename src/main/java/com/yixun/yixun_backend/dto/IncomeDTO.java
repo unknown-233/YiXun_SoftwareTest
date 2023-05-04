@@ -11,7 +11,7 @@ public class IncomeDTO {
     private String phoneNum;
 
     @JsonProperty("amount")
-    private int amount;
+    private double amount;
 
     @JsonProperty("time")
     private String time;

@@ -77,7 +77,7 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
     public Result AddFundOut(@RequestBody Map<String, Object> inputData){
         try {
             Result result = new Result();
-            int ammount = (int)inputData.get("fund_out_amount");
+            double ammount = (double)inputData.get("fund_out_amount");
             int administrator_id = (int)inputData.get("administrator_id");
             String usage = (String)inputData.get("fund_out_usage");
             String time = (String) inputData.get("fund_out_time");

@@ -9,7 +9,7 @@ public class FundOutDTO {
     private int fund_out_id;
 
     @JsonProperty("fund_out_amount")
-    private int fund_out_amount;
+    private double fund_out_amount;
 
     @JsonProperty("fund_out_time")
     private String fund_out_time;
