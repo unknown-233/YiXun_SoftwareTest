@@ -36,7 +36,10 @@ public class CurrentServiceImpl extends ServiceImpl<CurrentMapper, Current>
             return Result.error();
         }
     }
-
+    public double GetTotalIncome(){
+        Current current=currentMapper.selectById(1);
+        return current.getTotalIncome();
+    }
 }
 
 

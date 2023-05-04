@@ -26,7 +26,7 @@ public class Income implements Serializable {
     /**
      * 捐赠金额
      */
-    private Integer ammount;
+    private Double ammount;
 
     /**
      * 捐赠时间

@@ -16,5 +16,6 @@ public interface IncomeService extends IService<Income> {
     public Result GetAllIncome(int pageNum, int pageSize);
     public List<IncomeDTO> cutIntoIncomeDTOList(List<Income> list);
     public IncomeDTO cutIntoIncomeDTO(Income income);
+    public int GetDonateHead();
 
 }

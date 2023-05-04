@@ -25,7 +25,7 @@ public class FundOut implements Serializable {
     /**
      * 支出金额
      */
-    private Integer ammount;
+    private Double ammount;
 
     /**
      * 资金使用

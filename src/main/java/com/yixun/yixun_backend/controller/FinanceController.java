@@ -57,4 +57,14 @@ public class FinanceController {
         result=fundOutService.GetFundOutByYear(inputData);
         return result;
     }
+    @GetMapping("/GetDonateCount")
+    public double GetDonateCount(){
+        double result=currentService.GetTotalIncome();
+        return result;
+    }
+    @GetMapping("/GetDonateHead")
+    public int GetDonateHead(){
+        int result=incomeService.GetDonateHead();
+        return result;
+    }
 }

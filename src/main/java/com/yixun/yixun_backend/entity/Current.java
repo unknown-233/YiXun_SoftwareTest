@@ -23,17 +23,17 @@ public class Current implements Serializable  {
     /**
      * 总收入
      */
-    private Integer totalIncome;
+    private Double totalIncome;
 
     /**
      * 总支出
      */
-    private String totalOutcome;
+    private Double totalOutcome;
 
     /**
      * 总现金
      */
-    private Integer currentMoney;
+    private Double currentMoney;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
