@@ -361,6 +361,27 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             result.data.put("searchInfo_id", newSearchinfo.getSearchinfoId());
             SearchinfoFollowup follow=new SearchinfoFollowup();
             follow.setSearchinfoId(newSearchinfo.getSearchinfoId());
+            List<Volunteer> volList = new ArrayList<>();
+
+            if(province_id!=""){
+                volList=volunteerMapper.selectAreaNearVolID(area_id);
+                if (volList.isEmpty()) {
+                    // List为空的处理逻辑
+                    volList=volunteerMapper.selectCityNearVolID(city_id);
+                    if (volList.isEmpty()) {
+                        // List为空的处理逻辑
+                        volList=volunteerMapper.selectProvinceNearVolID(province_id);
+                    }
+                }
+                if (volList.isEmpty()){
+                    follow.setVolId(volunteerMapper.selectRandomOne().getVolId());
+                }
+                else{
+                    Random random = new Random();
+                    int randomIndex = random.nextInt(volList.size());
+                    follow.setVolId(volList.get(randomIndex).getVolId());
+                }
+            }
             follow.setVolId(volunteerMapper.selectRandomOne().getVolId());
             searchinfoFollowupMapper.insert(follow);
             result.errorCode = 200;

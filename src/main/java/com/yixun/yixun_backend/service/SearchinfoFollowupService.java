@@ -11,5 +11,6 @@ import com.yixun.yixun_backend.utils.Result;
 */
 public interface SearchinfoFollowupService extends IService<SearchinfoFollowup> {
     public Result GetFollowUpInfo(int volid, int pagenum, int pagesize);
+    public Result RefuseFollowUp(int volid, int search_info_id);
 
 }

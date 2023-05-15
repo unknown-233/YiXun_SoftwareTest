@@ -25,4 +25,25 @@
     <select id="selectRandomOne"  resultType="com.yixun.yixun_backend.entity.Volunteer">
         SELECT * From yixun_volunteer ORDER BY RAND() LIMIT 1
     </select>
+    <select id="selectAreaNearVolID" parameterType="java.lang.String" resultType="com.yixun.yixun_backend.entity.Volunteer">
+        SELECT v.*
+        FROM yixun_volunteer v
+                 INNER JOIN yixun_web_user u ON v.VOL_USER_ID = u.USER_ID
+                 INNER JOIN yixun_address a ON u.ADDRESS_ID = a.ADDRESS_ID
+        WHERE a.AREA_ID = #{area}
+    </select>
+    <select id="selectProvinceNearVolID" parameterType="java.lang.String" resultType="com.yixun.yixun_backend.entity.Volunteer">
+        SELECT v.*
+        FROM yixun_volunteer v
+                 INNER JOIN yixun_web_user u ON v.VOL_USER_ID = u.USER_ID
+                 INNER JOIN yixun_address a ON u.ADDRESS_ID = a.ADDRESS_ID
+        WHERE a.PROVINCE_ID = #{province}
+    </select>
+    <select id="selectCityNearVolID" parameterType="java.lang.String" resultType="com.yixun.yixun_backend.entity.Volunteer">
+        SELECT v.*
+        FROM yixun_volunteer v
+                 INNER JOIN yixun_web_user u ON v.VOL_USER_ID = u.USER_ID
+                 INNER JOIN yixun_address a ON u.ADDRESS_ID = a.ADDRESS_ID
+        WHERE a.CITY_ID = #{city}
+    </select>
 </mapper>
