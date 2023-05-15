@@ -163,7 +163,12 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             String contactMethodKey = "contact_method";
             String contactMethod = "";
             String needPeopleKey = "need_people";
+            String endTimeKey = "end_time";
+            String endTime = "";
             int needPeople = 0;
+            if (inputData.containsKey(endTimeKey)) {
+                endTime = (String) inputData.get(endTimeKey);
+            }
             if (inputData.containsKey(actNameKey)) {
                 actName = (String) inputData.get(actNameKey);
             }
@@ -195,6 +200,7 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             volActivity.setVolActName(actName);
             volActivity.setActContent(actContent);
             volActivity.setExpTime(TimeTrans.myToDate_1(actTime));
+            volActivity.setEndTime(TimeTrans.myToDate_1(endTime));
             volActivity.setContactMethod(contactMethod);
             volActivity.setNeedpeople(needPeople);
             if (actProvince != "") {
@@ -625,6 +631,8 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             String actContent = "";
             String actTimeKey = "act_time";
             String actTime = "";
+            String endTimeKey = "end_time";
+            String endTime = "";
             String actProvinceKey = "act_province";
             String actProvince = "";
             String actCityKey = "act_city";
@@ -650,6 +658,9 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             if (inputData.containsKey(actTimeKey)) {
                 actTime = (String) inputData.get(actTimeKey);
             }
+            if (inputData.containsKey(endTimeKey)) {
+                endTime = (String) inputData.get(endTimeKey);
+            }
             if (inputData.containsKey(actProvinceKey)) {
                 actProvince = (String) inputData.get(actProvinceKey);
             }
@@ -672,7 +683,7 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             volActivity.setVolActName(actName);
             volActivity.setActContent(actContent);
             volActivity.setExpTime(TimeTrans.myToDate_1(actTime));
-
+            volActivity.setEndTime(TimeTrans.myToDate_1(endTime));
             volActivity.setContactMethod(contactMethod);
             volActivity.setNeedpeople(needPeople);
             if(actProvince!=""){

@@ -58,6 +58,7 @@ public class IncomeServiceImpl extends ServiceImpl<IncomeMapper, Income>
             Result result = new Result();
             Page<Income> page = new Page<Income>(pageNum, pageSize);
             QueryWrapper<Income> wrapper = new QueryWrapper<Income>();
+            wrapper.orderByDesc("INCOME_TIME");
             IPage iPage = incomeMapper.selectPage(page, wrapper);
             List<IncomeDTO> dtoList = cutIntoIncomeDTOList((List<Income>) iPage.getRecords());
             result.data.put("income", dtoList);

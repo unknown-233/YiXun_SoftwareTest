@@ -30,6 +30,12 @@ public class FinanceController {
         result=incomeService.GetAllIncome(pageNum,pageSize);
         return result;
     }
+    @GetMapping("/GetAllFoudOutDetail")
+    public Result GetAllFoudOutDetail(int pageNum, int pageSize){
+        Result result=new Result();
+        result=fundOutService.GetAllFoudOutDetail(pageNum,pageSize);
+        return result;
+    }
     @PostMapping("/AddFundOut")
     public Result AddFundOut(@RequestBody Map<String, Object> inputData)
     {

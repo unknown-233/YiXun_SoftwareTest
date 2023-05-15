@@ -42,6 +42,13 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
         dto.setVolActId(volActivity.getVolActId());
         dto.setVolActName(volActivity.getVolActName());
         dto.setExpTime(TimeTrans.myToString(volActivity.getExpTime()));
+        if(volActivity.getEndTime()!=null){
+            dto.setEndTime(TimeTrans.myToString(volActivity.getEndTime()));
+        }
+        else{
+            dto.setEndTime("");
+        }
+        dto.setEndTime(TimeTrans.myToString(volActivity.getEndTime()));
         Address address=addressMapper.selectById(volActivity.getAddressId());
         dto.setArea(address.getAreaId());
         dto.setCity(address.getCityId());
@@ -137,6 +144,7 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
             result.data.put("activity_needpeople", volActivity.getNeedpeople());
             result.data.put("activity_signupPeople", volActivity.getSignupPeople());
             result.data.put("activity_expTime", TimeTrans.myToString(volActivity.getExpTime()));
+            result.data.put("activity_endTime", TimeTrans.myToString(volActivity.getEndTime()));
             result.data.put("activity_contactMethod", volActivity.getContactMethod());
             result.data.put("activity_content", volActivity.getActContent());
 

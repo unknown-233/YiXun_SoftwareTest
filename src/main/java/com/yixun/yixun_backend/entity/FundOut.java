@@ -37,6 +37,11 @@ public class FundOut implements Serializable {
      */
     private Date fundOutTime;
 
+    /**
+     * 详细描述
+     */
+    private String description;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

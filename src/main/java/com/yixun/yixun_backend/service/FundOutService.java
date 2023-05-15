@@ -1,6 +1,7 @@
 package com.yixun.yixun_backend.service;
 
 import com.yixun.yixun_backend.dto.FundOutDTO;
+import com.yixun.yixun_backend.dto.FundOutDetailDTO;
 import com.yixun.yixun_backend.entity.FundOut;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yixun.yixun_backend.utils.Result;
@@ -21,6 +22,8 @@ public interface FundOutService extends IService<FundOut> {
     public Result AddFundOut(@RequestBody Map<String, Object> inputData);
     public Result DeleteFundOut(int fundOutId);
     public Result GetFundOutByYear(@RequestBody Map<String, Object> inputData);
-
+    public Result GetAllFoudOutDetail(int pageNum, int pageSize);
+    public List<FundOutDetailDTO> cutIntoFundOutDetailList(List<FundOut> list);
+    public FundOutDetailDTO cutIntoFundOutDetailDTO(FundOut fundOut);
 
 }
