@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,9 +28,9 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
     @Resource
     private WebUserMapper webUserMapper;
     @Resource
-    private SearchinfoFollowupMapper searchinfoFollowupMapper;
+    private AddressMapper addressMapper;
     @Resource
-    private RecruitedMapper recruitedMapper;
+    private VolActivityMapper volActivityMapper;
     @Resource
     private VolunteerMapper volunteerMapper;
     @Resource
@@ -40,25 +41,32 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
     public VolInfoDTO cutIntoVolInfoDTO(Volunteer vol){
         //用户
         WebUser user=webUserMapper.selectById(vol.getVolUserId());
+        //地址
+        Address address=addressMapper.selectById(user.getAddressId());
 
         VolInfoDTO dto=new VolInfoDTO();
         dto.setUser_state(user.getUserState());
         dto.setUser_id(user.getUserId());
         dto.setUser_name(user.getUserName());
-        dto.setFundation_time(TimeTrans.myToString(user.getFundationTime()));
+        //dto.setFundation_time(TimeTrans.myToString(user.getFundationTime()));
         dto.setPhone_num(user.getPhoneNum());
         dto.setMail_num(user.getMailboxNum());
         dto.setVol_id(vol.getVolId());
-        dto.setVol_time(vol.getVolTime());
+
+        dto.setProvince_id(address.getProvinceId());
+        dto.setCity_id(address.getCityId());
+        dto.setArea_id(address.getAreaId());
+        dto.setDetail(address.getDetail());
 
         //跟进的寻人信息数
-        QueryWrapper<SearchinfoFollowup> wrapperFollow = new QueryWrapper<SearchinfoFollowup>();
-        wrapperFollow.eq("VOL_ID",vol.getVolId());
-        dto.setInfo_followup_num(searchinfoFollowupMapper.selectCount(wrapperFollow));
+        QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
+        wrapper.inSql("SEARCHINFO_ID","select SEARCHINFO_ID from yixun_searchinfo_followup where VOL_ID ="+vol.getVolId()).eq("WHETHER_FOUND","N");
+        dto.setInfo_followup_num(searchinfoMapper.selectCount(wrapper));
         //参加的活动数
-        QueryWrapper<Recruited> wrapperAct= new QueryWrapper<Recruited>();
-        wrapperAct.eq("VOL_ID",vol.getVolId());
-        dto.setAct_num(recruitedMapper.selectCount(wrapperAct));
+        QueryWrapper<VolActivity> wrapperAct = new QueryWrapper<VolActivity>();
+        wrapperAct.inSql("VOL_ACT_ID","select VOL_ACT_ID from yixun_recruited where VOL_ID="+vol.getVolId());
+        wrapperAct.gt("END_TIME",new Date());
+        dto.setAct_num(volActivityMapper.selectCount(wrapperAct));
 
         return dto;
     }
