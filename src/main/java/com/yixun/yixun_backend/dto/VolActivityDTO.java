@@ -10,6 +10,8 @@ public class VolActivityDTO {
     private String VolActName;//mingzi
     @JsonProperty("ExpTime")
     private String ExpTime;//time
+    @JsonProperty("EndTime")
+    private String EndTime;//time
     @JsonProperty("Detail")
     private String Detail;
     @JsonProperty("Province")

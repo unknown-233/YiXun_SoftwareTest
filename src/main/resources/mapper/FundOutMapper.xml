@@ -10,10 +10,11 @@
             <result property="ammount" column="AMMOUNT" jdbcType="DOUBLE"/>
             <result property="fundOutUsage" column="FUND_OUT_USAGE" jdbcType="VARCHAR"/>
         <result property="fundOutTime" column="FUND_OUT_TIME" jdbcType="TIMESTAMP"/>
+        <result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         FUND_OUT_ID,ADMINISTRATOR_ID,AMMOUNT,
-        FUND_OUT_USAGE,FUND_OUT_TIME
+        FUND_OUT_USAGE,FUND_OUT_TIME,DESCRIPTION
     </sql>
 </mapper>

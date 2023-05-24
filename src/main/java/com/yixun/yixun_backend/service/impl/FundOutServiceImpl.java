@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.FundOutDTO;
+import com.yixun.yixun_backend.dto.FundOutDetailDTO;
 import com.yixun.yixun_backend.dto.SearchinfoDTO;
 import com.yixun.yixun_backend.entity.FundOut;
 import com.yixun.yixun_backend.entity.Recruited;
@@ -45,6 +46,15 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
         dto.setFund_out_time(TimeTrans.myToString(fundOut.getFundOutTime()));
         return dto;
     }
+    public FundOutDetailDTO cutIntoFundOutDetailDTO(FundOut fundOut){
+        FundOutDetailDTO dto=new FundOutDetailDTO();
+        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        dto.setFund_out_detail(fundOut.getDescription());
+        dto.setFund_out_amount(fundOut.getAmmount());
+        dto.setFund_out_usage(fundOut.getFundOutUsage());
+        dto.setFund_out_time(TimeTrans.myToDateString(fundOut.getFundOutTime()));
+        return dto;
+    }
     public List<FundOutDTO> cutIntoFundOutList(List<FundOut> list){
         List<FundOutDTO> dtoList=new ArrayList<>();
         for(FundOut fundOut : list){
@@ -53,7 +63,14 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
         }
         return dtoList;
     }
-
+    public List<FundOutDetailDTO> cutIntoFundOutDetailList(List<FundOut> list){
+        List<FundOutDetailDTO> dtoList=new ArrayList<>();
+        for(FundOut fundOut : list){
+            FundOutDetailDTO dto= cutIntoFundOutDetailDTO(fundOut);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
     public Result GetAllFundOut(int pageNum, int pageSize) {
         try {
             Result result = new Result();
@@ -73,7 +90,26 @@ public class FundOutServiceImpl extends ServiceImpl<FundOutMapper, FundOut>
             return result;
         }
     }
-
+    public Result GetAllFoudOutDetail(int pageNum, int pageSize){
+        try {
+            //要改的
+            Result result = new Result();
+            Page<FundOut> page = new Page<FundOut>(pageNum, pageSize);
+            QueryWrapper<FundOut> wrapper = new QueryWrapper<FundOut>();
+            IPage iPage = fundOutMapper.selectPage(page, wrapper);
+            List<FundOutDetailDTO> dtoList = cutIntoFundOutDetailList((List<FundOut>) iPage.getRecords());
+            result.data.put("fund_out", dtoList);
+            result.data.put("total", iPage.getTotal());
+            result.data.put("getcount", iPage.getRecords().size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        } catch (Exception e) {
+            Result result = new Result();
+            result.data.put("error",e.getMessage());
+            return result;
+        }
+    }
     public Result AddFundOut(@RequestBody Map<String, Object> inputData){
         try {
             Result result = new Result();

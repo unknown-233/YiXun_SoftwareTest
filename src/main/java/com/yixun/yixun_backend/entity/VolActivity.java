@@ -65,6 +65,7 @@ public class VolActivity implements Serializable {
      * 志愿活动名
      */
     private String volActName;
+    private Date endTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -18,6 +18,9 @@ import java.util.List;
 public interface VolunteerMapper extends BaseMapper<Volunteer> {
     List<VolunteerDTO> selectTopTenVolDTO();
     public Volunteer selectRandomOne();
+    List<Volunteer> selectAreaNearVolID(String area);
+    List<Volunteer> selectProvinceNearVolID(String province);
+    List<Volunteer> selectCityNearVolID(String city);
 }
 
 
