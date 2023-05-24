@@ -89,11 +89,17 @@ public class VolunteerController {
         return result;
     }
     @PutMapping("/ChangeClueConfirmed")
-    public Result ChangeClueConfirmed(int clueId)
+    public Result ChangeClueConfirmed(@RequestBody Map<String, Object> inputMap)
     {
         Result result=new Result();
-        result=volunteerService.UpdateClueConfirmed(clueId);
+        result=volunteerService.UpdateClueConfirmed(inputMap);
         return result;
     }
-
+    @GetMapping("/SearchVolByDistinct")
+    public Result SearchVolByDistinct(String city)
+    {
+        Result result=new Result();
+        result=volunteerService.GetVolByDistinct(city);
+        return result;
+    }
 }
