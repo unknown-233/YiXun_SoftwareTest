@@ -12,10 +12,22 @@
             <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
             <result property="isactive" column="ISACTIVE" jdbcType="VARCHAR"/>
             <result property="whetherConfirmed" column="WHETHER_CONFIRMED" jdbcType="VARCHAR"/>
+            <result property="clueDay" column="CLUE_DAY" jdbcType="VARCHAR"/>
+            <result property="detailTime" column="DETAIL_TIME" jdbcType="VARCHAR"/>
+            <result property="province" column="PROVINCE" jdbcType="VARCHAR"/>
+            <result property="city" column="CITY" jdbcType="VARCHAR"/>
+            <result property="area" column="AREA" jdbcType="VARCHAR"/>
+            <result property="detailAddress" column="DETAIL_ADDRESS" jdbcType="VARCHAR"/>
+            <result property="picture" column="PICTURE" jdbcType="VARCHAR"/>
+            <result property="confirmMen" column="CONFIRM_MEN" jdbcType="VARCHAR"/>
+            <result property="confirmText" column="CONFIRM_TEXT" jdbcType="VARCHAR"/>
+            <result property="phonenum" column="PHONENUM" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <sql id="Base_Column_List">
         CLUE_ID,CLUE_CONTENT,CLUE_DATE,
-        SEARCHINFO_ID,USER_ID,ISACTIVE,WHETHER_CONFIRMED
+        SEARCHINFO_ID,USER_ID,ISACTIVE,WHETHER_CONFIRMED,
+        CLUE_DAY,DETAIL_TIME,PROVINCE,CITY,AREA,DETAIL_ADDRESS,PICTURE,CONFIRM_MEN,CONFIRM_TEXT,PHONENUM
     </sql>
 </mapper>

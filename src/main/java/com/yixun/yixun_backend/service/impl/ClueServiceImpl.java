@@ -10,17 +10,17 @@ import com.yixun.yixun_backend.entity.*;
 import com.yixun.yixun_backend.mapper.CluesReportMapper;
 import com.yixun.yixun_backend.service.ClueService;
 import com.yixun.yixun_backend.mapper.ClueMapper;
+import com.yixun.yixun_backend.utils.OssUploadService;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author hunyingzhong
@@ -34,6 +34,8 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
     private ClueMapper clueMapper;
     @Resource
     private CluesReportMapper cluesReportMapper;
+    @Resource
+    private OssUploadService ossUploadService;
     public ClueDTO cutIntoClueDTO(Clue clue){
         ClueDTO dto=new ClueDTO();
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -115,14 +117,58 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
             int user_id=(int)inputMap.get("user_id");
             int searchinfo_id=(int)inputMap.get("searchinfo_id");
             String clue_content=(String)inputMap.get("clue_content");
+            String date=(String)inputMap.get("date");
+            String detailTime=(String)inputMap.get("detailTime");
+            String province=(String)inputMap.get("province");
+            String city=(String)inputMap.get("city");
+            String area=(String)inputMap.get("area");
+            String detailAddress=(String)inputMap.get("detailAddress");
+            //String picture=(String)inputMap.get("picture");
+            List<String> array = new ArrayList<>();
 
+            int pic_num=(int)inputMap.get("picNum");
+            if(pic_num>0){
+                array = (List<String>) inputMap.get("clue_pic");
+
+            }
+            //图片结束
             Clue newClue = new Clue();
             newClue.setUserId(user_id);
             newClue.setSearchinfoId(searchinfo_id);
             newClue.setClueContent(clue_content);
             newClue.setIsactive("Y");
+            newClue.setWhetherConfirmed("N");
             newClue.setClueDate(new Date());
+            if(!Objects.equals(date, "") && date!=null)
+                newClue.setClueDay(new SimpleDateFormat("yyyy-MM-dd").parse(date));
+            if(!Objects.equals(detailTime, "") && detailTime!=null)
+                newClue.setDetailTime(detailTime);
+            if(!Objects.equals(province, "") && province!=null)
+                newClue.setProvince(province);
+            if(!Objects.equals(city, "") && city!=null)
+                newClue.setCity(city);
+            if(!Objects.equals(area, "") && area!=null)
+                newClue.setArea(area);
+            if(!Objects.equals(detailAddress, "") && detailAddress!=null)
+                newClue.setDetailAddress(detailAddress);
             clueMapper.insert(newClue);
+
+            //图片
+            List<String> url_array = new ArrayList<>();
+            if(array.size()>0){
+                List<Clue> tmpList = clueMapper.selectList(new QueryWrapper<Clue>().orderByDesc("CLUE_ID"));
+                Clue clue = tmpList.get(0);
+                for (int i = 0; i < array.size(); i++) {
+                    String img_base64= array.get(i);
+                    // 对每个元素执行操作
+                    String url= AddCluePic(img_base64,clue.getClueId(),i);
+                    url_array.add(url);
+                }
+                String joinedString = String.join(",", url_array);
+                clue.setPicture(joinedString);
+                clueMapper.updateById(clue);
+            }
+            //图片结束
             result.status = true;
             result.errorCode = 200;
             return result;
@@ -130,6 +176,18 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
         catch (Exception e) {
             return Result.error();
         }
+    }
+    public String AddCluePic(String img_base64,int clueId,int i){
+        String type = "." + img_base64.split(",")[0].split(";")[0].split("/")[1];
+        img_base64 = img_base64.split("base64,")[1];
+
+        byte[] img_bytes = Base64.getDecoder().decode(img_base64);
+        ByteArrayInputStream stream = new ByteArrayInputStream(img_bytes, 0, img_bytes.length);
+
+        String path = "clue_pic/" + Integer.toString(clueId)+"_"+i + type;
+        ossUploadService.uploadfile(stream, path);
+        String imgurl = "https://yixun-picture.oss-cn-shanghai.aliyuncs.com/" + path;
+        return imgurl;
     }
     public Result DeleteClueByUser(int userid, int clueid)
     {

@@ -49,6 +49,46 @@ public class Clue implements Serializable {
      * 线索是否已核实
      */
     private String whetherConfirmed;
+    /**
+     * 详细时间
+     */
+    private Date clueDay;
+    /**
+     * 详细时间
+     */
+    private String detailTime;
+    /**
+     * 省
+     */
+    private String province;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String area;
+    /**
+     * 详细地址
+     */
+    private String detailAddress;
+    /**
+     * 图片
+     */
+    private String picture;
+    /**
+     * 核实人
+     */
+    private String confirmMen;
+    /**
+     * 核实信息
+     */
+    private String confirmText;
+    /**
+     * 电话
+     */
+    private String phonenum;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

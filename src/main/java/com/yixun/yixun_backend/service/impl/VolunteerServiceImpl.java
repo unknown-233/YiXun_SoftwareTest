@@ -11,11 +11,13 @@ import com.yixun.yixun_backend.service.VolunteerService;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author hunyingzhong
@@ -122,12 +124,19 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
             return Result.error();
         }
     }
-    public Result UpdateClueConfirmed(int clueId){
+    public Result UpdateClueConfirmed(@RequestBody Map<String, Object> inputMap){
         try
         {
             Result result=new Result();
+            int clueId=(int) inputMap.get("clueId");
+            String confirmText=(String) inputMap.get("textarea");
+            String checkMan=(String) inputMap.get("checkMan");
+            String phoneNumber=(String) inputMap.get("phoneNumber");
             Clue clue=clueMapper.selectById(clueId);
             clue.setWhetherConfirmed("Y");
+            clue.setConfirmText(confirmText);
+            clue.setConfirmMen(checkMan);
+            clue.setPhonenum(phoneNumber);
             clueMapper.updateById(clue);
 
             result.errorCode = 200;
@@ -139,7 +148,22 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         }
     }
 
+    public Result GetVolByDistinct(String city)
+    {
+        try
+        {
+            Result result=new Result();
 
+
+            result.errorCode = 200;
+            result.status = true;
+            return result;
+        }
+        catch (Exception e)
+        {
+            return Result.error();
+        }
+    }
 }
 
 
