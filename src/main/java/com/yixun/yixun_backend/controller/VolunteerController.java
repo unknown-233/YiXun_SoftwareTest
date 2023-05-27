@@ -96,10 +96,10 @@ public class VolunteerController {
         return result;
     }
     @GetMapping("/SearchVolByDistinct")
-    public Result SearchVolByDistinct(String city)
+    public Result SearchVolByDistinct(String city,int pagenum, int pagesize)
     {
         Result result=new Result();
-        result=volunteerService.GetVolByDistinct(city);
+        result=volunteerService.GetVolByDistinct(city,pagenum,pagesize);
         return result;
     }
 }
