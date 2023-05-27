@@ -53,7 +53,7 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         }
         return dtoList;
     }
-    public List<VolunteerDTO> getPageOfData(int pageNum, int pageSize, List<VolunteerDTO> dtoList) {
+    public List<VolInfoDTO> getPageOfData(int pageNum, int pageSize, List<VolInfoDTO> dtoList) {
         int startIndex = (pageNum - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, dtoList.size());
 
@@ -191,8 +191,8 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
                     resultVolList.add(vol);
                 }
             }
-            List<VolunteerDTO> dtoList=cutIntoVolunteerDTOList(resultVolList);
-            List<VolunteerDTO> pageList=getPageOfData(pagenum,pagesize,dtoList);
+            List<VolInfoDTO> dtoList=cutIntoVolInfoList(resultVolList);
+            List<VolInfoDTO> pageList=getPageOfData(pagenum,pagesize,dtoList);
             result.data.put("volList",pageList);
             result.data.put("total",dtoList.size());
             result.data.put("getcount",pageList.size());
