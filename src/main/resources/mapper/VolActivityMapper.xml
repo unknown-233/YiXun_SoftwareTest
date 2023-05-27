@@ -16,13 +16,14 @@
             <result property="actContent" column="ACT_CONTENT" jdbcType="VARCHAR"/>
             <result property="volActName" column="VOL_ACT_NAME" jdbcType="VARCHAR"/>
             <result property="endTime" column="END_TIME" jdbcType="TIMESTAMP"/>
+            <result property="initiator" column="INITIATOR" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         VOL_ACT_ID,EXP_TIME,ADDRESS_ID,
         NEEDPEOPLE,ACT_PIC_URL,CONTACT_METHOD,
         VOL_INST_ID,RELEASE_TIME,SIGNUP_PEOPLE,
-        ACT_CONTENT,VOL_ACT_NAME,END_TIME
+        ACT_CONTENT,VOL_ACT_NAME,END_TIME,INITIATOR
     </sql>
 
     <select id="selectVolActByVolID" parameterType="java.lang.Integer" resultType="com.yixun.yixun_backend.entity.VolActivity">

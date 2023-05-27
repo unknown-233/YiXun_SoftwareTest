@@ -30,28 +30,28 @@ public class VolunteerController {
 
     //3.2 展示志愿者报名的所有志愿活动
     @GetMapping("/GetVolAct")
-    public Result GetVolAct(int volid, int pagenum, int pagesize)
+    public Result GetVolAct(int userId, int pagenum, int pagesize)
     {
         Result result=new Result();
-        result=recruitedService.GetVolActRecruited(volid,pagenum,pagesize);
+        result=recruitedService.GetVolActRecruited(userId,pagenum,pagesize);
         return result;
     }
 
     //3.5 判断志愿者是否参与某个活动
     @GetMapping("/IfApplyActivity")
-    public Result IfApplyActivity(int vol_id,int volAct_id)
+    public Result IfApplyActivity(int userId,int volAct_id)
     {
         Result result=new Result();
-        result=recruitedService.GetIfAppliedActivity(vol_id,volAct_id);
+        result=recruitedService.GetIfAppliedActivity(userId,volAct_id);
         return result;
     }
 
     //4.1.4 报名&取消报名参加志愿活动
     @GetMapping("/SignupOrCancelVolActivity")
-    public Result SignupOrCancelVolActivity(int VolId, int VolActId)
+    public Result SignupOrCancelVolActivity(int userId, int VolActId)
     {
         Result result=new Result();
-        result=recruitedService.UpdateRecruitedState(VolId,VolActId);
+        result=recruitedService.UpdateRecruitedState(userId,VolActId);
         return result;
     }
 

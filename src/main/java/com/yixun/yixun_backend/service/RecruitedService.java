@@ -10,7 +10,7 @@ import com.yixun.yixun_backend.utils.Result;
 * @createDate 2022-12-03 12:43:39
 */
 public interface RecruitedService extends IService<Recruited> {
-    public Result GetVolActRecruited(int volid, int pagenum, int pagesize);
-    public Result GetIfAppliedActivity(int vol_id,int volAct_id);
-    public Result UpdateRecruitedState(int VolId, int VolActId);
+    public Result GetVolActRecruited(int userId, int pagenum, int pagesize);
+    public Result GetIfAppliedActivity(int userId,int volAct_id);
+    public Result UpdateRecruitedState(int userId, int VolActId);
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 public interface VolActivityService extends IService<VolActivity> {
     VolActivityDTO cutIntoVolActivityDTO(VolActivity volActivity);
     List<VolActivityDTO>  cutIntoVolActivityDTOList(List<VolActivity> volActivityList);
-    public Result GetVolActivities(int pageNum, int pageSize);
+    public Result GetVolActivities(int volId,int pageNum, int pageSize);
     public Result GetVolActivityByWord(@RequestBody Map<String, Object> inputMap);
     public Result GetVolActivityDetail(int VolActId);
 }
