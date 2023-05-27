@@ -10,18 +10,28 @@ import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yixun.yixun_backend.entity.AlipayBean;
+import com.yixun.yixun_backend.entity.Income;
+import com.yixun.yixun_backend.entity.WebUser;
+import com.yixun.yixun_backend.mapper.IncomeMapper;
+import com.yixun.yixun_backend.mapper.WebUserMapper;
 import com.yixun.yixun_backend.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/Alipay")
 public class AliPayController{
+    @Resource
+    private IncomeMapper incomeMapper;
 
     //获取配置文件中的配置信息
     //应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号
@@ -62,6 +72,23 @@ public class AliPayController{
 
     private final String format = "json";
 
+    @PostMapping("/createorder")
+    public Result  CreateOrder(int user_id, Double total_amount){
+        Income income=new Income();
+        income.setIncomeTime(new Date());
+        income.setAmmount(total_amount);
+        income.setUserId(user_id);
+        income.setIfSucceed("N");
+        incomeMapper.insert(income);
+        List<Income> tmpList = incomeMapper.selectList(new QueryWrapper<Income>().orderByDesc("INCOME_ID"));
+        Income newAddedIncome= tmpList.get(0);
+        Result result=new Result();
+        result.data.put("outTradeNo",newAddedIncome.getIncomeId());
+        result.errorCode = 200;
+        result.status = true;
+        return result;
+    }
+
     //PC网页段支付，返回的是支付宝账号的登录页面
     @GetMapping("/pay")
     public String pay(AlipayBean alipayBean) throws AlipayApiException {
@@ -95,6 +122,9 @@ public class AliPayController{
         AlipayTradeQueryResponse response = alipayClient.execute(request);
         if(response.isSuccess()){
             System.out.println("调用成功");
+            Income income=incomeMapper.selectById(out_trade_no);
+            income.setIfSucceed("Y");
+            incomeMapper.updateById(income);
             result.data.put("response", response);
             result.status = true;
             result.errorCode = 200;
@@ -160,13 +190,12 @@ public class AliPayController{
         return Result.error();
     }
 
-    @RequestMapping("/success")
-    @ResponseBody
+    @GetMapping("/success")
     public String success(){
         return "交易成功！";
     }
 
-    @RequestMapping(value = "/index")
+    @GetMapping(value = "/index")
     public String payCoin(){
         return "index.html";
     }
