@@ -3,10 +3,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
+import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.yixun.yixun_backend.entity.AlipayBean;
 import com.yixun.yixun_backend.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +32,13 @@ public class AliPayController{
     @Value("${privateKey}")
     private String privateKey;
 
-    //支付宝公钥
+    //应用公钥
     @Value("${publicKey}")
     private String publicKey;
+
+    //支付宝公钥
+    @Value("${alipayPublicKey}")
+    private String alipayPublicKey;
 
     //服务器异步通知页面路径
     @Value("${notifyUrl}")
@@ -56,15 +63,8 @@ public class AliPayController{
     private final String format = "json";
 
     //PC网页段支付，返回的是支付宝账号的登录页面
-    @RequestMapping("/pay")
-    @ResponseBody
+    @GetMapping("/pay")
     public String pay(AlipayBean alipayBean) throws AlipayApiException {
-        //模拟数据
-//        alipayBean.setOut_trade_no(UUID.randomUUID().toString().replaceAll("-",""));
-//        alipayBean.setSubject("订单名称");
-//        alipayBean.setTotal_amount(String.valueOf(new Random().nextInt(100)));
-//        alipayBean.setBody("商品描述");
-
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, appId, privateKey, format, charset, publicKey, signType);
         //PC网页支付使用AlipayTradePagePayRequest传参，下面调用的是pageExecute方法
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
@@ -74,7 +74,39 @@ public class AliPayController{
 
         // 调用SDK生成表单
         String result = alipayClient.pageExecute(alipayRequest).getBody();
+        System.out.println("请求支付宝付款返回参数为: " + result);
         return result;
+    }
+
+    /**
+     * 交易状态,新版支付接口回调不返回trade_status
+     * @param out_trade_no
+     * @return
+     */
+    @GetMapping("/paycheck")
+    public Result selectTradeStatus(String out_trade_no) throws AlipayApiException {
+        Result result = new Result();
+        AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, appId, privateKey, format, charset, alipayPublicKey, signType);
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+        JSONObject bizContent = new JSONObject();
+        bizContent.put("out_trade_no", out_trade_no);
+        //bizContent.put("trade_no", "2014112611001004680073956707");
+        request.setBizContent(bizContent.toString());
+        AlipayTradeQueryResponse response = alipayClient.execute(request);
+        if(response.isSuccess()){
+            System.out.println("调用成功");
+            result.data.put("response", response);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        } else {
+            System.out.println("调用失败");
+            System.out.println(response);
+            result.data.put("response", response);
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
     }
 
     /**
