@@ -9,10 +9,11 @@
             <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
             <result property="ammount" column="AMMOUNT" jdbcType="DOUBLE"/>
             <result property="incomeTime" column="INCOME_TIME" jdbcType="TIMESTAMP"/>
+            <result property="ifSucceed" column="IF_SUCCEED" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         INCOME_ID,USER_ID,AMMOUNT,
-        INCOME_TIME
+        INCOME_TIME,IF_SUCCEED
     </sql>
 </mapper>

@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author hunyingzhong
@@ -153,8 +150,9 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         try
         {
             Result result=new Result();
-
-
+            QueryWrapper<Address> wrapper = new QueryWrapper<Address>();
+            wrapper.eq("AREA_ID",city);
+            //没写完，还在写
             result.errorCode = 200;
             result.status = true;
             return result;

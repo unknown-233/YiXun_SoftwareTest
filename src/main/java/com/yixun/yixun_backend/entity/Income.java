@@ -32,6 +32,10 @@ public class Income implements Serializable {
      * 捐赠时间
      */
     private Date incomeTime;
+    /**
+     * 是否捐赠成功
+     */
+    private Date ifSucceed;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
