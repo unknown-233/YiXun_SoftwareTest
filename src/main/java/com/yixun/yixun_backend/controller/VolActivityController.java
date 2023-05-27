@@ -18,10 +18,10 @@ public class VolActivityController {
 
     //4.1.1 获取志愿活动
     @GetMapping("/ShowVolActivityList")
-    public Result ShowVolActivityList(int pageNum, int pageSize)
+    public Result ShowVolActivityList(int volId,int pageNum, int pageSize)
     {
         Result result=new Result();
-        result=volActivityService.GetVolActivities(pageNum,pageSize);
+        result=volActivityService.GetVolActivities(volId,pageNum,pageSize);
         return result;
     }
 

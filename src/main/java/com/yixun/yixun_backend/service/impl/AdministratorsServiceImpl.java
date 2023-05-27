@@ -166,6 +166,8 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             String endTimeKey = "end_time";
             String endTime = "";
             int needPeople = 0;
+            String initiatorKey = "act_initiator";
+            int initiator = 0;
             if (inputData.containsKey(endTimeKey)) {
                 endTime = (String) inputData.get(endTimeKey);
             }
@@ -196,6 +198,9 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             if (inputData.containsKey(needPeopleKey)) {
                 needPeople = (int) inputData.get(needPeopleKey);
             }
+            if (inputData.containsKey(initiatorKey)) {
+                initiator = (int) inputData.get(initiatorKey);
+            }
             VolActivity volActivity = new VolActivity();
             volActivity.setVolActName(actName);
             volActivity.setActContent(actContent);
@@ -203,6 +208,7 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             volActivity.setEndTime(TimeTrans.myToDate_1(endTime));
             volActivity.setContactMethod(contactMethod);
             volActivity.setNeedpeople(needPeople);
+            volActivity.setInitiator(initiator);
             if (actProvince != "") {
                 Address address = new Address();
                 address.setDetail(actAddress);

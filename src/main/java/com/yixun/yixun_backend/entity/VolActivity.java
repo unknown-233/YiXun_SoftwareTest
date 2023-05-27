@@ -67,6 +67,11 @@ public class VolActivity implements Serializable {
     private String volActName;
     private Date endTime;
 
+    /**
+     * 发起者工作人员ID
+     */
+    private int initiator;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

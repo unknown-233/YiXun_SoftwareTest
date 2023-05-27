@@ -1,6 +1,7 @@
 package com.yixun.yixun_backend.service;
 
 import com.yixun.yixun_backend.dto.VolInfoDTO;
+import com.yixun.yixun_backend.dto.VolunteerDTO;
 import com.yixun.yixun_backend.entity.Volunteer;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yixun.yixun_backend.utils.Result;
@@ -15,11 +16,13 @@ import java.util.Map;
 * @createDate 2022-12-03 12:43:39
 */
 public interface VolunteerService extends IService<Volunteer> {
-    VolInfoDTO cutIntoVolInfoDTO(Volunteer vol);
-    List<VolInfoDTO> cutIntoVolInfoList(List<Volunteer> volList);
+    public VolInfoDTO cutIntoVolInfoDTO(Volunteer vol);
+    public List<VolInfoDTO> cutIntoVolInfoList(List<Volunteer> volList);
     public String GetVolunteerNumber();
     public Result GetTenVolunteer();
     public Result UpdateSearchinfoToFound(int searchinfoId);
     public Result UpdateClueConfirmed(@RequestBody Map<String, Object> inputMap);
-    public Result GetVolByDistinct(String city);
+    public VolunteerDTO cutIntoVolunteerDTO(Volunteer vol);
+    public List<VolunteerDTO> cutIntoVolunteerDTOList(List<Volunteer> list);
+    public Result GetVolByDistinct(String city,int pagenum, int pagesize);
 }

@@ -70,15 +70,14 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
         }
         return dtoList;
     }
-    public Result GetVolActivities(int pageNum, int pageSize)
+    public Result GetVolActivities(int volId, int pageNum, int pageSize)
     {
         try
         {
             Result result = new Result();
             Page<VolActivity> page = new Page<>(pageNum, pageSize);
             QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
-            String localTime=TimeTrans.myToString(new Date());
-            //传回一个发布时间
+            wrapper.eq("INITIATOR",volId);
             wrapper.orderByAsc("VOL_ACT_ID");
             IPage iPage = volActivityMapper.selectPage(page,wrapper);
             List<VolActivityDTO> dtoList=cutIntoVolActivityDTOList((List<VolActivity>)iPage.getRecords());

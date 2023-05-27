@@ -37,6 +37,34 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
     @Resource
     private ClueMapper clueMapper;
 
+    public VolunteerDTO cutIntoVolunteerDTO(Volunteer vol){
+        WebUser user=webUserMapper.selectById(vol.getVolUserId());
+        VolunteerDTO dto=new VolunteerDTO();
+        dto.setUserHeadUrl(user.getUserHeadUrl());
+        dto.setUserName(user.getUserName());
+        dto.setVolTime(vol.getVolTime());
+        return dto;
+    }
+    public List<VolunteerDTO> cutIntoVolunteerDTOList(List<Volunteer> list){
+        List<VolunteerDTO> dtoList=new ArrayList<>();
+        for(Volunteer vol : list){
+            VolunteerDTO dto=this.cutIntoVolunteerDTO(vol);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+    public List<VolunteerDTO> getPageOfData(int pageNum, int pageSize, List<VolunteerDTO> dtoList) {
+        int startIndex = (pageNum - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, dtoList.size());
+
+        if (startIndex >= endIndex) {
+            // 页数超出范围或数据为空，返回空列表或抛出异常
+            return new ArrayList<>();
+        }
+
+        return dtoList.subList(startIndex, endIndex);
+    }
+
     public VolInfoDTO cutIntoVolInfoDTO(Volunteer vol){
         //用户
         WebUser user=webUserMapper.selectById(vol.getVolUserId());
@@ -145,14 +173,28 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         }
     }
 
-    public Result GetVolByDistinct(String city)
+    public Result GetVolByDistinct(String city,int pagenum, int pagesize)
     {
         try
         {
             Result result=new Result();
-            QueryWrapper<Address> wrapper = new QueryWrapper<Address>();
-            wrapper.eq("AREA_ID",city);
-            //没写完，还在写
+            List<Volunteer> resultVolList=new ArrayList<>();
+            QueryWrapper<Volunteer> volWrapper = new QueryWrapper<Volunteer>();
+            List<Volunteer> volunteerList=volunteerMapper.selectList(volWrapper);
+            for (Volunteer vol : volunteerList) {
+                // 处理元素
+                WebUser user=webUserMapper.selectById(vol.getVolUserId());
+                Address address=addressMapper.selectById(user.getAddressId());
+                String volCity=address.getCityId();
+                if(volCity.equals(city)){
+                    resultVolList.add(vol);
+                }
+            }
+            List<VolunteerDTO> dtoList=cutIntoVolunteerDTOList(resultVolList);
+            List<VolunteerDTO> pageList=getPageOfData(pagenum,pagesize,dtoList);
+            result.data.put("volList",pageList);
+            result.data.put("total",dtoList.size());
+            result.data.put("getcount",pageList.size());
             result.errorCode = 200;
             result.status = true;
             return result;

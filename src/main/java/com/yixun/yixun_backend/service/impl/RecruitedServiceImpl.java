@@ -32,14 +32,14 @@ public class RecruitedServiceImpl extends ServiceImpl<RecruitedMapper, Recruited
     private VolActivityService volActivityService;
     @Resource
     private RecruitedMapper recruitedMapper;
-    public Result GetVolActRecruited(int volid, int pagenum, int pagesize)
+    public Result GetVolActRecruited(int userId, int pagenum, int pagesize)
     {
         try
         {
             Result result = new Result();
             Page<VolActivity> page = new Page<>(pagenum, pagesize);
             QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
-            wrapper.inSql("VOL_ACT_ID","select VOL_ACT_ID from yixun_recruited where VOL_ID="+volid);
+            wrapper.inSql("VOL_ACT_ID","select VOL_ACT_ID from yixun_recruited where VOL_ID="+userId);
             IPage iPage = volActivityMapper.selectPage(page,wrapper);
             List<VolActivityDTO> dtoList=volActivityService.cutIntoVolActivityDTOList((List<VolActivity>)iPage.getRecords());
             result.data.put("vol_act_info", dtoList);
@@ -53,13 +53,13 @@ public class RecruitedServiceImpl extends ServiceImpl<RecruitedMapper, Recruited
             return Result.error();
         }
     }
-    public Result GetIfAppliedActivity(int vol_id,int volAct_id)
+    public Result GetIfAppliedActivity(int userId,int volAct_id)
     {
         try
         {
             Result result = new Result();
             QueryWrapper<Recruited> wrapper = new QueryWrapper<Recruited>();
-            wrapper.eq("VOL_ID",vol_id).eq("VOL_ACT_ID",volAct_id);
+            wrapper.eq("VOL_ID",userId).eq("VOL_ACT_ID",volAct_id);
             int ifApply=recruitedMapper.selectCount(wrapper);
             if(ifApply==1)
             {
@@ -77,13 +77,13 @@ public class RecruitedServiceImpl extends ServiceImpl<RecruitedMapper, Recruited
             return Result.error();
         }
     }
-    public Result UpdateRecruitedState(int VolId, int VolActId)
+    public Result UpdateRecruitedState(int userId, int VolActId)
     {
         try
         {
             Result result = new Result();
             QueryWrapper<Recruited> wrapper = new QueryWrapper<Recruited>();
-            wrapper.eq("VOL_ID",VolId).eq("VOL_ACT_ID",VolActId);
+            wrapper.eq("VOL_ID",userId).eq("VOL_ACT_ID",VolActId);
             int ifApply=recruitedMapper.selectCount(wrapper);
             VolActivity curVolAct=volActivityMapper.selectById(VolActId);
             if(ifApply==1) //已报名
@@ -97,7 +97,7 @@ public class RecruitedServiceImpl extends ServiceImpl<RecruitedMapper, Recruited
             {
                 Recruited newRecruit = new Recruited();
                 newRecruit.setVolActId(VolActId);
-                newRecruit.setVolId(VolId);
+                newRecruit.setVolId(userId);
                 newRecruit.setRecruittime(new Date());
                 recruitedMapper.insert(newRecruit);
                 curVolAct.setSignupPeople(curVolAct.getSignupPeople()+1); //报名，人数增加
