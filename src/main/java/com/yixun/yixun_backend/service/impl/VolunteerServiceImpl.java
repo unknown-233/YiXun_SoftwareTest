@@ -91,6 +91,7 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         dto.setInfo_followup_num(searchinfoMapper.selectCount(wrapper));
         //参加的活动数
         QueryWrapper<VolActivity> wrapperAct = new QueryWrapper<VolActivity>();
+        wrapperAct.eq("INITIATOR",vol.getVolId());
         wrapperAct.inSql("VOL_ACT_ID","select VOL_ACT_ID from yixun_recruited where VOL_ID="+vol.getVolId());
         wrapperAct.gt("END_TIME",new Date());
         dto.setAct_num(volActivityMapper.selectCount(wrapperAct));
