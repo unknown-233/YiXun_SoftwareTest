@@ -6,8 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.VolActivityDTO;
 import com.yixun.yixun_backend.entity.Address;
+import com.yixun.yixun_backend.entity.Recruited;
 import com.yixun.yixun_backend.entity.VolActivity;
+import com.yixun.yixun_backend.entity.WebUser;
 import com.yixun.yixun_backend.mapper.AddressMapper;
+import com.yixun.yixun_backend.mapper.RecruitedMapper;
+import com.yixun.yixun_backend.mapper.WebUserMapper;
 import com.yixun.yixun_backend.service.AddressService;
 import com.yixun.yixun_backend.service.VolActivityService;
 import com.yixun.yixun_backend.mapper.VolActivityMapper;
@@ -35,7 +39,21 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
     private AddressMapper addressMapper;
     @Resource
     private VolActivityMapper volActivityMapper;
+    @Resource
+    private RecruitedMapper recruitedMapper;
+    @Resource
+    private WebUserMapper webUserMapper;
+    public List<WebUser> getPageOfData(int pageNum, int pageSize, List<WebUser> dtoList) {
+        int startIndex = (pageNum - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, dtoList.size());
 
+        if (startIndex >= endIndex) {
+            // 页数超出范围或数据为空，返回空列表或抛出异常
+            return new ArrayList<>();
+        }
+
+        return dtoList.subList(startIndex, endIndex);
+    }
     public VolActivityDTO cutIntoVolActivityDTO(VolActivity volActivity){
         VolActivityDTO dto=new VolActivityDTO();
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -157,7 +175,31 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
             return Result.error();
         }
     }
-
+    public Result GetAllRecruited(int actId,int pageNum, int pageSize)
+    {
+        try
+        {
+            Result result = new Result();
+            QueryWrapper<Recruited> wrapper=new QueryWrapper<>();
+            wrapper.eq("VOL_ACT_ID",actId);
+            List<Recruited> recruitedList=recruitedMapper.selectList(wrapper);
+            List<WebUser> userList=new ArrayList<>();
+            for(Recruited r:recruitedList){
+                WebUser user=webUserMapper.selectById(r.getVolId());
+                userList.add(user);
+            }
+            List<WebUser> resultList=getPageOfData(pageNum,pageSize,userList);
+            result.data.put("users_list",resultList);
+            result.data.put("total",userList.size());
+            result.data.put("getcount", resultList.size());
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+            catch (Exception e) {
+            return Result.error();
+        }
+    }
 }
 
 

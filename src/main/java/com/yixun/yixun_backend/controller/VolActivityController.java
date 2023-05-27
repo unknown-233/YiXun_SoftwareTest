@@ -1,6 +1,7 @@
 package com.yixun.yixun_backend.controller;
 
 
+import com.yixun.yixun_backend.dto.VolInfoDTO;
 import com.yixun.yixun_backend.service.VolActivityService;
 import com.yixun.yixun_backend.utils.Result;
 
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/api/VolAct")
@@ -41,6 +44,13 @@ public class VolActivityController {
     {
         Result result=new Result();
         result=volActivityService.GetVolActivityDetail(VolActId);
+        return result;
+    }
+    @GetMapping("/ShowAllRecruited")
+    public Result ShowAllRecruited(int actId,int pageNum, int pageSize)
+    {
+        Result result=new Result();
+        result=volActivityService.GetAllRecruited(actId,pageNum,pageSize);
         return result;
     }
 }

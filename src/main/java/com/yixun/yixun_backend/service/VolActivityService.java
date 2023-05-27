@@ -20,4 +20,5 @@ public interface VolActivityService extends IService<VolActivity> {
     public Result GetVolActivities(int volId,int pageNum, int pageSize);
     public Result GetVolActivityByWord(@RequestBody Map<String, Object> inputMap);
     public Result GetVolActivityDetail(int VolActId);
+    public Result GetAllRecruited(int actId,int pageNum, int pageSize);
 }
