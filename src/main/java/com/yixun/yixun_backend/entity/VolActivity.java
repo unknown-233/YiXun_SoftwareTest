@@ -72,6 +72,7 @@ public class VolActivity implements Serializable {
      */
     private int initiator;
 
+    private Integer clueId;
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

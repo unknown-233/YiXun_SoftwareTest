@@ -1,5 +1,6 @@
 package com.yixun.yixun_backend.controller;
 
+import com.yixun.yixun_backend.service.ClueService;
 import com.yixun.yixun_backend.service.SearchinfoFollowupService;
 import com.yixun.yixun_backend.service.SearchinfoService;
 import com.yixun.yixun_backend.utils.Result;
@@ -16,7 +17,8 @@ public class Searchinfocontroller {
     private SearchinfoService searchinfoService;
     @Resource
     private SearchinfoFollowupService searchinfoFollowupService;
-    
+    @Resource
+    private ClueService clueService;
     //获取寻人详情页
     @GetMapping("/GetSearchInfo")
     public Result GetSearchInfo(int search_id)
@@ -39,6 +41,13 @@ public class Searchinfocontroller {
     {
         Result result=new Result();
         result=searchinfoFollowupService.RefuseFollowUp(volid,search_info_id);
+        return result;
+    }
+    @GetMapping("/GetClueDetail")
+    public Result GetClueDetail(int clueId)
+    {
+        Result result=new Result();
+        result=clueService.GetClueDetail(clueId);
         return result;
     }
 }

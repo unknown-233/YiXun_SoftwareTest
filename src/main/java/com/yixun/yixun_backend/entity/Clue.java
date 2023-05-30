@@ -89,6 +89,7 @@ public class Clue implements Serializable {
      * 电话
      */
     private String phonenum;
+    private Integer volActId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

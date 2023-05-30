@@ -22,12 +22,13 @@
             <result property="confirmMen" column="CONFIRM_MEN" jdbcType="VARCHAR"/>
             <result property="confirmText" column="CONFIRM_TEXT" jdbcType="VARCHAR"/>
             <result property="phonenum" column="PHONENUM" jdbcType="VARCHAR"/>
+        <result property="volActId" column="VOL_ACT_ID" jdbcType="INTEGER"/>
 
     </resultMap>
 
     <sql id="Base_Column_List">
         CLUE_ID,CLUE_CONTENT,CLUE_DATE,
         SEARCHINFO_ID,USER_ID,ISACTIVE,WHETHER_CONFIRMED,
-        CLUE_DAY,DETAIL_TIME,PROVINCE,CITY,AREA,DETAIL_ADDRESS,PICTURE,CONFIRM_MEN,CONFIRM_TEXT,PHONENUM
+        CLUE_DAY,DETAIL_TIME,PROVINCE,CITY,AREA,DETAIL_ADDRESS,PICTURE,CONFIRM_MEN,CONFIRM_TEXT,PHONENUM,VOL_ACT_ID
     </sql>
 </mapper>

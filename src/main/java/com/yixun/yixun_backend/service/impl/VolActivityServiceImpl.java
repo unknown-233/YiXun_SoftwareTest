@@ -164,6 +164,12 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
             result.data.put("activity_endTime", TimeTrans.myToString(volActivity.getEndTime()));
             result.data.put("activity_contactMethod", volActivity.getContactMethod());
             result.data.put("activity_content", volActivity.getActContent());
+            if(volActivity.getClueId()!=null){
+                result.data.put("activity_clueId", volActivity.getClueId());
+            }
+            else{
+                result.data.put("activity_clueId",null);
+            }
 
             var is_overdue = volActivity.getExpTime().after(new Date());
             result.data.put("is_overdue", is_overdue);

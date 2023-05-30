@@ -168,6 +168,14 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             int needPeople = 0;
             String initiatorKey = "act_initiator";
             int initiator = 0;
+            String clueKey = "act_clueId";
+            int clueId = 0;
+            if (inputData.containsKey(clueKey)) {
+                Object value = inputData.get(clueKey);
+                if (value != null) {
+                    clueId = Integer.parseInt(value.toString());
+                }
+            }
             if (inputData.containsKey(endTimeKey)) {
                 endTime = (String) inputData.get(endTimeKey);
             }
@@ -209,6 +217,10 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             volActivity.setContactMethod(contactMethod);
             volActivity.setNeedpeople(needPeople);
             volActivity.setInitiator(initiator);
+            volActivity.setInitiator(initiator);
+            if(clueId!=0){
+                volActivity.setClueId(clueId);
+            }
             if (actProvince != "") {
                 Address address = new Address();
                 address.setDetail(actAddress);

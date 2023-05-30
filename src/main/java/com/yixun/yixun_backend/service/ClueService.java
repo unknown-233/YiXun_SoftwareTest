@@ -22,4 +22,5 @@ public interface ClueService extends IService<Clue> {
     public Result GetAllCLuesPublished(int user_id, int pageNum, int pageSize);
     public Result AddOneClue(@RequestBody Map<String, Object> inputMap);
     public Result DeleteClueByUser(int userid, int clueid);
+    public Result GetClueDetail(int clueId);
 }

@@ -200,6 +200,33 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
         result.errorCode = 200;
         return result;
     }
+    public Result GetClueDetail(int clueId){
+        try
+        {
+            Result result = new Result();
+            Clue clue=clueMapper.selectById(clueId);
+            result.data.put("clue_day",clue.getClueDay());
+            result.data.put("detail_time",clue.getDetailTime());
+            result.data.put("province",clue.getProvince());
+            result.data.put("city",clue.getCity());
+            result.data.put("area",clue.getArea());
+            result.data.put("detail_address",clue.getDetailAddress());
+            result.data.put("description",clue.getConfirmText());
+            result.data.put("whether_confirmed",clue.getWhetherConfirmed());
+            if(clue.getVolActId()!=null){
+                result.data.put("clue_volActId",clue.getVolActId());
+            }
+            else{
+                result.data.put("clue_volActId",null);
+            }
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }
+        catch (Exception e) {
+            return Result.error();
+        }
+    }
 }
 
 
