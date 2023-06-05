@@ -5,16 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yixun.yixun_backend.dto.VolActivityDTO;
-import com.yixun.yixun_backend.entity.Address;
-import com.yixun.yixun_backend.entity.Recruited;
-import com.yixun.yixun_backend.entity.VolActivity;
-import com.yixun.yixun_backend.entity.WebUser;
-import com.yixun.yixun_backend.mapper.AddressMapper;
-import com.yixun.yixun_backend.mapper.RecruitedMapper;
-import com.yixun.yixun_backend.mapper.WebUserMapper;
+import com.yixun.yixun_backend.entity.*;
+import com.yixun.yixun_backend.mapper.*;
 import com.yixun.yixun_backend.service.AddressService;
 import com.yixun.yixun_backend.service.VolActivityService;
-import com.yixun.yixun_backend.mapper.VolActivityMapper;
 import com.yixun.yixun_backend.utils.Result;
 import com.yixun.yixun_backend.utils.TimeTrans;
 import org.springframework.stereotype.Service;
@@ -43,6 +37,8 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
     private RecruitedMapper recruitedMapper;
     @Resource
     private WebUserMapper webUserMapper;
+    @Resource
+    private ClueMapper clueMapper;
     public List<WebUser> getPageOfData(int pageNum, int pageSize, List<WebUser> dtoList) {
         int startIndex = (pageNum - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, dtoList.size());
@@ -166,9 +162,12 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
             result.data.put("activity_content", volActivity.getActContent());
             if(volActivity.getClueId()!=null){
                 result.data.put("activity_clueId", volActivity.getClueId());
+                Clue clue=clueMapper.selectById(volActivity.getClueId());
+                result.data.put("activity_searchinfoId",clue.getSearchinfoId());
             }
             else{
                 result.data.put("activity_clueId",null);
+                result.data.put("activity_searchinfoId",null);
             }
 
             var is_overdue = volActivity.getExpTime().after(new Date());

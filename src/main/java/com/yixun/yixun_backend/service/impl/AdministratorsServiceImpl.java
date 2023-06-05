@@ -235,6 +235,12 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             volActivityMapper.insert(volActivity);
             List<VolActivity> tmpList = volActivityMapper.selectList(new QueryWrapper<VolActivity>().orderByDesc("VOL_ACT_ID"));
             VolActivity newVolActivity = tmpList.get(0);
+            if(clueId!=0){
+                Clue cLue=clueMapper.selectById(clueId);
+                cLue.setVolActId(newVolActivity.getVolActId());
+                clueMapper.updateById(cLue);
+            }
+
             result.data.put("volAct_id", newVolActivity.getVolActId());
 
             result.errorCode = 200;

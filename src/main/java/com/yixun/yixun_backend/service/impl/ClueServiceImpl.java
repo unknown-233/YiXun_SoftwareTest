@@ -44,6 +44,12 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
         dto.setClueDate(TimeTrans.myToString(clue.getClueDate()));
         dto.setSearchinfoId(clue.getSearchinfoId());
         dto.setWhetherConfirmed(clue.getWhetherConfirmed());
+        if(clue.getVolActId()!=null){
+            dto.setVolActId(clue.getVolActId());
+        }
+        else{
+            Integer volActId = null;
+        }
         return dto;
     }
 
@@ -205,13 +211,19 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
         {
             Result result = new Result();
             Clue clue=clueMapper.selectById(clueId);
-            result.data.put("clue_day",clue.getClueDay());
+            result.data.put("clue_day",TimeTrans.myToDateString(clue.getClueDay()));
             result.data.put("detail_time",clue.getDetailTime());
             result.data.put("province",clue.getProvince());
             result.data.put("city",clue.getCity());
+            //图片list
+            String pictureURLs = clue.getPicture(); // 获取数据库中的图片URL字符串，例如："http://.../1.png, http://.../2.png"
+            List<String> picList = Arrays.asList(pictureURLs.split("\\s*,\\s*")); // 将图片URL字符串以逗号分隔符拆分成字符串列表
+
+            result.data.put("pic_list", picList); // 将字符串列表写入result.data的pic_list字段
+
             result.data.put("area",clue.getArea());
             result.data.put("detail_address",clue.getDetailAddress());
-            result.data.put("description",clue.getConfirmText());
+            result.data.put("clue_content",clue.getClueContent());
             result.data.put("whether_confirmed",clue.getWhetherConfirmed());
             if(clue.getVolActId()!=null){
                 result.data.put("clue_volActId",clue.getVolActId());

@@ -15,4 +15,6 @@ public class ClueDTO {
     private int SearchinfoId;
     @JsonProperty("WhetherConfirmed")
     private String WhetherConfirmed;
+    @JsonProperty("VolActId")
+    private int VolActId;
 }
