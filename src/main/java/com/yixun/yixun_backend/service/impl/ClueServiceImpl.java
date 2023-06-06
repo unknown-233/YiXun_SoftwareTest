@@ -8,6 +8,7 @@ import com.yixun.yixun_backend.dto.ClueDTO;
 import com.yixun.yixun_backend.dto.VolActivityDTO;
 import com.yixun.yixun_backend.entity.*;
 import com.yixun.yixun_backend.mapper.CluesReportMapper;
+import com.yixun.yixun_backend.mapper.VolActivityMapper;
 import com.yixun.yixun_backend.service.ClueService;
 import com.yixun.yixun_backend.mapper.ClueMapper;
 import com.yixun.yixun_backend.utils.OssUploadService;
@@ -36,6 +37,8 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
     private CluesReportMapper cluesReportMapper;
     @Resource
     private OssUploadService ossUploadService;
+    @Resource
+    private VolActivityMapper volActivityMapper;
     public ClueDTO cutIntoClueDTO(Clue clue){
         ClueDTO dto=new ClueDTO();
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -69,6 +72,14 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
             Clue clue=clueMapper.selectById(clueID);
             clue.setIsactive("N");
             clueMapper.updateById(clue);
+            QueryWrapper<VolActivity> actWrapper = new QueryWrapper<VolActivity>();
+            actWrapper.eq("CLUE_ID",clueID);
+            List<VolActivity> actList=volActivityMapper.selectList(actWrapper);
+            for(VolActivity act:actList)
+            {
+                act.setClueId(0);
+                volActivityMapper.updateById(act);
+            }
             QueryWrapper<CluesReport> wrapper = new QueryWrapper<CluesReport>();
             wrapper.eq("CLUE_ID",clueID);
             List<CluesReport> cluesReportList=cluesReportMapper.selectList(wrapper);
@@ -211,21 +222,35 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
         {
             Result result = new Result();
             Clue clue=clueMapper.selectById(clueId);
-            result.data.put("clue_day",TimeTrans.myToDateString(clue.getClueDay()));
+            if(clue.getClueDay()!=null){
+                result.data.put("clue_day",TimeTrans.myToDateString(clue.getClueDay()));
+            }
+            else{
+                result.data.put("clue_day",null);
+            }
             result.data.put("detail_time",clue.getDetailTime());
             result.data.put("province",clue.getProvince());
             result.data.put("city",clue.getCity());
             //图片list
             String pictureURLs = clue.getPicture(); // 获取数据库中的图片URL字符串，例如："http://.../1.png, http://.../2.png"
-            List<String> picList = Arrays.asList(pictureURLs.split("\\s*,\\s*")); // 将图片URL字符串以逗号分隔符拆分成字符串列表
-
-            result.data.put("pic_list", picList); // 将字符串列表写入result.data的pic_list字段
+            if(pictureURLs!=null&&pictureURLs.length()>0){
+                List<String> picList = Arrays.asList(pictureURLs.split("\\s*,\\s*")); // 将图片URL字符串以逗号分隔符拆分成字符串列表
+                if(picList.size()>0){
+                    result.data.put("pic_list", picList); // 将字符串列表写入result.data的pic_list字段
+                }
+                else{
+                    result.data.put("pic_list", null); // 将字符串列表写入result.data的pic_list字段
+                }
+            }
+            else{
+                result.data.put("pic_list", null); // 将字符串列表写入result.data的pic_list字段
+            }
 
             result.data.put("area",clue.getArea());
             result.data.put("detail_address",clue.getDetailAddress());
             result.data.put("clue_content",clue.getClueContent());
             result.data.put("whether_confirmed",clue.getWhetherConfirmed());
-            if(clue.getVolActId()!=null){
+            if(clue.getVolActId()!=null&&clue.getVolActId()!=0){
                 result.data.put("clue_volActId",clue.getVolActId());
             }
             else{

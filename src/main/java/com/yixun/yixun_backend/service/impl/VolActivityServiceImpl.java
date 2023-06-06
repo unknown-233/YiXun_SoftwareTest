@@ -160,7 +160,7 @@ public class VolActivityServiceImpl extends ServiceImpl<VolActivityMapper, VolAc
             result.data.put("activity_endTime", TimeTrans.myToString(volActivity.getEndTime()));
             result.data.put("activity_contactMethod", volActivity.getContactMethod());
             result.data.put("activity_content", volActivity.getActContent());
-            if(volActivity.getClueId()!=null){
+            if(volActivity.getClueId()!=null&&volActivity.getClueId()!=0){
                 result.data.put("activity_clueId", volActivity.getClueId());
                 Clue clue=clueMapper.selectById(volActivity.getClueId());
                 result.data.put("activity_searchinfoId",clue.getSearchinfoId());

@@ -745,10 +745,18 @@ public class AdministratorsServiceImpl extends ServiceImpl<AdministratorsMapper,
             LambdaQueryWrapper<Recruited> wrapper2 = new QueryWrapper<Recruited>().lambda().eq(Recruited::getVolActId, actId);
             recruitedMapper.delete(wrapper2);
             //原来的方法只能删掉一行，这个可以删掉所有符合条件的
-            QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
+            QueryWrapper<VolActivity> wrapper = new QueryWrapper<VolActivity>();
             wrapper.eq("VOL_ACT_ID", actId);
-            searchinfoMapper.delete(wrapper);//从searchinfoFocus表中删去这条数据
-
+            volActivityMapper.delete(wrapper);//从searchinfoFocus表中删去这条数据
+            QueryWrapper<Clue> clueQueryWrapper = new QueryWrapper<Clue>();
+            clueQueryWrapper.eq("VOL_ACT_ID",actId);
+            List<Clue> clueList=clueMapper.selectList(clueQueryWrapper);
+            if(clueList.size()>0){
+                for(Clue c:clueList){
+                    c.setVolActId(0);
+                    clueMapper.updateById(c);
+                }
+            }
             result.status = true;
             result.errorCode = 200;
             return result;
