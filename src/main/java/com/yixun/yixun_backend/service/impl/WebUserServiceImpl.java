@@ -48,7 +48,6 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
     private ClueMapper clueMapper;
 
 
-
     public UserInfoDTO cutIntoUserInfoDTO(WebUser user){
         UserInfoDTO dto=new UserInfoDTO();
         dto.setIsactive(user.getIsactive());
@@ -91,14 +90,28 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
         String passwordKey="user_password";
         Long phone= Long.valueOf(0);
         String password="";
+
         if(inputData.containsKey(phoneKey)){
+            if(inputData.get(phoneKey)==""){
+                message.data.put("message","用户不正确或密码错误！");
+                message.status=false;
+                return message;
+            }
             phone=(Long) inputData.get(phoneKey);
         }
         if(inputData.containsKey(passwordKey)){
+            if(inputData.get(passwordKey)==""){
+                message.data.put("message","用户不正确或密码错误！");
+                message.status=false;
+                return message;
+            }
             password=(String)inputData.get(passwordKey);
         }
         try{
-            WebUser user = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM", phone).eq("USER_PASSWORDS", password));
+            WebUser user=null;
+            if(webUserMapper!=null){
+                user = webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM", phone).eq("USER_PASSWORDS", password));
+            }
             if(user!=null){
                 if (user.getIsactive() == "N" || user.getUserState() == "N"){
                     message.data.put("message","账号已被注销或封禁");
@@ -110,22 +123,24 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
                 //保存数据库
                 Volunteer volunteer = volunteerMapper.selectOne(new QueryWrapper<Volunteer>().eq("VOL_USER_ID", user.getUserId()));
                 if(volunteer!=null){
-                    String token= JWTutils.generateToken(Integer.toString(user.getUserId()),user.getUserPasswords());
-                    message.data.put("user_token",token);
-                    String vol_token= JWTutils.generateToken(Integer.toString(volunteer.getVolId()),user.getUserPasswords());
                     message.data.put("identity", "volunteer");
                     message.data.put("vol_id", volunteer.getVolId());
                     message.data.put("user_id", volunteer.getVolUserId());
-                }
-                else{
                     String token= JWTutils.generateToken(Integer.toString(user.getUserId()),user.getUserPasswords());
                     message.data.put("user_token",token);
+                }
+                else{
                     message.data.put("identity", "user");
                     message.data.put("id", user.getUserId());
+                    String token= JWTutils.generateToken(Integer.toString(user.getUserId()),user.getUserPasswords());
+                    message.data.put("user_token",token);
                 }
             }
             else{
-                Administrators administrator = administratorsMapper.selectOne(new QueryWrapper<Administrators>().eq("ADMINISTRATOR_PHONE", phone).eq("ADMINISTRATOR_CODE", password));
+                Administrators administrator=new Administrators();
+                if(administratorsMapper!=null){
+                    administrator = administratorsMapper.selectOne(new QueryWrapper<Administrators>().eq("ADMINISTRATOR_PHONE", phone).eq("ADMINISTRATOR_CODE", password));
+                }
                 message.data.put("identity", "administrator");
                 message.data.put("id", administrator.getAdministratorId());
                 String token= JWTutils.generateToken(Integer.toString(administrator.getAdministratorId()),administrator.getAdministratorCode());
@@ -212,8 +227,8 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
         }
     }
     public Result AddWebUser(@RequestBody Map<String,Object> inputData){
+        Result result=new Result();
         try{
-            Result result=new Result();
             String userPhoneKey = "user_phone";
             Long userPhone =  Long.valueOf(0);
             String userPasswordKey = "user_password";
@@ -255,6 +270,7 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
             return result;
         }
         catch (Exception e) {
+            result.status=false;
             return Result.error();
         }
     }
