@@ -247,9 +247,9 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
     }
     public Result GetSearchInfoDetail(int search_id)
     {
+        Result result = new Result();
         try
         {
-            Result result = new Result();
             Searchinfo searchinfo=searchinfoMapper.selectById(search_id);
             result.data.put("search_id", search_id);//data是字典，这是向result里面加输出的信息
             result.data.put("search_name", searchinfo.getSoughtPeopleName());
@@ -285,6 +285,8 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             return result;
         }
         catch (Exception e) {
+//            错误处理
+            result.status=false;
             return Result.error();
         }
     }

@@ -1,7 +1,9 @@
 package com.yixun.yixun_backend.unittest;
+import com.yixun.yixun_backend.entity.Address;
 import com.yixun.yixun_backend.entity.Administrators;
 import com.yixun.yixun_backend.entity.Volunteer;
 import com.yixun.yixun_backend.entity.WebUser;
+import com.yixun.yixun_backend.mapper.AddressMapper;
 import com.yixun.yixun_backend.mapper.AdministratorsMapper;
 import com.yixun.yixun_backend.mapper.VolunteerMapper;
 import com.yixun.yixun_backend.mapper.WebUserMapper;
@@ -13,11 +15,14 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class JUnitExampleTest {
     @InjectMocks
@@ -29,14 +34,20 @@ public class JUnitExampleTest {
     @Mock
     private VolunteerMapper volunteerMapper;
     @Mock
+    private AddressMapper addressMapper;
+    @Mock
     private WebUser mockUser = new WebUser();
+    @Mock
+    List<WebUser> tmpList = new ArrayList<>();
+    @Mock
+    Address address=new Address();
     @Mock
     private Volunteer volunteer=new Volunteer();
     @Mock
     private Administrators administrator = new Administrators();
 
     @Before
-    public void testBeforeClass(){
+    public void setUp(){
         MockitoAnnotations.openMocks(this);
     }
 
@@ -221,8 +232,374 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.data.get("id"), 1);
     }
 
+    //UT_TC_002_002_001 均不填内容
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_1(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=Long.valueOf(0);
+        String userPassword="";
+        String userName="";
+        String userEmail="";
 
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
 
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_002 不填手机号、填密码、不填姓名、填非法邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_2(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=Long.valueOf(0);
+        String userPassword="gbsdh";
+        String userName="";
+        String userEmail="1@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_003 不填手机号、不填密码、填姓名、填合法邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_3(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=Long.valueOf(0);
+        String userPassword="";
+        String userName="szq";
+        String userEmail="1051172622@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_004 填非法手机号、不填密码、填姓名、填合法邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_4(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=454215L;
+        String userPassword="";
+        String userName="szq";
+        String userEmail="1051172622@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_005 填非法手机号、填密码、填姓名、不填邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_5(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=454215L;
+        String userPassword="bgd";
+        String userName="szq";
+        String userEmail="";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_006 填非法手机号、填密码、不填姓名、填非法邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_6(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=454215L;
+        String userPassword="bgd";
+        String userName="";
+        String userEmail="1@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_007 填合法手机号、不填密码、填姓名、填非法邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_7(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=18759073815L;
+        String userPassword="";
+        String userName="zqd";
+        String userEmail="1@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_008 填合法手机号、填密码、不填姓名、填合法邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_8(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=18759073815L;
+        String userPassword="hjkh";
+        String userName="";
+        String userEmail="1051172622@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_009 填合法手机号、填密码、填姓名、不填邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_9(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=18759073815L;
+        String userPassword="hjkh";
+        String userName="zqd";
+        String userEmail="";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_002_010 填合法手机号、填密码、填姓名、填合法邮箱
+    //返回结果的status字段为true，data字段为新生成的user_id，用户信息添加成功
+    @Test
+    public void testAddWebUser_10(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=18759073815L;
+        String userPassword="hjkh*15";
+        String userName="zqd";
+        String userEmail="1051172622@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+//        mockito模拟依赖项行为
+        when(webUserMapper.selectOne(any())).thenReturn(null);
+        when(webUserMapper.insert(any())).thenReturn(10);
+        when(webUserMapper.selectList(any())).thenReturn(tmpList);
+        when(tmpList.get(0)).thenReturn(mockUser);
+        when(mockUser.getUserId()).thenReturn(10);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,true);
+        Assert.assertEquals(result1.data.get("user_id"),10);
+    }
+
+    //UT_TC_002_002_011 填合法但数据库中已有的手机号、填密码、填姓名、填合法邮箱
+    //返回结果的status字段为false
+    @Test
+    public void testAddWebUser_11(){
+        Map<String, Object> inputData1 = new HashMap<>();
+        // 构造测试数据
+        Long userPhone=19121763605L;
+        String userPassword="hjkh*15";
+        String userName="zqd";
+        String userEmail="1051172622@qq.com";
+
+        inputData1.put("user_phone", userPhone);
+        inputData1.put("user_password", userPassword);
+        inputData1.put("user_name",userName);
+        inputData1.put("user_email",userEmail);
+
+//        mockito模拟依赖项行为
+        when(webUserMapper.selectOne(any())).thenReturn(mockUser);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.AddWebUser(inputData1);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+//UT_TC_002_003_001 输入user_id为空
+//返回结果的status字段为false
+    @Test
+    public void testGetUserInformation_1(){
+        // 构造测试数据
+//        int user_id=;
+
+//        mockito模拟依赖项行为
+        when(webUserMapper.selectById(any())).thenReturn(null);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.GetUserInfomation(0);
+
+        // 验证结果
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_003_002 输入user_id非空，但在数据库中不存在
+//返回结果的status字段为false
+    @Test
+    public void testGetUserInformation_2(){
+        // 构造测试数据
+        int user_id=-1;
+
+//        mockito模拟依赖项行为
+        when(webUserMapper.selectById(user_id)).thenReturn(null);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.GetUserInfomation(user_id);
+
+        // 验证结果
+        verify(webUserMapper.selectById(user_id));
+        Assert.assertEquals(result1.status,false);
+    }
+
+    //UT_TC_002_003_003 输入user_id非空，且在数据库中存在，地址id为空
+//返回结果的status字段为true，data字段中返回用户的信息包括id和姓名邮箱等
+    @Test
+    public void testGetUserInformation_3(){
+        // 构造测试数据
+        int user_id=1;
+
+//        mockito模拟依赖项行为
+        when(webUserMapper.selectById(user_id)).thenReturn(mockUser);
+        when(mockUser.getUserId()).thenReturn(1);
+        when(mockUser.getUserName()).thenReturn("alian");
+        when(mockUser.getUserPasswords()).thenReturn("abc");
+        when(mockUser.getUserHeadUrl()).thenReturn("1111");
+        when(mockUser.getAddressId()).thenReturn(null);
+
+        // 调用被测试的函数
+        Result result1 = webUserService.GetUserInfomation(user_id);
+
+        // 验证结果
+        verify(webUserMapper.selectById(user_id));
+        Assert.assertEquals(result1.status,true);
+        Assert.assertEquals(result1.data.get("user_address"),null);
+    }
+
+    //UT_TC_002_003_004 输入user_id非空，且在数据库中存在，地址id非空
+//返回结果的status字段为true，data字段中返回用户的信息包括id和姓名邮箱等，地址相应信息非空
+    @Test
+    public void testGetUserInformation_4(){
+        // 构造测试数据
+        int user_id=1;
+
+//        mockito模拟依赖项行为
+        when(webUserMapper.selectById(user_id)).thenReturn(mockUser);
+        when(mockUser.getUserId()).thenReturn(1);
+        when(mockUser.getUserName()).thenReturn("alian");
+        when(mockUser.getUserPasswords()).thenReturn("abc");
+        when(mockUser.getUserHeadUrl()).thenReturn("1111");
+        when(mockUser.getAddressId()).thenReturn(1);
+        when(addressMapper.selectById(any())).thenReturn(address);
+        when(address.getProvinceId()).thenReturn("省份");
+        when(address.getCityId()).thenReturn("城市");
+        when(address.getAreaId()).thenReturn("地区");
+        when(address.getDetail()).thenReturn("细节");
+
+        // 调用被测试的函数
+        Result result1 = webUserService.GetUserInfomation(user_id);
+
+        // 验证结果
+        verify(webUserMapper.selectById(user_id));
+        Assert.assertEquals(result1.status,true);
+        Assert.assertEquals(result1.data.get("user_province"),"省份");
+    }
+
+    //UT_TC_002_003_005 输入user_id为0
+//返回结果的status字段为false
+    @Test
+    public void testGetUserInformation_5(){
+        // 构造测试数据
+        int user_id=0;
+
+//        mockito模拟依赖项行为
+        when(webUserMapper.selectById(user_id)).thenReturn(null);
+
+        // 调用被测试的函数
+        Result result = webUserService.GetUserInfomation(user_id);
+
+        // 验证结果
+        Assert.assertEquals(result.status,false);
+    }
 
 }
 

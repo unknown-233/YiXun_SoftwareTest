@@ -237,21 +237,40 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
             String userName = "";
             String userEmailKey = "user_email";
             String userEmail = "";
+//            四个值任意为空的时候错误处理
             if (inputData.containsKey(userPhoneKey)) {
                 userPhone = (Long) inputData.get(userPhoneKey);
+                if(userPhone==0){
+                    result.status=false;
+                    return result;
+                }
             }
             if (inputData.containsKey(userPasswordKey)) {
                 userPassword = (String) inputData.get(userPasswordKey);
+                if(userPassword==""){
+                    result.status=false;
+                    return result;
+                }
             }
             if (inputData.containsKey(userNameKey)) {
                 userName = (String) inputData.get(userNameKey);
+                if(userName==""){
+                    result.status=false;
+                    return result;
+                }
             }
             if (inputData.containsKey(userEmailKey)) {
                 userEmail = (String) inputData.get(userEmailKey);
+                if(userEmail==""){
+                    result.status=false;
+                    return result;
+                }
             }
             WebUser user=webUserMapper.selectOne(new QueryWrapper<WebUser>().eq("PHONE_NUM",userPhone));
             if(user != null)
             {
+//                如果手机号在数据库中已经存在，status为false
+                result.status=false;
                 return Result.error();
             }
             else{
@@ -268,8 +287,7 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
                 result.status = true;
             }
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             result.status=false;
             return Result.error();
         }
@@ -277,34 +295,37 @@ public class WebUserServiceImpl extends ServiceImpl<WebUserMapper, WebUser>
     public Result GetUserInfomation(int user_id)
     {
         Result result = new Result();
-        WebUser user=webUserMapper.selectById(user_id);
-        result.data.put("user_id", user.getUserId());
-        result.data.put("user_name", user.getUserName());
-        result.data.put("user_password", user.getUserPasswords());
-        result.data.put("user_head", user.getUserHeadUrl());
-        result.data.put("user_fundationtime", user.getFundationTime());
-        result.data.put("user_phonenum", user.getPhoneNum());
-        result.data.put("user_mailbox", user.getMailboxNum());
-        result.data.put("user_gender", user.getUserGender());
+//补充错误处理部分
+        try {
+            WebUser user = webUserMapper.selectById(user_id);
+            result.data.put("user_id", user.getUserId());
+            result.data.put("user_name", user.getUserName());
+            result.data.put("user_password", user.getUserPasswords());
+            result.data.put("user_head", user.getUserHeadUrl());
+            result.data.put("user_fundationtime", user.getFundationTime());
+            result.data.put("user_phonenum", user.getPhoneNum());
+            result.data.put("user_mailbox", user.getMailboxNum());
+            result.data.put("user_gender", user.getUserGender());
 
-        if (user.getAddressId() != null)
-        {
-            Address address = addressMapper.selectById(user.getAddressId());
-            result.data.put("user_province", address.getProvinceId());
-            result.data.put("user_city", address.getCityId());
-            result.data.put("user_area", address.getAreaId());
-            result.data.put("user_address", address.getDetail());
+            if (user.getAddressId() != null) {
+                Address address = addressMapper.selectById(user.getAddressId());
+                result.data.put("user_province", address.getProvinceId());
+                result.data.put("user_city", address.getCityId());
+                result.data.put("user_area", address.getAreaId());
+                result.data.put("user_address", address.getDetail());
+            } else {
+                result.data.put("user_province", null);
+                result.data.put("user_city", null);
+                result.data.put("user_area", null);
+                result.data.put("user_address", null);
+            }
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }catch (Exception e){
+            result.status=false;
+            return Result.error();
         }
-        else
-        {
-            result.data.put("user_province", null);
-            result.data.put("user_city", null);
-            result.data.put("user_area", null);
-            result.data.put("user_address", null);
-        }
-        result.status = true;
-        result.errorCode = 200;
-        return result;
     }
     public Result UpdateUserPassword(@RequestBody Map<String, Object> inputMap)
     {
