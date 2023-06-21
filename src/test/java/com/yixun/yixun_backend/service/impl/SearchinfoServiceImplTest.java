@@ -8,6 +8,7 @@ import com.yixun.yixun_backend.mapper.ClueMapper;
 import com.yixun.yixun_backend.mapper.SearchinfoMapper;
 import com.yixun.yixun_backend.mapper.WebUserMapper;
 import com.yixun.yixun_backend.service.ClueService;
+import com.yixun.yixun_backend.service.SearchinfoService;
 import com.yixun.yixun_backend.utils.Result;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,12 +17,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -148,6 +151,7 @@ public class SearchinfoServiceImplTest {
         Assert.assertEquals(result.data.get("search_name"),"Mary");
 
     }
+//    报错
 //    UT_TD_001_002_001用户ID在数据库中不存在
 //    返回结果的status字段为false
     @Test
@@ -168,12 +172,12 @@ public class SearchinfoServiceImplTest {
         int user_id=13;
         int pageNum=1;
         int pageSize=3;
-//      (List<Searchinfo>)
         when(searchinfoMapper.selectPage(any(),any())).thenReturn(iPage);
         when(iPage.getRecords()).thenReturn(dtoList);
-        when(searchinfoService.cutIntoSearchinfoDTOList(any())).thenReturn(dtoList);
+        when(searchinfoService.cutIntoSearchinfoDTOList(anyList())).thenReturn(dtoList);
         when(iPage.getTotal()).thenReturn(1L);
         when(iPage.getRecords().size()).thenReturn(2);
+
 
         Result result=searchinfoService.GetAllSearchInfoPublished(user_id,pageNum,pageSize);
 
@@ -181,8 +185,15 @@ public class SearchinfoServiceImplTest {
         Assert.assertEquals(result.data.get("total"),1);
     }
 
+//
+//    UT_TC_003_003_001删除不是用户本人发布的线索，userID和clueId不匹配
+//返回false
     @Test
-    public void addSearchInfo() {
+    public void addSearchInfo_1() {
+
+    }
+    @Test
+    public void addSearchInfo_2() {
     }
 
     @Test

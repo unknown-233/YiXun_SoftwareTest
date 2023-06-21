@@ -66,8 +66,7 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
     }
 
     //删除寻人线索（连锁删除相关线索举报）
-    public Boolean deleteClue(int clueID)
-    {
+    public Boolean deleteClue(int clueID) {
         try{
             Clue clue=clueMapper.selectById(clueID);
             clue.setIsactive("N");
@@ -94,8 +93,7 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
             return Boolean.FALSE;
         }
     }
-    public String GetCluesNumber()
-    {
+    public String GetCluesNumber() {
         try
         {
             QueryWrapper<Clue> wrapper = new QueryWrapper<Clue>();
