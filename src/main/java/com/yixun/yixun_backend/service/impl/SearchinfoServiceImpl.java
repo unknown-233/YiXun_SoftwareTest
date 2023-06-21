@@ -70,9 +70,12 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
 
     public List<SearchinfoDTO> cutIntoSearchinfoDTOList(List<Searchinfo> searchinfoList){
         List<SearchinfoDTO> dtoList=new ArrayList<>();
-        for(Searchinfo searchinfo : searchinfoList){
-            SearchinfoDTO dto= cutIntoSearchinfoDTO(searchinfo);
-            dtoList.add(dto);
+//        错误处理
+        if(searchinfoList!=null){
+            for(Searchinfo searchinfo : searchinfoList){
+                SearchinfoDTO dto= cutIntoSearchinfoDTO(searchinfo);
+                dtoList.add(dto);
+            }
         }
         return dtoList;
     }
@@ -292,9 +295,9 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
     }
     public Result GetAllSearchInfoPublished(int user_id,int pageNum, int pageSize)
     {
+        Result result = new Result();
         try
         {
-            Result result = new Result();
             Page<Searchinfo> page = new Page<>(pageNum, pageSize);
             QueryWrapper<Searchinfo> wrapper = new QueryWrapper<Searchinfo>();
             wrapper.eq("USER_ID",user_id).eq("ISACTIVE","Y");
@@ -308,6 +311,8 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             return result;
         }
         catch (Exception e) {
+//            错误处理
+            result.status = false;
             return Result.error();
         }
     }

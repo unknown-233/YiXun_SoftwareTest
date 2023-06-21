@@ -1,5 +1,8 @@
 package com.yixun.yixun_backend.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.yixun.yixun_backend.dto.SearchinfoDTO;
 import com.yixun.yixun_backend.entity.Searchinfo;
 import com.yixun.yixun_backend.mapper.ClueMapper;
 import com.yixun.yixun_backend.mapper.SearchinfoMapper;
@@ -15,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,16 +30,19 @@ public class SearchinfoServiceImplTest {
     @InjectMocks
     SearchinfoServiceImpl searchinfoService;
     @Mock
-    ClueService clueService;
+    private ClueService clueService;
     @Mock
-    ClueMapper clueMapper;
+    private ClueMapper clueMapper;
     @Mock
     private SearchinfoMapper searchinfoMapper;
     @Mock
     private Searchinfo searchinfo;
     @Mock
+    private IPage iPage;
+    @Mock
+    private List<SearchinfoDTO> dtoList=new ArrayList<>();
+    @Mock
     private WebUserMapper webUserMapper;
-
     @Before
     public void setUp(){
         MockitoAnnotations.openMocks(this);
@@ -92,7 +99,7 @@ public class SearchinfoServiceImplTest {
         Assert.assertEquals(result.status,false);
 
     }
-    //    UT_TC_001_001_003 输入寻人信息ID合法的情况
+    //    UT_TC_001_001_003 输入寻人信息ID合法的情况,地址为空
 //    返回结果的各个字段与预期相符,status字段为true
     @Test
     public void getSearchInfoDetail_3() {
@@ -106,17 +113,72 @@ public class SearchinfoServiceImplTest {
         when(searchinfo.getSearchinfoPhotoUrl()).thenReturn("");
         when(clueMapper.selectList(any())).thenReturn(new ArrayList<>());
         when(clueService.cutIntoClueDTOList(any())).thenReturn(new ArrayList<>());
-        when(webUserMapper.selectVolDTOByInfoID(any())).thenReturn(new ArrayList<>());
+        when(webUserMapper.selectVolDTOByInfoID(1)).thenReturn(new ArrayList<>());
         when(searchinfo.getWhetherFound()).thenReturn("已找到");
+        when(searchinfo.getAddressId()).thenReturn(null);
 
 
         Result result=searchinfoService.GetSearchInfoDetail(search_id);
 
-        Assert.assertEquals(result.status,false);
+        Assert.assertEquals(result.status,true);
+        Assert.assertEquals(result.data.get("search_name"),"Mary");
 
     }
+    //    UT_TC_001_001_004 输入寻人信息ID合法，但线索返回空列表
+//    返回结果的各个字段与预期相符,status字段为true
     @Test
-    public void getAllSearchInfoPublished() {
+    public void getSearchInfoDetail_4() {
+        int search_id=1;
+        when(searchinfoMapper.selectById(search_id)).thenReturn(searchinfo);
+        when(searchinfo.getSoughtPeopleName()).thenReturn("Mary");
+        when(searchinfo.getSoughtPeopleBirthday()).thenReturn(new Date());
+        when(searchinfo.getSoughtPeopleGender()).thenReturn("女");
+        when(searchinfo.getSoughtPeopleDetail()).thenReturn("");
+        when(searchinfo.getSearchinfoPhotoUrl()).thenReturn("");
+        when(clueMapper.selectList(any())).thenReturn(null);
+        when(clueService.cutIntoClueDTOList(any())).thenReturn(null);
+        when(webUserMapper.selectVolDTOByInfoID(1)).thenReturn(new ArrayList<>());
+        when(searchinfo.getWhetherFound()).thenReturn("已找到");
+        when(searchinfo.getAddressId()).thenReturn(null);
+
+
+        Result result=searchinfoService.GetSearchInfoDetail(search_id);
+
+        Assert.assertEquals(result.status,true);
+        Assert.assertEquals(result.data.get("search_name"),"Mary");
+
+    }
+//    UT_TD_001_002_001用户ID在数据库中不存在
+//    返回结果的status字段为false
+    @Test
+    public void getAllSearchInfoPublished_1() {
+        int user_id=999;
+        int pageNum=1;
+        int pageSize=3;
+
+        when(searchinfoMapper.selectPage(any(),any())).thenReturn(null);
+
+        Result result=searchinfoService.GetAllSearchInfoPublished(user_id,pageNum,pageSize);
+        Assert.assertEquals(result.status,false);
+    }
+    //    UT_TD_001_002_002用户ID合法，且发布过寻人信息
+//    返回结果的status字段为false
+    @Test
+    public void getAllSearchInfoPublished_2() {
+        int user_id=13;
+        int pageNum=1;
+        int pageSize=3;
+//      (List<Searchinfo>)
+        when(searchinfoMapper.selectPage(any(),any())).thenReturn(iPage);
+        when(iPage.getRecords()).thenReturn(dtoList);
+        when(searchinfoService.cutIntoSearchinfoDTOList(any())).thenReturn(dtoList);
+        when(iPage.getTotal()).thenReturn(1L);
+        when(iPage.getRecords().size()).thenReturn(2);
+
+        Result result=searchinfoService.GetAllSearchInfoPublished(user_id,pageNum,pageSize);
+
+        Assert.assertEquals(result.status,true);
+        Assert.assertEquals(result.data.get("total"),1);
     }
 
     @Test
