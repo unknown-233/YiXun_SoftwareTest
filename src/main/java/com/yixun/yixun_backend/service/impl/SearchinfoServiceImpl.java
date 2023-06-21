@@ -436,9 +436,9 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
         }
     }
     public Result DeleteInfoByUser(int userid, int infoid){
+        Result result = new Result();
         try
         {
-            Result result = new Result();
             Searchinfo searchinfo=searchinfoMapper.selectById(infoid);
             searchinfo.setIsactive("N");
             searchinfoMapper.updateById(searchinfo);
@@ -468,6 +468,7 @@ public class SearchinfoServiceImpl extends ServiceImpl<SearchinfoMapper, Searchi
             return result;
         }
         catch (Exception e) {
+            result.status=false;
             return Result.error();
         }
     }

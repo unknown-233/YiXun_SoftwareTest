@@ -1,4 +1,4 @@
-package com.yixun.yixun_backend.unittest;
+package com.yixun.yixun_backend.service.impl;
 import com.yixun.yixun_backend.entity.Address;
 import com.yixun.yixun_backend.entity.Administrators;
 import com.yixun.yixun_backend.entity.Volunteer;
@@ -9,6 +9,7 @@ import com.yixun.yixun_backend.mapper.VolunteerMapper;
 import com.yixun.yixun_backend.mapper.WebUserMapper;
 import com.yixun.yixun_backend.service.impl.WebUserServiceImpl;
 import com.yixun.yixun_backend.utils.Result;
+import jdk.jfr.Description;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class JUnitExampleTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//测试IfCorrectToLogIn方法
+@Description("UT_TC_002_001_001 输入参数任意为空的情况")
 //UT_TC_002_001_001 输入参数任意为空的情况
 // 返回结果的status字段为false
     @Test

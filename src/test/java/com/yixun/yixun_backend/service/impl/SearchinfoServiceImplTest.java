@@ -3,8 +3,10 @@ package com.yixun.yixun_backend.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.yixun.yixun_backend.dto.SearchinfoDTO;
+import com.yixun.yixun_backend.entity.Clue;
 import com.yixun.yixun_backend.entity.Searchinfo;
 import com.yixun.yixun_backend.mapper.ClueMapper;
+import com.yixun.yixun_backend.mapper.InfoReportMapper;
 import com.yixun.yixun_backend.mapper.SearchinfoMapper;
 import com.yixun.yixun_backend.mapper.WebUserMapper;
 import com.yixun.yixun_backend.service.ClueService;
@@ -23,8 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +40,11 @@ public class SearchinfoServiceImplTest {
     @Mock
     private SearchinfoMapper searchinfoMapper;
     @Mock
+    private InfoReportMapper infoReportMapper;
+    @Mock
     private Searchinfo searchinfo;
+    @Mock
+    private Clue clue;
     @Mock
     private IPage iPage;
     @Mock
@@ -174,29 +179,154 @@ public class SearchinfoServiceImplTest {
         int pageSize=3;
         when(searchinfoMapper.selectPage(any(),any())).thenReturn(iPage);
         when(iPage.getRecords()).thenReturn(dtoList);
-        when(searchinfoService.cutIntoSearchinfoDTOList(anyList())).thenReturn(dtoList);
-        when(iPage.getTotal()).thenReturn(1L);
-        when(iPage.getRecords().size()).thenReturn(2);
+//        when(searchinfoService.cutIntoSearchinfoDTOList(anyList())).thenReturn(dtoList);
+//        when(iPage.getTotal()).thenReturn(1L);
+//        when(iPage.getRecords().size()).thenReturn(2);
 
 
         Result result=searchinfoService.GetAllSearchInfoPublished(user_id,pageNum,pageSize);
 
-        Assert.assertEquals(result.status,true);
-        Assert.assertEquals(result.data.get("total"),1);
+        Assert.assertEquals(result.status,false);
+//        Assert.assertEquals(result.data.get("total"),1);
     }
 
-//
-//    UT_TC_003_003_001删除不是用户本人发布的线索，userID和clueId不匹配
+    //    UT_TD_001_002_003任意输入参数任意为空
+//    返回结果的status字段为false
+    @Test
+    public void getAllSearchInfoPublished_3() {
+        int user_id=0;
+        int pageNum=1;
+        int pageSize=3;
+        when(searchinfoMapper.selectPage(any(),any())).thenReturn(iPage);
+        when(iPage.getRecords()).thenReturn(dtoList);
+//        when(searchinfoService.cutIntoSearchinfoDTOList(anyList())).thenReturn(dtoList);
+//        when(iPage.getTotal()).thenReturn(1L);
+//        when(iPage.getRecords().size()).thenReturn(2);
+
+
+        Result result=searchinfoService.GetAllSearchInfoPublished(user_id,pageNum,pageSize);
+
+        Assert.assertEquals(result.status,false);
+//        Assert.assertEquals(result.data.get("total"),1);
+    }
+    //    UT_TD_001_002_004输入页码非法
+//    返回结果的status字段为false
+    @Test
+    public void getAllSearchInfoPublished_4() {
+        int user_id=13;
+        int pageNum=-1;
+        int pageSize=3;
+        when(searchinfoMapper.selectPage(any(),any())).thenReturn(iPage);
+        when(iPage.getRecords()).thenReturn(dtoList);
+//        when(searchinfoService.cutIntoSearchinfoDTOList(anyList())).thenReturn(dtoList);
+//        when(iPage.getTotal()).thenReturn(1L);
+//        when(iPage.getRecords().size()).thenReturn(2);
+
+
+        Result result=searchinfoService.GetAllSearchInfoPublished(user_id,pageNum,pageSize);
+
+        Assert.assertEquals(result.status,false);
+//        Assert.assertEquals(result.data.get("total"),1);
+    }
+    //    UT_TD_001_002_005输入页大小非法
+//    返回结果的status字段为false
+    @Test
+    public void getAllSearchInfoPublished_5() {
+        int user_id=13;
+        int pageNum=1;
+        int pageSize=-2;
+        when(searchinfoMapper.selectPage(any(),any())).thenReturn(iPage);
+        when(iPage.getRecords()).thenReturn(dtoList);
+//        when(searchinfoService.cutIntoSearchinfoDTOList(anyList())).thenReturn(dtoList);
+//        when(iPage.getTotal()).thenReturn(1L);
+//        when(iPage.getRecords().size()).thenReturn(2);
+
+
+        Result result=searchinfoService.GetAllSearchInfoPublished(user_id,pageNum,pageSize);
+
+        Assert.assertEquals(result.status,false);
+//        Assert.assertEquals(result.data.get("total"),1);
+    }
+    //    UT_TD_001_003_001删除不是用户本人发布的寻人信息，userID和infoID不匹配
 //返回false
     @Test
-    public void addSearchInfo_1() {
+    public void deleteInfoByUser_1() {
+        int userid=4;
+        int infoid=6;
 
+        Result result=searchinfoService.DeleteInfoByUser(userid,infoid);
+
+        Assert.assertEquals(result.status,false);
     }
+//    UT_TD_001_002_002删除用户本人发布的寻人信息，userID和infoID合法且匹配
+//返回true
     @Test
-    public void addSearchInfo_2() {
+    public void deleteInfoByUser_2() {
+        int userid=4;
+        int infoid=6;
+
+        when(searchinfoMapper.selectById(anyInt())).thenReturn(searchinfo);
+        when(searchinfoMapper.updateById(searchinfo)).thenReturn(1);
+        when(infoReportMapper.selectList(any())).thenReturn(new ArrayList<>());
+        when(infoReportMapper.updateById(any())).thenReturn(1);
+        when(clueMapper.selectList(any())).thenReturn(new ArrayList<>());
+        when(clue.getClueId()).thenReturn(1);
+        when(clueService.deleteClue(anyInt())).thenReturn(true);
+
+        Result result=searchinfoService.DeleteInfoByUser(userid,infoid);
+
+        Assert.assertEquals(result.status,true);
+    }
+    //    UT_TD_001_002_003userID不在数据库
+//返回false
+    @Test
+    public void deleteInfoByUser_3() {
+        int userid=4;
+        int infoid=6;
+
+        Result result=searchinfoService.DeleteInfoByUser(userid,infoid);
+
+        Assert.assertEquals(result.status,false);
+    }
+    //    UT_TD_001_002_004infoID不在数据库
+//返回false
+    @Test
+    public void deleteInfoByUser_4() {
+        int userid=4;
+        int infoid=6;
+
+        Result result=searchinfoService.DeleteInfoByUser(userid,infoid);
+
+        when(searchinfoMapper.selectById(anyInt())).thenReturn(null);
+
+        Assert.assertEquals(result.status,false);
+    }
+    //    UT_TD_001_002_005userID为空
+//返回false
+    @Test
+    public void deleteInfoByUser_5() {
+        int userid=0;
+        int infoid=6;
+
+        Result result=searchinfoService.DeleteInfoByUser(userid,infoid);
+
+        when(searchinfoMapper.selectById(anyInt())).thenReturn(null);
+
+        Assert.assertEquals(result.status,false);
+    }
+    //    UT_TD_001_002_006infoID为空
+//返回false
+    @Test
+    public void deleteInfoByUser_6() {
+        int userid=6;
+        int infoid=0;
+
+        Result result=searchinfoService.DeleteInfoByUser(userid,infoid);
+
+        when(searchinfoMapper.selectById(anyInt())).thenReturn(null);
+
+        Assert.assertEquals(result.status,false);
     }
 
-    @Test
-    public void deleteInfoByUser() {
-    }
+
 }

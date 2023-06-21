@@ -206,19 +206,27 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
     }
     public Result DeleteClueByUser(int userid, int clueid)
     {
+//  错误处理
         Result result = new Result();
-        if(!deleteClue(clueid))
-        {
+        try{
+            if(!deleteClue(clueid))
+            {
+                result.status=false;
+                return Result.error();
+            }
+            result.status = true;
+            result.errorCode = 200;
+            return result;
+        }catch (Exception e){
+            result.status=false;
             return Result.error();
         }
-        result.status = true;
-        result.errorCode = 200;
-        return result;
     }
     public Result GetClueDetail(int clueId){
+//        错误处理
+        Result result = new Result();
         try
         {
-            Result result = new Result();
             Clue clue=clueMapper.selectById(clueId);
             if(clue.getClueDay()!=null){
                 result.data.put("clue_day",TimeTrans.myToDateString(clue.getClueDay()));
@@ -259,6 +267,7 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue>
             return result;
         }
         catch (Exception e) {
+            result.status=false;
             return Result.error();
         }
     }
