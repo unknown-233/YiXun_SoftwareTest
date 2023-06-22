@@ -149,7 +149,16 @@
 <!--            <version>LATEST_VERSION</version>-->
 <!--            <scope>test</scope>-->
 <!--        </dependency>-->
-
+        <!--                    <dependency>-->
+        <!--                        <groupId>org.aspectj</groupId>-->
+        <!--                        <artifactId>aspectjweaver</artifactId>-->
+        <!--                        <version>${aspectj.version}</version>-->
+        <!--                    </dependency>-->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>2.10.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -160,44 +169,13 @@
 <!--                <groupId>org.springframework.boot</groupId>-->
 <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
 <!--            </plugin>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                <version>2.20</version>-->
-<!--                <configuration>-->
-<!--                    &lt;!&ndash;当单元测试不通过的时候任然生成测试报告&ndash;&gt;-->
-<!--                    <testFailureIgnore>true</testFailureIgnore>-->
-<!--                    &lt;!&ndash;表示不进行字节码验证  有些是在1.6的环境下开发，而现在使用1.8进行测试，可能会出现验证不通过的情况&ndash;&gt;-->
-<!--                    &lt;!&ndash; <argLine>-noverify -XX:-UseSplitVerifier</argLine>&ndash;&gt;-->
-<!--                    &lt;!&ndash;    &lt;!&ndash;表示需要测试哪些用例   默认情况下包含test目录下*Ttest.java或者Test*.javad的类&ndash;&gt;-->
-<!--                        <includes>-->
-<!--                            <include>**/*Test.java</include>-->
-<!--                        </includes>&ndash;&gt;-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-
-<!--            surefire-->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
+                <version>2.20</version>
                 <configuration>
-                    <testFailureIgnore>false</testFailureIgnore>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>io.qameta.allure.junit4.AllureJunit4</value>
-                        </property>
-                    </properties>
-                    <argLine>
-                        -Xmx1024m -XX:MaxPermSize=256m
                     </argLine>
                 </configuration>
                 <dependencies>
@@ -206,13 +184,33 @@
                         <artifactId>aspectjweaver</artifactId>
                         <version>${aspectj.version}</version>
                     </dependency>
-                    <dependency>
-                        <groupId>io.qameta.allure</groupId>
-                        <artifactId>allure-testng</artifactId>
-                        <version>LAST_VERSION</version>
-                        <scope>test</scope>
-                    </dependency>
                 </dependencies>
+            </plugin>
+
+<!--            surefire-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                                <configuration>
+                                    <testFailureIgnore>false</testFailureIgnore>
+                                    <argLine>
+                                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                                    </argLine>
+                                    <properties>
+                                        <property>
+                                            <name>listener</name>
+                                            <value>io.qameta.allure.junit4.AllureJunit4</value>
+                                        </property>
+                                    </properties>
+                                    <argLine>
+                                        -Xmx1024m -XX:MaxPermSize=256m
+                                    </argLine>
+                                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

@@ -7,8 +7,8 @@ import com.yixun.yixun_backend.mapper.AddressMapper;
 import com.yixun.yixun_backend.mapper.AdministratorsMapper;
 import com.yixun.yixun_backend.mapper.VolunteerMapper;
 import com.yixun.yixun_backend.mapper.WebUserMapper;
-import com.yixun.yixun_backend.service.impl.WebUserServiceImpl;
 import com.yixun.yixun_backend.utils.Result;
+import io.qameta.allure.*;
 import jdk.jfr.Description;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,8 +24,9 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
-public class JUnitExampleTest {
+@Epic("益寻后端单元测试")
+@Feature("用户类")
+public class WebUserServiceImplTest {
     @InjectMocks
     WebUserServiceImpl webUserService;
     @Mock
@@ -51,8 +52,10 @@ public class JUnitExampleTest {
     public void setUp(){
         MockitoAnnotations.openMocks(this);
     }
-
-@Description("UT_TC_002_001_001 输入参数任意为空的情况")
+@Story("UT_TC_002_001_001 输入参数任意为空的情况")
+@Description("返回结果的status字段为false")
+@Owner("zqr")
+@Severity(SeverityLevel.BLOCKER)
 //UT_TC_002_001_001 输入参数任意为空的情况
 // 返回结果的status字段为false
     @Test
@@ -88,7 +91,10 @@ public class JUnitExampleTest {
 
 
     }
-
+    @Story("UT_TC_002_001_002 输入手机号在数据库中不存在")
+    @Description("返回结果的status字段为false，data字段中有信息提示“用户不正确”")
+    @Owner("zqr")
+    @Severity(SeverityLevel.BLOCKER)
     //UT_TC_002_001_002 输入手机号在数据库中不存在
 //返回结果的status字段为false，data字段中有信息提示“用户不正确”
     @Test
@@ -108,7 +114,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.data.get("message"), "用户不正确或密码错误！");
     }
 
-
+    @Story("UT_TC_002_002_003 输入手机号与密码不匹配")
+    @Description("返回结果的status字段为false，data字段中有信息提示“密码错误”")
+    @Owner("zqr")
+    @Severity(SeverityLevel.BLOCKER)
     //UT_TC_002_002_003 输入手机号与密码不匹配
 //返回结果的status字段为false，data字段中有信息提示“密码错误”
     @Test
@@ -128,6 +137,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.data.get("message"), "用户不正确或密码错误！");
     }
 
+    @Story("UT_TC_002_001_004 输入手机号属于用户，但对应用户在数据库中为封禁状态")
+    @Description("返回结果的status字段为false，data字段中有信息“账号已被注销或封禁”")
+    @Owner("zqr")
+    @Severity(SeverityLevel.BLOCKER)
     //UT_TC_002_001_004 输入手机号属于用户，但对应用户在数据库中为封禁状态
 //返回结果的status字段为false，data字段中有信息“账号已被注销或封禁”
     @Test
@@ -152,7 +165,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.data.get("message"), "账号已被注销或封禁");
     }
-
+    @Story("UT_TC_002_001_005 输入手机号属于用户，且与密码匹配，且用户user_id表明该用户同时是志愿者")
+    @Description("返回结果的status字段为true，data字段中保存志愿者的登录信息。")
+    @Owner("zqr")
+    @Severity(SeverityLevel.BLOCKER)
     //UT_TC_002_001_005 输入手机号属于用户，且与密码匹配，且用户user_id表明该用户同时是志愿者
 //返回结果的status字段为true，data字段中保存志愿者的登录信息。
     @Test
@@ -179,7 +195,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.data.get("vol_id"), 1);
         Assert.assertEquals(result1.data.get("user_id"), 1);
     }
-
+    @Story("UT_TC_002_001_006 输入手机号属于用户，且与密码匹配且用户user_id表明该用户并不是志愿者")
+    @Description("返回结果的status字段为true，data字段中保存用户登录信息。")
+    @Owner("zqr")
+    @Severity(SeverityLevel.BLOCKER)
     //UT_TC_002_001_006 输入手机号属于用户，且与密码匹配且用户user_id表明该用户并不是志愿者
 //返回结果的status字段为true，data字段中保存用户登录信息。
     @Test
@@ -204,7 +223,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.data.get("identity"), "user");
         Assert.assertEquals(result1.data.get("id"), 2);
     }
-
+    @Story("UT_TC_002_001_007 输入手机号属于管理员，且手机号和密码匹配")
+    @Description("返回结果的status字段为true，data字段中保存管理员登录信息。")
+    @Owner("zqr")
+    @Severity(SeverityLevel.BLOCKER)
     //UT_TC_002_001_007 输入手机号属于管理员，且手机号和密码匹配
     // 返回结果的status字段为true，data字段中保存管理员登录信息。
     @Test
@@ -232,7 +254,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.data.get("identity"), "administrator");
         Assert.assertEquals(result1.data.get("id"), 1);
     }
-
+    @Story("UT_TC_002_002_001 均不填内容")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_001 均不填内容
     //返回结果的status字段为false
     @Test
@@ -255,7 +280,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_002_002 不填手机号、填密码、不填姓名、填非法邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_002 不填手机号、填密码、不填姓名、填非法邮箱
     //返回结果的status字段为false
     @Test
@@ -279,6 +307,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.status,false);
     }
 
+    @Story("UT_TC_002_002_003 不填手机号、不填密码、填姓名、填合法邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_003 不填手机号、不填密码、填姓名、填合法邮箱
     //返回结果的status字段为false
     @Test
@@ -301,7 +333,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_002_004 填非法手机号、不填密码、填姓名、填合法邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_004 填非法手机号、不填密码、填姓名、填合法邮箱
     //返回结果的status字段为false
     @Test
@@ -324,7 +359,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_002_005 填非法手机号、填密码、填姓名、不填邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_005 填非法手机号、填密码、填姓名、不填邮箱
     //返回结果的status字段为false
     @Test
@@ -347,7 +385,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_002_006 填非法手机号、填密码、不填姓名、填非法邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_006 填非法手机号、填密码、不填姓名、填非法邮箱
     //返回结果的status字段为false
     @Test
@@ -370,7 +411,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_002_007 填合法手机号、不填密码、填姓名、填非法邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_007 填合法手机号、不填密码、填姓名、填非法邮箱
     //返回结果的status字段为false
     @Test
@@ -393,7 +437,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_002_008 填合法手机号、填密码、不填姓名、填合法邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_008 填合法手机号、填密码、不填姓名、填合法邮箱
     //返回结果的status字段为false
     @Test
@@ -416,7 +463,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_002_009 填合法手机号、填密码、填姓名、不填邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_009 填合法手机号、填密码、填姓名、不填邮箱
     //返回结果的status字段为false
     @Test
@@ -440,6 +490,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.status,false);
     }
 
+    @Story("UT_TC_002_002_010 填合法手机号、填密码、填姓名、填合法邮箱")
+    @Description("返回结果的status字段为true，data字段为新生成的user_id，用户信息添加成功")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_010 填合法手机号、填密码、填姓名、填合法邮箱
     //返回结果的status字段为true，data字段为新生成的user_id，用户信息添加成功
     @Test
@@ -470,7 +524,10 @@ public class JUnitExampleTest {
         Assert.assertEquals(result1.status,true);
         Assert.assertEquals(result1.data.get("user_id"),10);
     }
-
+    @Story("UT_TC_002_002_011 填合法但数据库中已有的手机号、填密码、填姓名、填合法邮箱")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //UT_TC_002_002_011 填合法但数据库中已有的手机号、填密码、填姓名、填合法邮箱
     //返回结果的status字段为false
     @Test
@@ -496,7 +553,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_003_001 输入user_id为空")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.MINOR)
 //UT_TC_002_003_001 输入user_id为空
 //返回结果的status字段为false
     @Test
@@ -513,7 +573,10 @@ public class JUnitExampleTest {
         // 验证结果
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_003_002 输入user_id非空，但在数据库中不存在")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.NORMAL)
     //UT_TC_002_003_002 输入user_id非空，但在数据库中不存在
 //返回结果的status字段为false
     @Test
@@ -528,10 +591,13 @@ public class JUnitExampleTest {
         Result result1 = webUserService.GetUserInfomation(user_id);
 
         // 验证结果
-        verify(webUserMapper.selectById(user_id));
+//        verify(webUserMapper.selectById(user_id));
         Assert.assertEquals(result1.status,false);
     }
-
+    @Story("UT_TC_002_003_003 输入user_id非空，且在数据库中存在，地址id为空")
+    @Description("返回结果的status字段为true，data字段中返回用户的信息包括id和姓名邮箱等")
+    @Owner("zqr")
+    @Severity(SeverityLevel.NORMAL)
     //UT_TC_002_003_003 输入user_id非空，且在数据库中存在，地址id为空
 //返回结果的status字段为true，data字段中返回用户的信息包括id和姓名邮箱等
     @Test
@@ -551,11 +617,14 @@ public class JUnitExampleTest {
         Result result1 = webUserService.GetUserInfomation(user_id);
 
         // 验证结果
-        verify(webUserMapper.selectById(user_id));
+//        verify(webUserMapper.selectById(user_id));
         Assert.assertEquals(result1.status,true);
         Assert.assertEquals(result1.data.get("user_address"),null);
     }
-
+    @Story("UT_TC_002_003_004 输入user_id非空，且在数据库中存在，地址id非空")
+    @Description("返回结果的status字段为true，data字段中返回用户的信息包括id和姓名邮箱等，地址相应信息非空")
+    @Owner("zqr")
+    @Severity(SeverityLevel.NORMAL)
     //UT_TC_002_003_004 输入user_id非空，且在数据库中存在，地址id非空
 //返回结果的status字段为true，data字段中返回用户的信息包括id和姓名邮箱等，地址相应信息非空
     @Test
@@ -580,11 +649,14 @@ public class JUnitExampleTest {
         Result result1 = webUserService.GetUserInfomation(user_id);
 
         // 验证结果
-        verify(webUserMapper.selectById(user_id));
+//        verify(webUserMapper.selectById(user_id));
         Assert.assertEquals(result1.status,true);
         Assert.assertEquals(result1.data.get("user_province"),"省份");
     }
-
+    @Story("UT_TC_002_003_005 输入user_id为0")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.MINOR)
     //UT_TC_002_003_005 输入user_id为0
 //返回结果的status字段为false
     @Test

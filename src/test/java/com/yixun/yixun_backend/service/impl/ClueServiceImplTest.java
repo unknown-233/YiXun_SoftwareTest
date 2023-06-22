@@ -4,6 +4,8 @@ import com.yixun.yixun_backend.entity.Clue;
 import com.yixun.yixun_backend.mapper.ClueMapper;
 import com.yixun.yixun_backend.service.ClueService;
 import com.yixun.yixun_backend.utils.Result;
+import io.qameta.allure.*;
+import jdk.jfr.Description;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-
+@Epic("益寻后端单元测试")
+@Feature("线索类")
 public class ClueServiceImplTest {
     @InjectMocks
     private ClueServiceImpl clueService;
@@ -29,7 +32,10 @@ public class ClueServiceImplTest {
     public void setUp(){
         MockitoAnnotations.openMocks(this);
     }
-
+    @Story("UT_TC_003_001_001删除不是用户本人发布的线索，userID和clueId不匹配")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
 //    UT_TC_003_001_001删除不是用户本人发布的线索，userID和clueId不匹配
 //    返回结果的status字段为false
     @Test
@@ -56,6 +62,10 @@ public class ClueServiceImplTest {
 
         Assert.assertEquals(result.status,false);
     }
+    @Story("UT_TC_003_001_003clueId不在数据库")
+    @Description("status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //    UT_TC_003_001_003clueId不在数据库
 //status字段为false
     @Test
@@ -69,7 +79,11 @@ public class ClueServiceImplTest {
 
         Assert.assertEquals(result.status,false);
     }
-    //    UT_TC_003_001_004userID为空
+    @Story("UT_TC_003_001_004userID为空 ")
+    @Description("status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
+    //   UT_TC_003_001_004userID为空
 //status字段为false
     @Test
     public void deleteClueByUser_4() {
@@ -82,6 +96,10 @@ public class ClueServiceImplTest {
 
         Assert.assertEquals(result.status,false);
     }
+    @Story("UT_TC_003_001_005clueId为空 ")
+    @Description("status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.CRITICAL)
     //    UT_TC_003_001_005clueId为空
 //status字段为false
     @Test
@@ -95,6 +113,10 @@ public class ClueServiceImplTest {
 
         Assert.assertEquals(result.status,false);
     }
+    @Story("UT_TC_003_002_001 测试输入线索ID存在但数据库中没有对应线索的错误情况 ")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.NORMAL)
 //UT_TC_003_002_001测试输入线索ID存在但数据库中没有对应线索的错误情况
 //    返回结果的status字段为false
     @Test
@@ -108,6 +130,10 @@ public class ClueServiceImplTest {
         Assert.assertEquals(result.status,false);
 
     }
+    @Story("UT_TC_003_002_002测试输入线索ID不存在 ")
+    @Description("返回结果的status字段为false")
+    @Owner("zqr")
+    @Severity(SeverityLevel.NORMAL)
     //UT_TC_003_002_002测试输入线索ID不存在
 //    返回结果的status字段为false
     @Test
@@ -121,6 +147,10 @@ public class ClueServiceImplTest {
         Assert.assertEquals(result.status,false);
 
     }
+    @Story("UT_TC_003_002_003 输入线索ID合法，且有图片")
+    @Description("返回结果的各个字段与预期相符,status字段为true")
+    @Owner("zqr")
+    @Severity(SeverityLevel.NORMAL)
     //UT_TC_003_002_003输入线索ID合法，且有图片
 //返回结果的各个字段与预期相符,status字段为true
     @Test
@@ -137,6 +167,10 @@ public class ClueServiceImplTest {
         Assert.assertEquals(result.data.get("clue_content"),"hello");
 
     }
+    @Story("UT_TC_003_002_004输入线索ID合法，但没有图片")
+    @Description("返回结果的各个字段与预期相符,status字段为true")
+    @Owner("zqr")
+    @Severity(SeverityLevel.NORMAL)
     //UT_TC_003_002_004输入线索ID合法，但没有图片
 //返回结果的各个字段与预期相符,status字段为true
     @Test
